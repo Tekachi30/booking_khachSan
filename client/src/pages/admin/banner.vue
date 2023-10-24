@@ -1,0 +1,3 @@
+<template>
+    qli banner
+</template>
