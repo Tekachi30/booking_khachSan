@@ -6,12 +6,16 @@ require('./Config/connect');
 const app = express();
 
 // const {???} = require ('???')
+const { routerUser } = require ('./routers/userRouter');
+const { routerHotel } = require ('./routers/hotelRouter');
+const   {routerAmin}   = require ('./routers/adminRouter');
+
 
 // Thiết lập body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
 
-
+ 
 //session 
 app.use(session({
   secret: 'keysaveloginuser123456', 
@@ -25,6 +29,9 @@ app.use(express.json());
 
 // Định tuyến
 //app.use(???);
+app.use(routerUser, routerHotel);
+app.use(routerAmin);
+// app.use(routerHotel);
 
 app.use(express.static("uploads"));
 

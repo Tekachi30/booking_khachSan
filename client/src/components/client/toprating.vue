@@ -23,9 +23,9 @@
                         <img src="https://thanhtoanhoadon365.com/wp-content/uploads/2022/04/qua-khu-cua-anya-forger-trong-spy-x-family-2.jpg"
                             class="w-32 rounded-full shadow-lg dark:shadow-black/30" />
                     </div>
-                    <h5 class="mb-4 text-xl font-semibold text-center">Nguyễn Minh Nhựt</h5>
+                    <h5 class="mb-4 text-xl font-semibold text-center">Đặng Thành Đạt</h5>
                     <h6 class="mb-4 font-semibold text-primary dark:text-primary-500 text-center">
-                        Giới tính
+                        Giới tính: Nam
                     </h6>
                     <p class="mb-4 text-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-block h-7 w-7 pr-2"
@@ -33,7 +33,7 @@
                             <path
                                 d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z" />
                         </svg>
-                       So Cảm thấy mọi thứ thật là tuyệt vời luôn á chứ nhể.
+                        Từ dịch vụ tận tâm của nhân viên, không gian phòng ốc thoải mái và sạch sẽ cho đến tiện nghi hiện đại và vị trí thuận lợi, mọi thứ đều khiến tôi cảm thấy hài lòng. .
                     </p>
                 </div>
             </div>
