@@ -65,13 +65,13 @@ const router = createRouter({
           component: () => import("../pages/admin/user.vue"),
         },
         {
-          path: "owner",
-          name: "owner",
+          path: "owners",
+          name: "owners",
           component: () => import("../pages/admin/owner.vue"),
         },
         {
-          path: "rating",
-          name: "rating",
+          path: "ratings",
+          name: "ratings",
           component: () => import("../pages/admin/rating.vue"),
         },
         {

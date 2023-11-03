@@ -71,7 +71,7 @@
           </router-link>
 
           <!--chủ khách sạn-->
-          <router-link to="/admin/owner"
+          <router-link to="/admin/owners"
             class="flex items-center px-6 py-2 mt-4 duration-200 bg-white rounded-sm"
           >
             <svg
@@ -94,7 +94,7 @@
           </router-link>
 
           <!--đánh giá-->
-          <router-link to="/admin/rating"
+          <router-link to="/admin/ratings"
             class="flex items-center px-6 py-2 mt-4 duration-200 bg-white rounded-sm"
           >
             <svg
