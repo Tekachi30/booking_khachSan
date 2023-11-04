@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   banner.init({
     title_banner: DataTypes.STRING,
-    content_banner: DataTypes.STRING
+    content_banner: DataTypes.STRING,
+    public_id: DataTypes.STRING,
+    url_banner: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'banner',

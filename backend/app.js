@@ -2,7 +2,9 @@ const session  = require('express-session');
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors  = require("cors");
-require('./Config/connect');
+require('./config/connect');
+const http = require('http');
+const server = http.createServer(app);
 const app = express();
 
 // const {???} = require ('???')
@@ -23,7 +25,9 @@ app.use(session({
   saveUninitialized: false
 }));
 // app.use(cookieParser()); //Parse cookie
-app.use(cors());
+app.use(cors({
+  methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
+}));
 
 app.use(express.json());
 
@@ -33,6 +37,7 @@ app.use(routerUser, routerHotel);
 app.use(routerAmin);
 // app.use(routerHotel);
 
+// Server các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));
 
 const port = 3000;

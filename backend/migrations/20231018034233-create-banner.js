@@ -15,6 +15,12 @@ module.exports = {
       content_banner: {
         type: Sequelize.STRING
       },
+      public_id: {
+        type: Sequelize.STRING
+      },
+      url_banner: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
