@@ -39,8 +39,6 @@ const updateBanner = async (req, res) => {
     const {title_banner, content_banner} = req.body;
     const {idBanner, idAdmin} = res.params.id;
     const exsitBanner = await Banner.findByPk(idBanner);
-    const exsitAdmin = await Amin.findByPk(idAdmin);
-    if(exsitAdmin){
         if(exsitBanner){
             try {
             const exsitTitle = await Banner.findOne({ where: {title_banner: title_banner}});
@@ -58,9 +56,6 @@ const updateBanner = async (req, res) => {
         }else{
         res.status(400).json({messsage: 'Không tìm thấy banner.'});
         }
-    }else{
-        res.status(400).json({messsage: 'Tài khoản Admin không tồn tại'});
-    }
 }
 
 module.exports = {
