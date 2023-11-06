@@ -115,10 +115,23 @@ const updateBanner = async (req, res) => {
 }
 
 const deleteBanner = async (req, res) => {
-    
+    try {
+        const id = req.params.id;
+        const exsitBanner = await Banner.findByPk(id);
+        if(exsitBanner){
+            await exsitBanner.destroy();
+            res.status(200).json({messsage: 'Xóa banner thành công.'});
+        }else{
+            res.status(400).json({messsage: 'Không tìm thấy banner.'});
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 module.exports = {
     getBanner,
+    addBanner,
     updateBanner,
+    deleteBanner
 }

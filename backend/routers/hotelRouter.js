@@ -1,9 +1,11 @@
 const express = require("express");
-const { getHotel, getHotelById } = require("../controllers/hotelController");
+const { getHotel, addHotel, updateHotel, deleteHotel } = require("../controllers/hotelController");
 const routerHotel = express.Router();
 
-routerHotel.get("/api/hotel/get", getHotel);
-routerHotel.get("/api/hotel/get", getHotelById)
+routerHotel.get("/api/hotel/getHotel", getHotel);
+routerHotel.post("/api/hotel/addHotel", addHotel);
+routerHotel.put("/api/hotel/updateHotel/:id", updateHotel);
+routerHotel.delete("/api/hotel/deleteHotel/:id", deleteHotel);
 
 
 module.exports = {

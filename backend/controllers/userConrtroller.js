@@ -57,12 +57,12 @@ const register = async (req, res) => {
               email:email,
               isactive:true
             })
-            return res.status(200).json({messsage: 'Đăng ký thành công'});
+            res.status(200).json({messsage: 'Đăng ký thành công'});
           }else{
-            return res.status(400).json({messsage: 'Email đã tồn tại'});
+            res.status(400).json({messsage: 'Email đã tồn tại'});
           }
         }else{
-          return res.status(400).json({messsage: 'Tên tài khoản đã được sử dụng'});
+          res.status(400).json({messsage: 'Tên tài khoản đã được sử dụng'});
         }
         
     } catch (error) {
@@ -128,7 +128,7 @@ const login = async (req, res) => {
                 token
             })
         }else{
-            return res.status(400).json({messsage: 'Tài khoản không tồn tại'});
+          res.status(400).json({messsage: 'Tài khoản không tồn tại'});
         }
     } catch (error) {
         console.log(error);

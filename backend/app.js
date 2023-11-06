@@ -10,7 +10,10 @@ const app = express();
 // const {???} = require ('???')
 const { routerUser } = require ('./routers/userRouter');
 const { routerHotel } = require ('./routers/hotelRouter');
-const   {routerAmin}   = require ('./routers/adminRouter');
+const { routerAdmin } = require ('./routers/adminRouter');
+const { routerBanner } = require ('./routers/bannerRouter');
+const { routerReport } = require ('./routers/reportRouter');
+const { routerOwner } = require ('./routers/ownerRouter');
 
 
 // Thiết lập body-parser
@@ -22,7 +25,7 @@ app.use(bodyParser.json());
 app.use(session({
   secret: 'keysaveloginuser123456', 
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false 
 }));
 // app.use(cookieParser()); //Parse cookie
 app.use(cors({
@@ -33,8 +36,7 @@ app.use(express.json());
 
 // Định tuyến
 //app.use(???);
-app.use(routerUser, routerHotel);
-app.use(routerAmin);
+app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner);
 // app.use(routerHotel);
 
 // Server các tệp tĩnh trong thư mục "uploads"
