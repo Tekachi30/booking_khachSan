@@ -40,23 +40,31 @@ const getUserById = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { username, email, password, avatar_url} = req.body;
-        const exsitUser = await User.findOne({where:{email: email}});
-        if(!exsitUser){
+        const {account, fullname, address, phone, sex, password, email} = req.body;
+        const exsitEmail = await User.findOne({where:{email: email}});
+        const exsitAccount = await User.findOne({where:{account: account}});
+        if(!exsitAccount){
+          if(!exsitEmail){
             let salt = await bcrypt.genSalt(10);
             const hash = await bcrypt.hash(password,salt);
-
-            const user = await User.create({
-                username:username,
-                email:email,
-                password:hash,
-                avatar_url:avatar_url,
-                isactive:true
+            await User.create({
+              account:account,
+              fullname:fullname,
+              address:address,
+              phone:phone,
+              sex:sex,
+              password:hash,
+              email:email,
+              isactive:true
             })
             return res.status(200).json({messsage: 'Đăng ký thành công'});
+          }else{
+            return res.status(400).json({messsage: 'Email đã tồn tại'});
+          }
         }else{
-            return res.status(400).json({messsage: 'Tài khoản đã tồn tại'});
+          return res.status(400).json({messsage: 'Tên tài khoản đã được sử dụng'});
         }
+        
     } catch (error) {
         console.log(error);
     }
@@ -64,7 +72,6 @@ const register = async (req, res) => {
 
 const updateUserById = async (req, res) => {
     const userId = req.params.id;
-    console.log(req.body);
     const {
       fullname,
       address,
@@ -79,7 +86,7 @@ const updateUserById = async (req, res) => {
       const user = await User.findByPk(userId);
       if (!user) {
         res.status(404).json({
-          message: `User with id ${userId} not found.`
+          message: `Không tìm thấy user id ${userId}.`
         });
       } else {
         await user.update({
@@ -90,14 +97,12 @@ const updateUserById = async (req, res) => {
           password : hashedPassword,
         });
   
-        res.json({
-          message: `User with id ${userId} has been updated successfully.`
+        res.status(200).json({
+          message: `Cập nhật thông tin với user id ${userId} thành công.`
         });
       }
     } catch (error) {
-      res.status(500).json({
-        message: "Error updating user with id " + userId
-      });
+      console.log(error);
     }
   };
 

@@ -31,4 +31,5 @@ const addReport = async (req, res) => {
 
 module.exports = {
     getReport,
+    addReport,
 }
