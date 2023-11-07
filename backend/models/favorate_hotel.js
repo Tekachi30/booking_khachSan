@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      coupon_owner.belongsTo(models.hotel, { foreignKey: 'id_hotel' });
-      coupon_owner.belongsTo(models.User, { foreignKey: 'id_user' });
+      favorate_hotel.belongsTo(models.hotel, { foreignKey: 'id_hotel' });
+      favorate_hotel.belongsTo(models.User, { foreignKey: 'id_user' });
     }
   }
   favorate_hotel.init({

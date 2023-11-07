@@ -113,7 +113,7 @@ const login = async (req, res) => {
         if(exsitUser){
             const ismatch = await bcrypt.compare(password, exsitUser.password);
             if(!ismatch){
-
+              res.status(400).json({messsage: 'Mật khẩu không chính xác.'});
             }
             // Tạo JWT
             const token = jwt.sign({

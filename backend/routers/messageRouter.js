@@ -1,10 +1,10 @@
 const express = require("express");
-const {  } = require("../controllers/ownerController");
-const routerOwner = express.Router();
+const { getMessage } = require("../controllers/messageController");
+const routerMessage = express.Router();
 
-
+routerMessage.get("/api/message/getMessage", getMessage)
 
 
 module.exports = {
-    routerOwner,
+    routerMessage,
 };

@@ -1,8 +1,8 @@
 const express = require("express");
-const {  } = require("../controllers/adminController");
+const { loginAmin } = require("../controllers/adminController");
 const routerAdmin = express.Router();
 
-routerAdmin.get()
+routerAdmin.get("/api/admin/loginAdmin", loginAmin);
 
 
 module.exports = {

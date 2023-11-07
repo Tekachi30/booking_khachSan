@@ -4,8 +4,9 @@ const express = require('express');
 const cors  = require("cors");
 require('./config/connect');
 const http = require('http');
-const server = http.createServer(app);
 const app = express();
+const server = http.createServer(app);
+
 
 // const {???} = require ('???')
 const { routerUser } = require ('./routers/userRouter');
@@ -14,6 +15,7 @@ const { routerAdmin } = require ('./routers/adminRouter');
 const { routerBanner } = require ('./routers/bannerRouter');
 const { routerReport } = require ('./routers/reportRouter');
 const { routerOwner } = require ('./routers/ownerRouter');
+const { routerMessage } = require ('./routers/messageRouter');
 
 
 // Thiết lập body-parser
@@ -36,7 +38,7 @@ app.use(express.json());
 
 // Định tuyến
 //app.use(???);
-app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner);
+app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner, routerMessage);
 // app.use(routerHotel);
 
 // Server các tệp tĩnh trong thư mục "uploads"
