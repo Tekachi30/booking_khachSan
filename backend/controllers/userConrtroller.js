@@ -24,16 +24,12 @@ const getUserById = async (req, res) => {
     try {
       const user = await User.findByPk(userId);
       if (!user) {
-        res.status(404).json({
-          message: `Không tìm thấy user id ${userId}.`
-        });
+        return res.status(404).json({ message: `Không tìm thấy user id ${userId}.`});
       } else {
         res.status(200).json(user);
       }
     } catch (error) {
-      res.status(500).json({
-        message: "Xảy ra lỗi khi tìm user id " + userId
-      });
+      return res.status(500).json({ message: "Xảy ra lỗi khi tìm user id " + userId });
     }
   };
 
@@ -57,14 +53,13 @@ const register = async (req, res) => {
               email:email,
               isactive:true
             })
-            res.status(200).json({messsage: 'Đăng ký thành công'});
+            return res.status(200).json({messsage: 'Đăng ký thành công'});
           }else{
-            res.status(400).json({messsage: 'Email đã tồn tại'});
+            return res.status(400).json({messsage: 'Email đã tồn tại'});
           }
         }else{
-          res.status(400).json({messsage: 'Tên tài khoản đã được sử dụng'});
+          return res.status(400).json({messsage: 'Tên tài khoản đã được sử dụng'});
         }
-        
     } catch (error) {
         console.log(error);
     }
@@ -85,7 +80,7 @@ const updateUserById = async (req, res) => {
     try {
       const user = await User.findByPk(userId);
       if (!user) {
-        res.status(404).json({
+        return res.status(404).json({
           message: `Không tìm thấy user id ${userId}.`
         });
       } else {
@@ -97,7 +92,7 @@ const updateUserById = async (req, res) => {
           password : hashedPassword,
         });
   
-        res.status(200).json({
+        return res.status(200).json({
           message: `Cập nhật thông tin với user id ${userId} thành công.`
         });
       }
@@ -108,12 +103,12 @@ const updateUserById = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const {email, password} = req.body;
-        const exsitUser = await User.findOne({where:{email: email}});
+        const {account, password} = req.body;
+        const exsitUser = await User.findOne({where:{account: account}});
         if(exsitUser){
             const ismatch = await bcrypt.compare(password, exsitUser.password);
             if(!ismatch){
-              res.status(400).json({messsage: 'Mật khẩu không chính xác.'});
+              return res.status(400).json({messsage: 'Mật khẩu không chính xác.'});
             }
             // Tạo JWT
             const token = jwt.sign({
@@ -121,14 +116,15 @@ const login = async (req, res) => {
             }, JWT_SECRET, {
                 expiresIn: JWT_EXPIRES_IN,
             });
-            res.status(200).json({
-                username: exsitUser.username,
+            return res.status(200).json({
+                fullname: exsitUser.fullname,
+                address: exsitUser.address, 
+                phone: exsitUser.phone, 
                 email: exsitUser.email,
-                avatar_url: exsitUser.avatar_url,
                 token
             })
         }else{
-          res.status(400).json({messsage: 'Tài khoản không tồn tại'});
+          return res.status(400).json({messsage: 'Tài khoản không tồn tại'});
         }
     } catch (error) {
         console.log(error);

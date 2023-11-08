@@ -43,7 +43,7 @@ const addBanner = async (req, res) => {
     try {
         const exsitTitle = await Banner.findOne({ where: {title_banner: title_banner}});
         if(exsitTitle){
-            res.status(400).json({messsage: 'Tiêu đề đã tồn tại'});
+            return res.status(400).json({messsage: 'Tiêu đề đã tồn tại'});
         }else{
             await runMiddleware(req, res, upload.single("avatar"));
             // chuyển đổi dữ liệu nhị phân (buffer) từ file được upload lên thành chuỗi ký tự mã hóa base64.
@@ -65,12 +65,12 @@ const addBanner = async (req, res) => {
                   });
                 }
                 if (imagesData.length > 0) {
-                    res.status(200).json({messsage: 'Thêm banner thành công.'});
+                    return res.status(200).json({messsage: 'Thêm banner thành công.'});
                 }else{
-                    res.status(400).json({messsage: 'Không có hình ảnh được truyền vào.'});
+                    return res.status(400).json({messsage: 'Không có hình ảnh được truyền vào.'});
                 }
             }else{
-                res.status(400).json({messsage: 'Thêm banner thất bại.'});
+                return res.status(400).json({messsage: 'Thêm banner thất bại.'});
             }
             
         };
@@ -87,7 +87,7 @@ const updateBanner = async (req, res) => {
         if(exsitBanner){
             const exsitTitle = await Banner.findOne({ where: {title_banner: title_banner}});
             if(exsitTitle){
-                res.status(400).json({messsage: 'Tiêu đề đã tồn tại'});
+                return res.status(400).json({messsage: 'Tiêu đề đã tồn tại'});
             }else{
                 await cloudinary.uploader.destroy(`${exsitTitle.public_id}`)
                 await runMiddleware(req, res, upload.single("avatar"));
@@ -103,11 +103,11 @@ const updateBanner = async (req, res) => {
                     exsitBanner.public_id = cldRes.public_id,
                     exsitBanner.url_img = cldRes.url_img
                     await exsitBanner.save();
-                    res.status(200).json({ message: "Cập nhật banner thành công" });
+                    return res.status(200).json({ message: "Cập nhật banner thành công" });
                 }
             }
         }else{
-        res.status(400).json({messsage: 'Không tìm thấy banner.'});
+            return res.status(400).json({messsage: 'Không tìm thấy banner.'});
         }
     } catch (error) {
         console.log(error);
@@ -120,9 +120,9 @@ const deleteBanner = async (req, res) => {
         const exsitBanner = await Banner.findByPk(id);
         if(exsitBanner){
             await exsitBanner.destroy();
-            res.status(200).json({messsage: 'Xóa banner thành công.'});
+            return res.status(200).json({messsage: 'Xóa banner thành công.'});
         }else{
-            res.status(400).json({messsage: 'Không tìm thấy banner.'});
+            return res.status(400).json({messsage: 'Không tìm thấy banner.'});
         }
     } catch (error) {
         console.log(error);

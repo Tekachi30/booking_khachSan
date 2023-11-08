@@ -8,7 +8,7 @@ const loginAmin = async (req, res) => {
         if(exsitAdmin){
             const ismatch = await bcrypt.compare(password, exsitAdmin.password);
             if(!ismatch){
-                res.status(400).json({messsage: 'Tài khoản không tồn tại'});
+                return res.status(400).json({messsage: 'Tài khoản không tồn tại'});
             }
             // Tạo JWT
             const token = jwt.sign({
@@ -22,7 +22,7 @@ const loginAmin = async (req, res) => {
                 token
             })
         }else{
-          res.status(400).json({messsage: 'Tài khoản không tồn tại'});
+            return res.status(400).json({messsage: 'Tài khoản không tồn tại'});
         }
     } catch (error) {
         console.log(error);
