@@ -18,11 +18,10 @@ const loginAmin = async (req, res) => {
             });
             res.status(200).json({
                 account: exsitAdmin.account,
-                password: exsitAdmin.password,
                 token
             })
         }else{
-            return res.status(400).json({messsage: 'Tài khoản không tồn tại'});
+            return res.status(400).json({messsage: 'Tài khoản sai hoặc không tồn tại'});
         }
     } catch (error) {
         console.log(error);

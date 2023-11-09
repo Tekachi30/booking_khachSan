@@ -39,7 +39,6 @@ app.use(express.json());
 // Định tuyến
 //app.use(???);
 app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner, routerMessage);
-// app.use(routerHotel);
 
 // Server các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));

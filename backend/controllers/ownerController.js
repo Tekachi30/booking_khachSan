@@ -46,7 +46,29 @@ const addOwner = async (req, res) => {
 
 const loginOwner = async (req, res) => {
   try {
-    
+    const {account, password} = req.body;
+    const exsitOnwer = await Owner.findOne({where:{account: account}});
+    if(exsitOnwer){
+        const ismatch = await bcrypt.compare(password, exsitOnwer.password);
+        if(!ismatch){
+          return res.status(400).json({messsage: 'Mật khẩu không chính xác.'});
+        }
+        // Tạo JWT
+        const token = jwt.sign({
+            userId: exsitOnwer.id
+        }, JWT_SECRET, {
+            expiresIn: JWT_EXPIRES_IN,
+        });
+        return res.status(200).json({
+            fullname: exsitOnwer.fullname,
+            address: exsitOnwer.address, 
+            phone: exsitOnwer.phone, 
+            email: exsitOnwer.email,
+            token
+        });
+    }else{
+      return res.status(400).json({messsage: 'Tài khoản sai hoặc không tồn tại'});
+    }
   } catch (error) {
     console.log(error);
   }
@@ -57,7 +79,6 @@ const updateOwner = async (req, res) => {
         const ownerId = req.params.id;
         const {fullname, address, phone, password, email} = req.body;
         const exsitOnwer = await Owner.findByPk(ownerId);
-        const exsitEmail = await Owner.findOne({where:{email: email}});
         if(exsitOnwer){
           let salt = await bcrypt.genSalt(10);
           const hash = await bcrypt.hash(password,salt);
@@ -69,7 +90,7 @@ const updateOwner = async (req, res) => {
           await exsitOnwer.save();
           return res.status(200).json({messsage: 'Cập nhật chủ khách sạn thành công.'});
         }else{
-          return res.status(400).json({messsage: 'Tài khoản không tồn tại.'});
+          return res.status(400).json({messsage: 'Không tìm thấy tài khoản.'});
         }
     } catch (error) {
         console.log(error);
