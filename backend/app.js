@@ -36,8 +36,6 @@ app.use(cors({
 
 app.use(express.json());
 
-// Định tuyến
-//app.use(???);
 app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner, routerMessage);
 
 // Server các tệp tĩnh trong thư mục "uploads"

@@ -2,10 +2,10 @@ const express = require("express");
 const { getBanner, addBanner, updateBanner, deleteBanner } = require("../controllers/bannerController");
 const routerBanner = express.Router();
 
-routerBanner.get("/api/banner/getBanner", getBanner);
-routerBanner.post("/api/banner/addBanner", addBanner);
-routerBanner.get("/api/banner/uppdateBanner/:id", updateBanner);
-routerBanner.get("/api/banner/deleteBanner/:id", deleteBanner);
+routerBanner.get("/api/banner/get", getBanner);
+routerBanner.post("/api/banner/add", addBanner);
+routerBanner.put("/api/banner/uppdate/:id", updateBanner);
+routerBanner.delete("/api/banner/delete/:id", deleteBanner);
 
 
 

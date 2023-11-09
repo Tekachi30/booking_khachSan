@@ -1,6 +1,11 @@
 const db = require('../models');
+const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
 const Admin = db.admin;
-
+const dotenv = require("dotenv");
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN
 const loginAmin = async (req, res) => {
     try {
         const {account, password} = req.body;
@@ -8,7 +13,7 @@ const loginAmin = async (req, res) => {
         if(exsitAdmin){
             const ismatch = await bcrypt.compare(password, exsitAdmin.password);
             if(!ismatch){
-                return res.status(400).json({messsage: 'Tài khoản không tồn tại'});
+                return res.status(201).json({message: 'Mật khẩu nhập vào sai'});
             }
             // Tạo JWT
             const token = jwt.sign({
@@ -21,7 +26,7 @@ const loginAmin = async (req, res) => {
                 token
             })
         }else{
-            return res.status(400).json({messsage: 'Tài khoản sai hoặc không tồn tại'});
+            return res.status(201).json({message: 'Tài khoản sai hoặc không tồn tại'});
         }
     } catch (error) {
         console.log(error);
