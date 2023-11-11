@@ -5,6 +5,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 const Owner = db.owner;
 
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN
+
 const getOwner = async (req, res) => {
     try {
         const owner = await Owner.findAll();
@@ -90,7 +93,7 @@ const updateOwner = async (req, res) => {
           await exsitOnwer.save();
           return res.status(200).json({messsage: 'Cập nhật chủ khách sạn thành công.'});
         }else{
-          return res.status(400).json({messsage: 'Không tìm thấy tài khoản.'});
+          return res.status(404).json({messsage: 'Không tìm thấy tài khoản.'});
         }
     } catch (error) {
         console.log(error);
@@ -103,9 +106,9 @@ const deleteOwner = async (req, res) => {
         const exsitOnwer = await Owner.findByPk(id);
         if(exsitOnwer){
             await exsitOnwer.destroy();
-            return res.status(200).json({messsage: 'Tên tài khoản đã được sử dụng'});
+            return res.status(200).json({messsage: 'Xóa thành công.'});
         }else{
-            return res.status(400).json({messsage: 'Xóa thành công.'});
+            return res.status(400).json({messsage: 'Không tìm thấy tài khoản.'});
         }
     } catch (error) {
         console.log(error);

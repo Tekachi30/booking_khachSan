@@ -49,7 +49,7 @@
                         <tbody v-for="(banner, index) in banners" :key="index">
                             <tr class="border-b dark:border-gray-700">
                                 <th scope="row"
-                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ index +
+                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                         1 }}</th>
                                 <td class="px-4 py-3">
                                     {{ banner.title_banner }}
@@ -220,7 +220,7 @@
 
     <!-- Delete modal -->
     <div id="deleteModal" tabindex="-1" aria-hidden="true" v-if="isDelete"
-        class=" overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 right-0 left-0 z-50 justify-center items-center md:inset-0 max-h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <!-- Modal content -->
             <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
@@ -241,7 +241,7 @@
                         d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                         clip-rule="evenodd" />
                 </svg>
-                <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to delete this item?</p>
+                <p class="mb-4 text-gray-500 dark:text-gray-300">Bạn có muốn xóa Banner này ?</p>
                 <div class="flex justify-center items-center space-x-4">
                     <button data-modal-toggle="deleteModal" type="button" @click="openDelete()"
                         class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Hủy</button>
@@ -333,8 +333,8 @@ export default {
 
                 if (result.status === 200) {
                     alert(result.data.message)
-                    // this.openUpdate();
-                    // this.getBanner();
+                    this.openUpdate();
+                    this.getBanner();
                 } else {
                     alert(result.data.message);
                     console.log(result);
@@ -350,6 +350,7 @@ export default {
                 const result = await this.$axios.delete(`banner/delete/${this.banner.id}`);
                 if (result.status == 200) {
                     this.getBanner();
+                    this.openDelete();
                     alert(result.data.message);
                 } else {
                     alert(result.data.message);

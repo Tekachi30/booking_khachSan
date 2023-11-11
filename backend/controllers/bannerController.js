@@ -54,8 +54,7 @@ const addBanner = async (req, res) => {
                 }
                 // Kiểm tra nếu có file ảnh mới được chọn
                 if (req.file) {
-                    const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename
-                        }`;
+                    const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
                     await Banner.create({title_banner: title_banner ,url_banner: imageUrl, name_banner: req.file.filename, content_banner:content_banner})
                     res.status(200).json({ message: "Thêm thành công" })
                 }

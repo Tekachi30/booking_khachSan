@@ -5,11 +5,11 @@ const routerUser = express.Router();
 routerUser.post("/api/user/login", login);
 routerUser.post("/api/user/register", register);
 
-routerUser.get("/api/user/getUser", getUser);
-routerUser.get("/api/user/getUserById/:id", getUserById);
+routerUser.get("/api/user/get", getUser);
+routerUser.get("/api/user/getById/:id", getUserById);
 
-routerUser.put("/api/user/updateUser/:id", updateUser);
-routerUser.delete("/api/user/deleteUser/:id", deleteUser);
+routerUser.put("/api/user/update/:id", updateUser);
+routerUser.delete("/api/user/delete/:id", deleteUser);
 
 
 module.exports = {

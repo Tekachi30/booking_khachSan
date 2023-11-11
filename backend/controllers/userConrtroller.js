@@ -136,9 +136,10 @@ const deleteUser = async (req, res) => {
     const id = req.params.id;
     const exsitUser = await User.findByPk(id);
     if(!exsitUser){
-      return res.status(400).json({messsage: 'Không tìm thấy user'});
+      return res.status(404).json({error: 'Không tìm thấy user'});
     }else{
       await exsitUser.destroy();
+      return res.status(200).json({ message: 'Xóa tài khoản thành công' });
     }
   } catch (error) {
     console.log(error);
