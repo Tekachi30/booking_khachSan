@@ -15,7 +15,7 @@ module.exports = {
       content_banner: {
         type: Sequelize.STRING
       },
-      public_id: {
+      name_banner: {
         type: Sequelize.STRING
       },
       url_banner: {

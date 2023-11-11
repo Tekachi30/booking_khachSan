@@ -8,3 +8,4 @@
 + QL Rating
 + QL Report
 + QL Banner
+=> Kèm sơ đồ tuần tự 
