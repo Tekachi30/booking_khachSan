@@ -102,16 +102,16 @@ const addBanner = async (req, res) => {
 }
 
 const updateBanner = async (req, res) => {
-    const { title_banner, content_banner } = req.body;
-    const { idBanner } = res.params.id;
     try {
+        const { title_banner, content_banner } = req.body;
+        const idBanner = req.params.id;
         const exsitBanner = await Banner.findByPk(idBanner);
         if (exsitBanner) {
-            const exsitTitle = await Banner.findOne({ where: { title_banner: title_banner } });
+            const exsitTitle = await Banner.findOne({ where: { title_banner } });
             if (exsitTitle) {
                 return res.status(400).json({ messsage: 'Tiêu đề đã tồn tại' });
             } else {
-                await cloudinary.uploader.destroy(`${exsitTitle.public_id}`)
+                await cloudinary.uploader.destroy(`${exsitBanner.public_id}`)
                 await runMiddleware(req, res, upload.single("avatar"));
 
                 const b64 = Buffer.from(req.file.buffer).toString("base64");
@@ -120,7 +120,7 @@ const updateBanner = async (req, res) => {
                 const cldRes = await handleUpload(dataURI);
 
                 if (cldRes) {
-                    exsitBanner.title_banner = title_banner,
+                        exsitBanner.title_banner = title_banner,
                         exsitBanner.content_banner = content_banner,
                         exsitBanner.public_id = cldRes.public_id,
                         exsitBanner.url_img = cldRes.url_img
@@ -142,7 +142,7 @@ const deleteBanner = async (req, res) => {
         const exsitBanner = await Banner.findByPk(id);
         if (exsitBanner) {
             // xóa trên cloud là dựa vào public_id lưu lại từ lúc thêm
-            await cloudinary.uploader.destroy(`${exist.name_img}`)
+            await cloudinary.uploader.destroy(`${exsitBanner.public_id}`)
             await exsitBanner.destroy();
             return res.status(200).json({ messsage: 'Xóa banner thành công.' });
         } else {
