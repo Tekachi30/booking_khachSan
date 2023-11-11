@@ -1,9 +1,9 @@
 <template>
     <!-- Start block -->
-    <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <section class=" p-3 sm:p-5 antialiased">
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
             <!-- Start coding here -->
-            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class=" relative shadow-md sm:rounded-lg overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
                         <form class="flex items-center">
@@ -49,8 +49,7 @@
                         <tbody v-for="(banner, index) in banners" :key="index">
                             <tr class="border-b dark:border-gray-700">
                                 <th scope="row"
-                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ index +
-                                        1 }}</th>
+                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ index + 1 }}</th>
                                 <td class="px-4 py-3">
                                     {{ banner.title_banner }}
                                 </td>
@@ -76,7 +75,7 @@
                                         </li>
 
                                         <li>
-                                            <button type="button"
+                                            <button @click="deleteBanner()" type="button"
                                                 class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
                                                 <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -104,7 +103,7 @@
         class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
         <div class="relative p-4 w-full max-w-2xl max-h-full">
             <!-- Modal content -->
-            <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-400 sm:p-5">
                 <!-- Modal header -->
                 <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thêm banner</h3>
@@ -203,7 +202,7 @@
                                 <input type="file" @change="onFileSelected($event)">
                         </div>
                     </div>
-                    <button @click="addBanner()" type="button"
+                    <button @click="updateBanner()" type="button"
                         class=" inline-flex items-center bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
@@ -233,7 +232,7 @@
                         clip-rule="evenodd" />
                 </svg>
                 <span class="sr-only">Close modal</span>
-            </button>
+            </button >
             <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
                 fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
@@ -324,7 +323,7 @@ export default {
                 formData.append('title_banner', this.title_banner)
                 formData.append('content_banner', this.content_banner)
 
-                const result = await this.$axios.put(`banner/update/:${this.banner.id}`, formData, {
+                const result = await this.$axios.put(`banner/update/${this.banner.id}`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
@@ -337,6 +336,21 @@ export default {
                 else
                 {
                     alert(result.data.message)
+                    console.log(result)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        async deleteBanner() {
+            try {
+                const result = await this.$axios.delete(`banner/delete/${this.banner.id}`);
+                if (result.status == 200) {
+                    this.getBanner();
+                    alert(result.data.message);
+                } else {    
+                    alert(result.data.message);
                 }
             } catch (error) {
                 console.log(error)
