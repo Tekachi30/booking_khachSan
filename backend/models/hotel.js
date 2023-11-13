@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       hotel.hasMany(models.report_hotel, { foreignKey: 'id_hotel' });
       hotel.hasMany(models.coupon_owner, { foreignKey: 'id_hotel' });
       hotel.hasMany(models.rating_hotel, { foreignKey: 'id_hotel' });
+      hotel.hasMany(models.order, { foreignKey: 'id_hotel' });
       
       hotel.belongsTo(models.owner, { foreignKey: 'id_owner' });
 

@@ -32,8 +32,7 @@ const addOwner = async (req, res) => {
                 address:address,
                 phone:phone,
                 password:hash,
-                email:email,
-                isactive:true
+                email:email
               })
               return res.status(200).json({messsage: 'Đăng ký chủ khách sạn thành công'});
             }else{

@@ -23,7 +23,8 @@ const addHotel = async (req, res) => {
                 city_code: city_code,
                 district_code: district_code,
                 ward_code: ward_code,
-                imformation: imformation
+                imformation: imformation,
+                isactive:true
             })
             return res.status(200).json({messsage: 'Thêm khách sạn thành công.'});
         }
