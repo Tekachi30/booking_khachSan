@@ -219,8 +219,8 @@
     </div>
 
     <!-- Delete modal -->
-    <div id="deleteModal" tabindex="-1" aria-hidden="true" v-if="isDelete"
-        class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 right-0 left-0 z-50 justify-center items-center md:inset-0 max-h-full">
+    <div id="deleteModal" v-if="isDelete"
+        class="  overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <!-- Modal content -->
             <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
@@ -303,17 +303,23 @@ export default {
             formData.append('title_banner', this.title_banner)
             formData.append('content_banner', this.content_banner)
             try {
-                const result = await this.$axios.post(`banner/add`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+                // Kiểm tra xem các thông tin có được nhập đầy đủ không
+                if (!this.avatar || !this.title_banner || !this.content_banner) {
+                alert("Vui lòng nhập đầy đủ thông tin.")
+                return;
+                }else{
+                    const result = await this.$axios.post(`banner/add`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    if (result.status == 200) {
+                        this.openAdd()
+                        this.getBanner()
                     }
-                });
-                if (result.status == 200) {
-                    this.openAdd()
-                    this.getBanner()
-                }
-                else {
-                    alert(result.data.message)
+                    else {
+                        alert(result.data.message)
+                    }
                 }
             } catch (error) {
                 console.log(error)
@@ -324,20 +330,26 @@ export default {
             formData.append('avatar', this.new_avatar);
             formData.append('title_banner', this.title_banner)
             formData.append('content_banner', this.content_banner)
+
             try {
-                const result = await this.$axios.put(`banner/update/${this.banner.id}`, formData, {
+                // Kiểm tra xem các thông tin có được nhập đầy đủ không
+                if (!this.avatar || !this.title_banner || !this.content_banner) {
+                alert("Vui lòng nhập đầy đủ thông tin.")
+                return;
+                }else{
+                    const result = await this.$axios.put(`banner/update/${this.banner.id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
-                });
-
-                if (result.status === 200) {
-                    alert(result.data.message)
-                    this.openUpdate();
-                    this.getBanner();
-                } else {
-                    alert(result.data.message);
-                    console.log(result);
+                    });
+                    if (result.status === 200) {
+                        alert(result.data.message)
+                        this.openUpdate();
+                        this.getBanner();
+                    } else {
+                        alert(result.data.message);
+                        console.log(result);
+                    }
                 }
             } catch (error) {
                 console.error(error);

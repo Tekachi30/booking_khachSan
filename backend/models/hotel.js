@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     district_code: DataTypes.INTEGER,
     ward_code: DataTypes.INTEGER,
     id_owner: DataTypes.INTEGER,
-    information: DataTypes.STRING
+    information: DataTypes.STRING,
+    isactive: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'hotel',

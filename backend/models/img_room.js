@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   img_room.init({
-    public_id: DataTypes.STRING,
+    name_img: DataTypes.STRING,
     url: DataTypes.STRING,
     id_room: DataTypes.INTEGER
   }, {

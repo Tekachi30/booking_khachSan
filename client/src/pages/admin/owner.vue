@@ -60,10 +60,10 @@
                                 <td class="px-4 py-3"> {{ owner.email }}</td>
                                 
                                 <!--action ?-->
-                                <!-- <td class="px-4 py-3">
+                                <td class="px-4 py-3">
                                     <ul class="py-1 text-sm flex">
                                         <li>
-                                            <button @click="openDelete(); selectBanner(owner)" type="button"
+                                            <button @click="openDelete(); selectOwner(owner)" type="button"
                                                 class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
                                                 <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -74,7 +74,7 @@
                                             </button>
                                         </li>
                                     </ul>
-                                </td> -->
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -92,7 +92,7 @@
             <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-400 sm:p-5">
                 <!-- Modal header -->
                 <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thêm banner</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thêm chủ khách sạn</h3>
 
                     <button @click="openAdd()" type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -175,7 +175,7 @@ export default
   data(){
     return {
         owners: [], owner: '',
-        isAdd: false,
+        isAdd: false,isDelete: false,
         account: '',fullname: '',address: '',phone: '',password: '',email: ''
     }
   },
@@ -187,6 +187,10 @@ export default
     openAdd() {
         this.isAdd = !this.isAdd
     },
+    selectOwner(select){
+        this.owner = select
+    },
+    
 
 
     async getOwner() {

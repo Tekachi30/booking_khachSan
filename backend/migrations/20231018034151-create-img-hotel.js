@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      public_id: {
+      name_img: {
         type: Sequelize.STRING
       },
       url: {

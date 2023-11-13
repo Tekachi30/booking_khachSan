@@ -47,16 +47,21 @@ const addBanner = async (req, res) => {
         try {
             upload.single("avatar")(req, res, async function (err) {
                 const { title_banner,content_banner } = req.body
+                const exsitTitle = await Banner.findOne({ where: { title_banner } });
                 if (err instanceof multer.MulterError) {
                     return res.status(400).json({ message: err.message });
                 } else if (err) {
                     return res.status(400).json({ message: err.message });
                 }
-                // Kiểm tra nếu có file ảnh mới được chọn
-                if (req.file) {
-                    const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
-                    await Banner.create({title_banner: title_banner ,url_banner: imageUrl, name_banner: req.file.filename, content_banner:content_banner})
-                    res.status(200).json({ message: "Thêm thành công" })
+                if(!exsitTitle){
+                    if (req.file) {
+                        // Kiểm tra nếu có file ảnh mới được chọn
+                        const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+                        await Banner.create({title_banner: title_banner ,url_banner: imageUrl, name_banner: req.file.filename, content_banner:content_banner})
+                        return res.status(200).json({ message: "Thêm thành công" })
+                    }
+                }else{
+                    return res.status(201).json({ message: "Title bị trùng lặp." })
                 }
             });
         } catch (error) {
@@ -81,16 +86,22 @@ const updateBanner = async (req, res) => {
             }
 
             const Ubanner = await Banner.findByPk(id);
-            // Kiểm tra nếu có file ảnh mới được chọn
-            if (req.file) {
-                const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
-                const imagePath = `./uploads/${Ubanner.name_banner}`;
-                deleteFile(imagePath);
-                await Ubanner.update({ title_banner: title_banner, content_banner:content_banner, url_banner: imageUrl, name_banner: req.file.filename })
-            } else {
-                await Ubanner.update({ title_banner: title_banner,content_banner:content_banner});
+            const exsitTitle = await Banner.findOne({ where: { title_banner } });
+
+            if(!exsitTitle){
+                // Kiểm tra nếu có file ảnh mới được chọn
+                if (req.file) {
+                    const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+                    const imagePath = `./uploads/${Ubanner.name_banner}`;
+                    deleteFile(imagePath);
+                    await Ubanner.update({ title_banner: title_banner, content_banner:content_banner, url_banner: imageUrl, name_banner: req.file.filename })
+                } else {
+                    await Ubanner.update({ title_banner: title_banner,content_banner:content_banner});
+                }
+                return res.status(200).json({ message: `Cập nhật thành công ` });
+            }else{
+                return res.status(201).json({ message: "Title bị trùng lặp." })
             }
-            return res.status(200).json({ message: `Cập nhật thành công ` });
         });
     } catch (error) {
         console.error(error);

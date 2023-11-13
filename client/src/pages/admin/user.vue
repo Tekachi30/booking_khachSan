@@ -86,6 +86,8 @@
     </section>
     <!-- End block -->
 
+    
+
     <!-- Delete modal -->
     <div id="deleteModal" tabindex="-1" aria-hidden="true" v-if="isDelete"
         class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 right-0 left-0 z-50 justify-center items-center md:inset-0 max-h-full">
@@ -128,7 +130,7 @@ export default
   data(){
     return {
         users: [], user: '',
-        isDelete: false,
+        isDelete: false,isAdd: false
         
     }
   },
@@ -143,6 +145,9 @@ export default
     },
     openDelete() {
         this.isDelete = !this.isDelete
+    },
+    openAdd() {
+        this.isAdd = !this.isAdd
     },
 
 
