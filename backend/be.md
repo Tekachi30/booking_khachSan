@@ -36,3 +36,7 @@ npx sequelize-cli model:generate --name order_detail --attributes id_order:integ
 npx sequelize-cli model:generate --name notification --attributes title_noti:string,content_noti:string,id_user:integer //
 
 npx sequelize-cli model:generate --name coupon_owner --attributes id_hotel:integer,code_coupon:string,discount:integer,date_coupon:datetime
+
+npx sequelize-cli db:migrate
+npx sequelize-cli seed:generate --name seed-event
+npx sequelize-cli db:seed:all

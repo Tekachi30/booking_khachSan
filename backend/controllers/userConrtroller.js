@@ -1,8 +1,13 @@
 const db = require("../models");
 const User = db.User;
+const Order = db.order
+const OD = db.order_detail
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const dotenv = require("dotenv");
+const sequelize = require('sequelize');
+const Op  = sequelize.Op
+const dayjs = require('dayjs');
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -11,135 +16,176 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN
 
 
 const getUser = async (req, res) => {
-    try {
-        const user = await User.findAll();
-        res.status(200).json(user);
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    const user = await User.findAll();
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const getUserById = async (req, res) => {
-    const userId = req.params.id;
-    try {
-      const user = await User.findByPk(userId);
-      if (!user) {
-        return res.status(404).json({ message: `Không tìm thấy user id ${userId}.`});
-      } else {
-        res.status(200).json(user);
-      }
-    } catch (error) {
-      return res.status(500).json({ message: "Xảy ra lỗi khi tìm user id " + userId });
+  const userId = req.params.id;
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: `Không tìm thấy user id ${userId}.` });
+    } else {
+      res.status(200).json(user);
     }
-  };
+  } catch (error) {
+    return res.status(500).json({ message: "Xảy ra lỗi khi tìm user id " + userId });
+  }
+};
 
 
 const register = async (req, res) => {
-    try {
-        const {account, fullname, address, phone, sex, password, email} = req.body;
-        const exsitEmail = await User.findOne({where:{email: email}});
-        const exsitAccount = await User.findOne({where:{account: account}});
-        if(!exsitAccount){
-          if(!exsitEmail){
-            let salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(password,salt);
-            await User.create({
-              account:account,
-              fullname:fullname,
-              address:address,
-              phone:phone,
-              sex:sex,
-              password:hash,
-              email:email,
-              isactive:true
-            })
-            return res.status(200).json({messsage: 'Đăng ký thành công'});
-          }else{
-            return res.status(400).json({messsage: 'Email đã tồn tại'});
-          }
-        }else{
-          return res.status(400).json({messsage: 'Tên tài khoản đã được sử dụng'});
-        }
-    } catch (error) {
-        console.log(error);
+  try {
+    const { account, fullname, address, phone, sex, password, email } = req.body;
+    const exsitEmail = await User.findOne({ where: { email: email } });
+    const exsitAccount = await User.findOne({ where: { account: account } });
+    if (!exsitAccount) {
+      if (!exsitEmail) {
+        let salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        await User.create({
+          account: account,
+          fullname: fullname,
+          address: address,
+          phone: phone,
+          sex: sex,
+          password: hash,
+          email: email,
+          isactive: true
+        })
+        return res.status(200).json({ messsage: 'Đăng ký thành công' });
+      } else {
+        return res.status(400).json({ messsage: 'Email đã tồn tại' });
+      }
+    } else {
+      return res.status(400).json({ messsage: 'Tên tài khoản đã được sử dụng' });
     }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const login = async (req, res) => {
   try {
-      const {account, password} = req.body;
-      const exsitUser = await User.findOne({where:{account: account}});
-      if(exsitUser){
-          const ismatch = await bcrypt.compare(password, exsitUser.password);
-          if(!ismatch){
-            return res.status(400).json({messsage: 'Mật khẩu không chính xác.'});
-          }
-          // Tạo JWT
-          const token = jwt.sign({
-              userId: exsitUser.id
-          }, JWT_SECRET, {
-              expiresIn: JWT_EXPIRES_IN,
-          });
-          return res.status(200).json({
-              fullname: exsitUser.fullname,
-              address: exsitUser.address, 
-              phone: exsitUser.phone, 
-              email: exsitUser.email,
-              token
-          });
-      }else{
-        return res.status(400).json({messsage: 'Tài khoản sai hoặc không tồn tại'});
+    const { account, password } = req.body;
+    const exsitUser = await User.findOne({ where: { account: account } });
+    if (exsitUser) {
+      const ismatch = await bcrypt.compare(password, exsitUser.password);
+      if (!ismatch) {
+        return res.status(400).json({ messsage: 'Mật khẩu không chính xác.' });
       }
+      // Tạo JWT
+      const token = jwt.sign({
+        userId: exsitUser.id
+      }, JWT_SECRET, {
+        expiresIn: JWT_EXPIRES_IN,
+      });
+      return res.status(200).json({
+        fullname: exsitUser.fullname,
+        address: exsitUser.address,
+        phone: exsitUser.phone,
+        email: exsitUser.email,
+        token
+      });
+    } else {
+      return res.status(400).json({ messsage: 'Tài khoản sai hoặc không tồn tại' });
+    }
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 
 const updateUser = async (req, res) => {
-    const userId = req.params.id;
-    const {
-      fullname,
-      address,
-      phone,
-      email,
-      password
-    } = req.body;
-   // Mã hóa mật khẩu
-   const salt = await bcrypt.genSalt(10);
-   const hashedPassword = await bcrypt.hash(password, salt);
-    try {
-      const user = await User.findByPk(userId);
-      if (!user) {
-        return res.status(404).json({
-          message: `Không tìm thấy user id ${userId}.`
-        });
-      } else {
-        await user.update({
-          fullname: fullname,
-          address: address, 
-          phone: phone, 
-          email: email,
-          password : hashedPassword,
-        });
-  
-        return res.status(200).json({
-          message: `Cập nhật thông tin với user id ${userId} thành công.`
-        });
-      }
-    } catch (error) {
-      console.log(error);
+  const userId = req.params.id;
+  const {
+    fullname,
+    address,
+    phone,
+    email,
+    password
+  } = req.body;
+  // Mã hóa mật khẩu
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: `Không tìm thấy user id ${userId}.`
+      });
+    } else {
+      await user.update({
+        fullname: fullname,
+        address: address,
+        phone: phone,
+        email: email,
+        password: hashedPassword,
+      });
+
+      return res.status(200).json({
+        message: `Cập nhật thông tin với user id ${userId} thành công.`
+      });
     }
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
     const exsitUser = await User.findByPk(id);
-    if(!exsitUser){
-      return res.status(404).json({error: 'Không tìm thấy user'});
-    }else{
-      await exsitUser.destroy();
-      return res.status(200).json({ message: 'Xóa tài khoản thành công' });
+    if (!exsitUser) {
+      return res.status(404).json({ error: 'Không tìm thấy user' });
+    } else {
+      // xử lý hóa đơn
+      const exitsOrder = await Order.findOne({
+        where: {
+          id_user: id,
+          [Op.or]: [{ status: 'Đã Thanh Toán' }, { status: 'Đã Đặt' }]
+        }
+      });
+      if (exitsOrder) {
+        /*
+         note command
+         Khi tồn tại hóa đơn chưa trả phòng
+         Thực hiện => lấy ngày cuối cùng họ trả phòng để report lại admin
+         Thực hiện bằng cách cú pháp find kết hợp ...
+        */
+        const last_checkout = await OD.findOne({
+          attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
+          where: {
+            '$order.status$': 'Đã Thanh Toán',
+            '$order.id_user$': id,
+          },
+          include: [
+            {
+              model: Order,
+              as: 'order',
+              attributes: [],
+              where: {
+                status: 'Đã Thanh Toán',
+                id_user: id,
+              },
+            },
+          ],
+          group: ['id_order'],
+          order: [[sequelize.fn('MAX', sequelize.col('check_out')), 'DESC']],
+        })
+        const time = new Date(last_checkout.getDataValue('latest_checkout'))
+        var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
+        return res.status(201).json({ message: `Không thể xóa user - Xóa sau thời gian: ${result_last}` });
+      }
+      else {
+        await Order.destroy({ where: { id_user: id } })
+        // mess - report - rating - ...
+        await User.destroy()
+      }
     }
   } catch (error) {
     console.log(error);
@@ -147,10 +193,10 @@ const deleteUser = async (req, res) => {
 }
 
 module.exports = {
-    getUser,
-    getUserById,
-    register,
-    updateUser,
-    login,
-    deleteUser,
-  };
+  getUser,
+  getUserById,
+  register,
+  updateUser,
+  login,
+  deleteUser,
+};
