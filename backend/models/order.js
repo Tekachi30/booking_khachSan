@@ -13,10 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       order.hasMany(models.order_detail, { foreignKey: 'id_order' });
       order.belongsTo(models.User, { foreignKey: 'id_user' });
+      order.belongsTo(models.hotel, { foreignKey: 'id_hotel' });
     }
   }
   order.init({
     id_user: DataTypes.INTEGER,
+    id_hotel: DataTypes.INTEGER,
     status: DataTypes.ENUM("Đã Đặt","Đã Thanh Toán","Đã Hủy","Đã trả phòng"),
     provider: DataTypes.ENUM("MOMO","VNPAY")
   }, {
