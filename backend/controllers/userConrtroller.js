@@ -1,7 +1,12 @@
 const db = require("../models");
 const User = db.User;
-const Order = db.order
-const OD = db.order_detail
+const Order = db.order;
+const OD = db.order_detail;
+const Rating = db.rating_hotel;
+const Mess = db.messager;
+const Report = db.report_hotel;
+const Favorate = db.favorate_hotel;
+const Noti = db.notification;
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const dotenv = require("dotenv");
@@ -191,8 +196,13 @@ const deleteUser = async (req, res) => {
         return res.status(201).json({ message: `Không thể xóa user - Xóa sau thời gian: ${result_last}` });
       }
       else {
-        await Order.destroy({ where: { id_user: id } })
+        await Order.destroy({ where: { id_user: id } });
         // mess - report - rating - ...
+        await Rating.destroy({ where: { id_user: id } });
+        await Mess.destroy({ where: { id_user: id } });
+        await Report.destroy({ where: { id_user: id } });
+        await Favorate.destroy({ where: { id_user: id } });
+        await Noti.destroy({ where: { id_user: id } });
         await User.destroy()
       }
     }
