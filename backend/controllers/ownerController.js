@@ -2,6 +2,7 @@ const db = require('../models');
 const Owner = db.owner;
 const Hotel = db.hotel;
 const Order = db.order;
+const OD = db.order_detail;
 const room = db.room_hotel;
 const Rating = db.rating_hotel;
 const Mess = db.messager;
