@@ -73,7 +73,16 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { account, password } = req.body;
-    const exsitUser = await User.findOne({ where: { account: account } });
+    // Tìm kiếm user bằng account hoặc email
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [
+          { account: account },
+          { email: account }
+        ]
+      }
+    });
+
     if (exsitUser) {
       const ismatch = await bcrypt.compare(password, exsitUser.password);
       if (!ismatch) {
