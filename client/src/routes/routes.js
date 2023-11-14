@@ -27,6 +27,28 @@ const router = createRouter({
           name: "blog",
           component: () => import("../pages/client/blog.vue"),
         },
+        {
+          path: "/users",
+          name: "users",
+          component: () => import("../pages/client/user.vue"),
+          children: [
+            {
+              path: "",
+              name: "usersPage",  // Thay đổi tên thành "usersPage"
+              component: () => import("../pages/client/user/user.vue"),
+            },
+            {
+              path: "cart",
+              name: "carts",
+              component: () => import("../pages/client/user/cart.vue"),
+            },
+            {
+              path: "favorite",
+              name: "favorites",
+              component: () => import("../pages/client/user/favorite.vue")
+            },
+          ]
+        },
       ]
     },
     {
