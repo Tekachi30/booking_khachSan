@@ -204,6 +204,7 @@ const deleteUser = async (req, res) => {
         await Favorate.destroy({ where: { id_user: id } });
         await Noti.destroy({ where: { id_user: id } });
         await User.destroy()
+        return res.status(200).json({ message: 'Xóa thành công.' });
       }
     }
   } catch (error) {
