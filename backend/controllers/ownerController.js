@@ -15,6 +15,7 @@ const coupon = db.coupon_owner;
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const dotenv = require("dotenv");
+const sequelize = require('sequelize');
 const Op  = sequelize.Op
 const dayjs = require('dayjs');
 dotenv.config();
