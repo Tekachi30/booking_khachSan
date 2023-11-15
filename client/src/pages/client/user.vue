@@ -7,7 +7,7 @@
                     <img src="https://pubcdn.ivymoda.com/ivy2//images/v2/assets/user-avatar-placeholder.png" alt="">
                 </div>
                 <div class="order-sidemenu__user-name">
-                    <p>Nguyễn Minh Nhựt</p>
+                    <p>Đặng Thành Đạt</p>
                 </div>
             </div>
             <div class="order-sidemenu__menu">

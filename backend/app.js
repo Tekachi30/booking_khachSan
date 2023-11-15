@@ -16,6 +16,12 @@ const { routerBanner } = require ('./routers/bannerRouter');
 const { routerReport } = require ('./routers/reportRouter');
 const { routerOwner } = require ('./routers/ownerRouter');
 const { routerMessage } = require ('./routers/messageRouter');
+const { routerRating } = require ('./routers/ratingRouter');
+const { routerOrder } = require ('./routers/orderRouter');
+const { routerCoupon } = require ('./routers/couponRouter');
+
+
+
 
 
 // Thiết lập body-parser
@@ -36,7 +42,7 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner, routerMessage);
+app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner, routerMessage, routerRating, routerOrder, routerCoupon);
 
 // Server các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));

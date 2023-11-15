@@ -63,12 +63,12 @@ const register = async (req, res) => {
           email: email,
           isactive: true
         })
-        return res.status(200).json({ messsage: 'Đăng ký thành công' });
+        return res.status(200).json({ message: 'Đăng ký thành công' });
       } else {
-        return res.status(400).json({ messsage: 'Email đã tồn tại' });
+        return res.status(400).json({ message: 'Email đã tồn tại' });
       }
     } else {
-      return res.status(400).json({ messsage: 'Tên tài khoản đã được sử dụng' });
+      return res.status(400).json({ message: 'Tên tài khoản đã được sử dụng' });
     }
   } catch (error) {
     console.log(error);
@@ -91,7 +91,7 @@ const login = async (req, res) => {
     if (exsitUser) {
       const ismatch = await bcrypt.compare(password, exsitUser.password);
       if (!ismatch) {
-        return res.status(400).json({ messsage: 'Mật khẩu không chính xác.' });
+        return res.status(400).json({ message: 'Mật khẩu không chính xác.' });
       }
       // Tạo JWT
       const token = jwt.sign({
@@ -107,7 +107,7 @@ const login = async (req, res) => {
         token
       });
     } else {
-      return res.status(400).json({ messsage: 'Tài khoản sai hoặc không tồn tại' });
+      return res.status(400).json({ message: 'Tài khoản sai hoặc không tồn tại' });
     }
   } catch (error) {
     console.log(error);

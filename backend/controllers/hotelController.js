@@ -15,7 +15,7 @@ const addHotel = async (req, res) => {
         const { name_hotel, address, city_code, district_code, ward_code, imformation} = req.body;
         const exsitName_hotel = await Hotel.findOne({ where: {name_hotel: name_hotel}});
         if(!exsitName_hotel){
-            return res.status(400).json({messsage: 'Tên Khách sạn đã được sử dụng.'});
+            return res.status(400).json({message: 'Tên Khách sạn đã được sử dụng.'});
         }else{
             await Hotel.create({
                 name_hotel: name_hotel,
@@ -26,7 +26,7 @@ const addHotel = async (req, res) => {
                 imformation: imformation,
                 isactive:true
             })
-            return res.status(200).json({messsage: 'Thêm khách sạn thành công.'});
+            return res.status(200).json({message: 'Thêm khách sạn thành công.'});
         }
     } catch (error) {
         console.log(error);
@@ -46,10 +46,10 @@ const updateHotel = async (req, res) => {
                 exsitHotel.district_code
                 await exsitHotel.save();
             }else{
-                return res.status(200).json({messsage: 'Tên Khách sạn đã được sử dụng.'});
+                return res.status(200).json({message: 'Tên Khách sạn đã được sử dụng.'});
             }
         }else{
-            return res.status(200).json({messsage: 'Khách sạn không tồn tại.'});
+            return res.status(200).json({message: 'Khách sạn không tồn tại.'});
         }
     } catch (error) {
         console.log(error);
@@ -63,7 +63,7 @@ const deleteHotel = async (req, res) => {
         if(exsitHotel){
             await exsitHotel.destroy();
         }else{
-            return res.status(200).json({messsage: 'Khách sạn không tồn tại.'});
+            return res.status(200).json({message: 'Khách sạn không tồn tại.'});
         }
     } catch (error) {
         console.log(error);

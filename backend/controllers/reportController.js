@@ -1,5 +1,5 @@
 const db = require("../models");
-const Report = db.report;
+const Report = db.report_hotel;
 const User = db.User;
 
 const getReport = async (req, res) => {

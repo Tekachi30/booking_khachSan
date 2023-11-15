@@ -16,7 +16,7 @@ module.exports = {
     // admin admin
     await queryInterface.bulkInsert('admins', [{
       account: 'admin2',
-      password: '$2b$10$rtyEsgLL05JW5h8tGsFngOcNZk7eMjfAjfmT6aK6ngK.4GHkejgp6'
+      password: '$2b$10$rtyEsgLL05JW5h8tGsFngOcNZk7eMjfAjfmT6aK6ngK.4GHkejgp6' //admin
     }], {});
 
     // owners
@@ -25,7 +25,7 @@ module.exports = {
       fullname: "owner1 fullname",
       address: "owner1 address",
       phone: "owner1 phone",
-      password: "$2b$10$PfsusDUBx6fsGWSl3Kph7e7dzf1JlwhsZ5LyJMXKGSgiljjD.G4ZO",
+      password: "$2b$10$PfsusDUBx6fsGWSl3Kph7e7dzf1JlwhsZ5LyJMXKGSgiljjD.G4ZO", //owner123+
       email: "owner1@gmail.com"
     },
     {
@@ -33,7 +33,7 @@ module.exports = {
       fullname: "owner2 fullname",
       address: "owner2 address",
       phone: "owner2 phone",
-      password: "$2b$10$PfsusDUBx6fsGWSl3Kph7e7dzf1JlwhsZ5LyJMXKGSgiljjD.G4ZO",
+      password: "$2b$10$PfsusDUBx6fsGWSl3Kph7e7dzf1JlwhsZ5LyJMXKGSgiljjD.G4ZO", //owner123+
       email: "owner2@gmail.com"
     },
     ], {});

@@ -49,12 +49,12 @@ const addOwner = async (req, res) => {
                 password:hash,
                 email:email
               })
-              return res.status(200).json({messsage: 'Đăng ký chủ khách sạn thành công'});
+              return res.status(200).json({message: 'Đăng ký chủ khách sạn thành công'});
             }else{
-              return res.status(400).json({messsage: 'Email đã tồn tại'});
+              return res.status(400).json({message: 'Email đã tồn tại'});
             }
           }else{
-            return res.status(400).json({messsage: 'Tên tài khoản đã được sử dụng'});
+            return res.status(400).json({message: 'Tên tài khoản đã được sử dụng'});
           }
     } catch (error) {
         console.log(error);
@@ -68,7 +68,7 @@ const loginOwner = async (req, res) => {
     if(exsitOnwer){
         const ismatch = await bcrypt.compare(password, exsitOnwer.password);
         if(!ismatch){
-          return res.status(400).json({messsage: 'Mật khẩu không chính xác.'});
+          return res.status(400).json({message: 'Mật khẩu không chính xác.'});
         }
         // Tạo JWT
         const token = jwt.sign({
@@ -77,6 +77,7 @@ const loginOwner = async (req, res) => {
             expiresIn: JWT_EXPIRES_IN,
         });
         return res.status(200).json({
+            id: exsitOnwer.id,
             fullname: exsitOnwer.fullname,
             address: exsitOnwer.address, 
             phone: exsitOnwer.phone, 
@@ -84,7 +85,7 @@ const loginOwner = async (req, res) => {
             token
         });
     }else{
-      return res.status(400).json({messsage: 'Tài khoản sai hoặc không tồn tại'});
+      return res.status(400).json({message: 'Tài khoản sai hoặc không tồn tại'});
     }
   } catch (error) {
     console.log(error);
@@ -105,9 +106,9 @@ const updateOwner = async (req, res) => {
           exsitOnwer.password = hash,
           exsitOnwer.email = email
           await exsitOnwer.save();
-          return res.status(200).json({messsage: 'Cập nhật chủ khách sạn thành công.'});
+          return res.status(200).json({message: 'Cập nhật chủ khách sạn thành công.'});
         }else{
-          return res.status(404).json({messsage: 'Không tìm thấy tài khoản.'});
+          return res.status(404).json({message: 'Không tìm thấy tài khoản.'});
         }
     } catch (error) {
         console.log(error);
@@ -120,10 +121,10 @@ const deleteOwner = async (req, res) => {
         const exsitOnwer = await Owner.findByPk(id);
         const existHotel = await Hotel.findOne({ where: { id_owner: id } }); //tìm khách sạn của owner
         if(!exsitOnwer){
-          return res.status(400).json({messsage: 'Không tìm thấy tài khoản.'});
+          return res.status(400).json({message: 'Không tìm thấy tài khoản.'});
         }else{
           if(!existHotel){
-            return res.status(400).json({messsage: `Không tìm thấy khách sạn.`});
+            return res.status(400).json({message: `Không tìm thấy khách sạn.`});
           }else{
             // xử lý hóa đơn
             const exitsOrder = await Order.findOne({

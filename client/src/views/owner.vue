@@ -22,11 +22,24 @@ export default {
       
     };
   },
+  mounted() {
+    const owner = this.getToken()
+    if(!owner)
+    {
+      this.$router.push('/login_owner')
+    }
+
+  },
   components: {
     footerVue,
     bannerVue,
     navbarVue
   },
-  methods: {},
+  methods: {
+    getToken() {
+      let owner = JSON.parse(localStorage.getItem("owner"));
+      return owner;
+    },
+  },
 };
 </script>

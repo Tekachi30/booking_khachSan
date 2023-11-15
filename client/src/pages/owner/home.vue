@@ -17,7 +17,7 @@
 
         <div class="md:w-1/2 lg:w-[47%]">
           <h2
-            class="text-3xl font-bold text-gray-900 dark:text-white md:text-4xl lg:text-5xl"
+            class="text-3xl font-bold text-gray-900  md:text-4xl lg:text-5xl"
           >
           Chỉ cần tập trung vào khởi nghiệp kinh doanh của bạn.
           </h2>
@@ -78,10 +78,10 @@
                 </svg>
               </div>
               <div class="w-5/6">
-                <h3 class="text-lg font-semibold text-gray-700 dark:text-white">
+                <h3 class="text-lg font-semibold text-gray-700 ">
                  Thời gian thực
                 </h3>
-                <p class="text-gray-500 dark:text-gray-400">
+                <p class="text-gray-500 ">
                   Ứng dụng quản lý khách sạn trên hệ thống thời gian thực.
                 </p>
               </div>

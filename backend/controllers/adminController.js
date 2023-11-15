@@ -11,10 +11,10 @@ const loginAmin = async (req, res) => {
         const {account, password} = req.body;
         const exsitAdmin = await Admin.findOne({where:{account: account}});
         if(exsitAdmin){
-            // const ismatch = await bcrypt.compare(password, exsitAdmin.password);
-            // if(!ismatch){
-            //     return res.status(201).json({message: `Mật khẩu nhập vào sai ${exsitAdmin.password} vs ${password}`});
-            // }else{
+            const ismatch = await bcrypt.compare(password, exsitAdmin.password);
+            if(!ismatch){
+                return res.status(201).json({message: `Mật khẩu nhập vào sai.}`});
+            }else{
                 // Tạo JWT
                 const token = jwt.sign({
                     adminId: exsitAdmin.id
@@ -25,7 +25,7 @@ const loginAmin = async (req, res) => {
                     account: exsitAdmin.account,
                     token
                 })
-            //}
+            }
             
         }else{
             return res.status(201).json({message: 'Tài khoản sai hoặc không tồn tại'});
