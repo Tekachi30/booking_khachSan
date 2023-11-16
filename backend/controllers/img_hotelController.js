@@ -1,5 +1,6 @@
 const db = require("../models");
 const ImgHotel = db.img_hotel;
+const Hotel = db.hotel;
 
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
@@ -34,9 +35,19 @@ const deleteFile = (filePath) => {
 }
 
 const getImgHotel = async (req, res) => {
+    const id = req.params.id;
+    const existHotel = await ImgHotel.findOne({ id_hotel: id }) // tìm hình của chính hotel đó
     try {
-        const img = await ImgHotel.findAll();
-        res.status(200).json(img);
+        if(existHotel){
+            const img = await ImgHotel.findAll({
+                include:[
+                    {model: Hotel, attributes: ['id_owner','name_hotel']}, //tìm hình thuộc chủ khách sạn đó
+                ]
+            });
+            res.status(200).json(img);
+        }else{
+          return res.status(201).json("Không tồn tại khách sạn");
+        }
     } catch (error) {
         console.log(error);
     }
@@ -44,7 +55,7 @@ const getImgHotel = async (req, res) => {
 
 const addImgHotel = async (req, res) => {
     try {
-        upload.single("avatar")(req, res, async function (err) {
+        upload.array("avatar", 10)(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
                 return res.status(400).json({ message: err.message });
             } else if (err) {
@@ -52,9 +63,14 @@ const addImgHotel = async (req, res) => {
             }
             // Kiểm tra nếu có file ảnh mới được chọn
             if (req.file) {
-                const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
-                await ImgHotel.create({url: imageUrl, name_img: req.file.filename})
-                res.status(200).json({ message: "Thêm thành công" })
+                const imgs = [];
+  
+                for (let i = 0; i < req.files.length; i++) {
+                    const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+                    const img = await ImgHotel.create({url: imageUrl, name_img: req.file.filename});
+                    imgs.push(img);
+                    res.status(200).json({ message: "Thêm thành công" })
+                }
             }
         });
     } catch (error) {

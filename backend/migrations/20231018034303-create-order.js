@@ -26,7 +26,7 @@ module.exports = {
         }
       },
       status: {
-        type: Sequelize.ENUM("Đã Đặt","Đã Thanh Toán","Đã Hủy","Đã trả phòng")
+        type: Sequelize.ENUM("Đã Đặt","Đã Thanh Toán","Đã Hủy","Đã Trả Phòng")
       },
       provider: {
         type: Sequelize.ENUM("MOMO","VNPAY")
