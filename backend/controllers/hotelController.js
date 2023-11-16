@@ -1,7 +1,18 @@
 const db = require("../models");
 const Hotel = db.hotel;
 const Owner = db.owner;
+const Order = db.order;
+const OD = db.order_detail;
 const ImgHotel = db.img_hotel;
+const room = db.room_hotel;
+const Rating = db.rating_hotel;
+const Report = db.report_hotel;
+const Favorate = db.favorate_hotel;
+const coupon = db.coupon_owner;
+
+const sequelize = require('sequelize');
+const Op  = sequelize.Op
+const dayjs = require('dayjs');
 
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
@@ -126,7 +137,7 @@ const updateHotel = async (req, res) => {
     try {
         const id = req.params.id;
         const exsitHotel  = await Hotel.findByPk(id);
-        const exsitName_hotel = await Hotel.findOne({ where: {name_hotel: name_hotel}}); 
+        const exsitName_hotel = await Hotel.findOne({ where: {name_hotel}}); 
         if(exsitHotel){
             if(!exsitName_hotel){
                 exsitHotel.name_hotel = name_hotel,
@@ -145,15 +156,115 @@ const updateHotel = async (req, res) => {
     }
 }
 
+const updateImgHotel = async (req, res) => {
+    try {
+        upload.single("avatar")(req, res, async function (err) {
+            const id = req.params.id;
+            const { id_hotel } = req.body;
+            const existImg = await ImgHotel.findByPk(id);
+            if (err instanceof multer.MulterError) {
+                return res.status(400).json({ message: err.message });
+            } else if (err) {
+                return res.status(400).json({ message: err.message });
+            }
+
+            if(!existImg){
+                return res.status(200).json({ message: `Không tìm thấy hình ảnh`});
+            }else{
+                // Kiểm tra nếu có file ảnh mới được chọn
+                if (req.file) {
+                    const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+                    const imagePath = `./uploads/${existImg.name_banner}`;
+                    deleteFile(imagePath); //gọi hàm xóa file ảnh trên uploads
+                    await existImg.update({ url_banner: imageUrl, name_banner: req.file.filename, id_hotel: id_hotel })
+                }else{
+                    await existImg.update({ id_hotel: id_hotel })
+                }
+                return res.status(200).json({ message: `Cập nhật thành công`});
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const deleteHotel = async (req, res) => {
     try {
         const id = req.params.id;
-        const exsitHotel  = await Hotel.findByPk(id);
-        if(exsitHotel){
-            await exsitHotel.destroy();
+        const existHotel  = await Hotel.findByPk(id);
+        if(!existHotel){
+            return res.status(200).json({message: 'Không tìm thấy khách sạn.'});
         }else{
-            return res.status(200).json({message: 'Khách sạn không tồn tại.'});
+            // xử lý hóa đơn
+            const exitsOrder = await Order.findOne({
+              where: { 
+                id_hotel: id,
+                [Op.or]: [{ status: 'Đã Thanh Toán' }, { status: 'Đã Đặt' }]
+              }
+            });
+            if (exitsOrder) {
+              /*
+               note command
+               Khi tồn tại hóa đơn chưa trả phòng
+               Thực hiện => lấy ngày cuối cùng họ trả phòng để report lại owner
+               Thực hiện bằng cách cú pháp find kết hợp ...
+              */
+              const last_checkout = await OD.findOne({
+                attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
+                where: {
+                  '$order.status$': 'Đã Thanh Toán',
+                  '$order.id_user$': id,
+                },
+                include: [
+                  {
+                    model: Order,
+                    as: 'order',
+                    attributes: [],
+                    where: {
+                      status: 'Đã Thanh Toán',
+                      id_user: id,
+                    },
+                  },
+                ],
+                group: ['id_order'],
+                order: [[sequelize.fn('MAX', sequelize.col('check_out')), 'DESC']],
+              })
+              const time = new Date(last_checkout.getDataValue('latest_checkout'))
+              var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
+              return res.status(201).json({ message: `Không thể xóa hotel - Xóa sau thời gian: ${result_last}` });
+            }
+            else {
+                await Order.destroy({ where: { id_hotel: existHotel.id } });
+                await room.destroy({ where: { id_hotel: existHotel.id } });
+                await Rating.destroy({ where: { id_hotel: existHotel.id } });
+                await Report.destroy({ where: { id_hotel: existHotel.id } });
+                await Favorate.destroy({ where: { id_hotel: existHotel.id } });
+                await ImgHotel.destroy({ where: { id_hotel: existHotel.id } });
+                await coupon.destroy({ where: { id_hotel: existHotel.id } });
+
+                await existHotel.destroy();
+                return res.status(200).json({ message: 'Xóa thành công.' });
+            }
         }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+const deleteImgHotel = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const existImg = await ImgHotel.findByPk(id);
+
+        if (existImg.length === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy' });
+        }
+        const imagePath = `./uploads/${existImg.name_img}`;
+        deleteFile(imagePath);
+        await existImg.destroy();
+        return res.status(200).json({ message: 'Xóa thành công' });
     } catch (error) {
         console.log(error);
     }
@@ -167,5 +278,7 @@ module.exports = {
     addHotel,
     addImgHotel,
     updateHotel,
-    deleteHotel
+    updateImgHotel,
+    deleteHotel,
+    deleteImgHotel
 }

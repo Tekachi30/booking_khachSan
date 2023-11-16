@@ -3,12 +3,12 @@ const Owner = db.owner;
 const Hotel = db.hotel;
 const Order = db.order;
 const OD = db.order_detail;
-const room = db.room_hotel;
+const Room = db.room_hotel;
 const Rating = db.rating_hotel;
 const Mess = db.messager;
 const Report = db.report_hotel;
 const Favorate = db.favorate_hotel;
-const img = db.img_hotel;
+const Img = db.img_hotel;
 const coupon = db.coupon_owner;
 
 
@@ -162,15 +162,15 @@ const deleteOwner = async (req, res) => {
               })
               const time = new Date(last_checkout.getDataValue('latest_checkout'))
               var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
-              return res.status(201).json({ message: `Không thể xóa user - Xóa sau thời gian: ${result_last}` });
+              return res.status(201).json({ message: `Không thể xóa owner - Xóa sau thời gian: ${result_last}` });
             }
             else {
               await Order.destroy({ where: { id_hotel: existHotel.id } });
-              await room.destroy({ where: { id_hotel: existHotel.id } });
+              await Room.destroy({ where: { id_hotel: existHotel.id } });
               await Rating.destroy({ where: { id_hotel: existHotel.id } });
               await Report.destroy({ where: { id_hotel: existHotel.id } });
               await Favorate.destroy({ where: { id_hotel: existHotel.id } });
-              await img.destroy({ where: { id_hotel: existHotel.id } });
+              await Img.destroy({ where: { id_hotel: existHotel.id } });
               await coupon.destroy({ where: { id_hotel: existHotel.id } });
 
               await Hotel.destroy({ where: { id_owner: id } });

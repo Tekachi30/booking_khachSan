@@ -79,10 +79,13 @@ export default
   },
   components: {},
   methods: {
+
+    // định dạng thời gian thông qua dayjs
     formatTime(time){
         return dayjs(time).format('DD-MM-YYYY');
     },
 
+    // lấy thông tin của chính owner đã đăng nhập trên local storage
     getToken() {
       let owner = JSON.parse(localStorage.getItem("owner"));
       return owner;

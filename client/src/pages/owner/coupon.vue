@@ -211,10 +211,12 @@ export default
         this.discount = select.discount
     },
 
+    // định dạng thời gian thông qua dayjs
     formatTime(time){
         return dayjs(time).format('DD-MM-YYYY');
     },
 
+    // lấy thông tin của chính owner đã đăng nhập trên local storage
     getToken() {
       let owner = JSON.parse(localStorage.getItem("owner"));
       return owner;
@@ -223,7 +225,7 @@ export default
     async getCoupon() {
        try {
            const result = await this.$axios.get('coupon/get');
-           this.coupons = result.data.filter((item) => item.hotel.id_owner == this.owner.id); //lọc ra những đánh giá của chính owner đó theo id
+           this.coupons = result.data.filter((item) => item.hotel.id_owner == this.owner.id); //lọc ra những coupon của chính owner đó theo id
            console.log(result.data);
        } catch (error) {
            console.log(error)

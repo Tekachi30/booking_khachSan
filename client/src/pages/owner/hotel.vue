@@ -1,3 +1,20 @@
 <template>
-    hotel
+
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+        
+    };
+  },
+  mounted() {
+   
+  },
+  components: {},
+  methods: {
+   
+  },
+};
+</script>
