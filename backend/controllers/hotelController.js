@@ -212,8 +212,7 @@ const deleteHotel = async (req, res) => {
               const last_checkout = await OD.findOne({
                 attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
                 where: {
-                  '$order.status$': 'Đã Thanh Toán',
-                  '$order.id_user$': id,
+                  '$order.status$': 'Đã Thanh Toán'
                 },
                 include: [
                   {
@@ -222,7 +221,6 @@ const deleteHotel = async (req, res) => {
                     attributes: [],
                     where: {
                       status: 'Đã Thanh Toán',
-                      id_user: id,
                     },
                   },
                 ],
@@ -241,7 +239,6 @@ const deleteHotel = async (req, res) => {
                 await Favorate.destroy({ where: { id_hotel: existHotel.id } });
                 await ImgHotel.destroy({ where: { id_hotel: existHotel.id } });
                 await coupon.destroy({ where: { id_hotel: existHotel.id } });
-
                 await existHotel.destroy();
                 return res.status(200).json({ message: 'Xóa thành công.' });
             }

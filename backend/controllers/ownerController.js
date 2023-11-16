@@ -144,7 +144,6 @@ const deleteOwner = async (req, res) => {
                 attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
                 where: {
                   '$order.status$': 'Đã Thanh Toán',
-                  '$order.id_user$': id,
                 },
                 include: [
                   {
@@ -153,7 +152,6 @@ const deleteOwner = async (req, res) => {
                     attributes: [],
                     where: {
                       status: 'Đã Thanh Toán',
-                      id_user: id,
                     },
                   },
                 ],
