@@ -19,6 +19,7 @@ const { routerMessage } = require ('./routers/messageRouter');
 const { routerRating } = require ('./routers/ratingRouter');
 const { routerOrder } = require ('./routers/orderRouter');
 const { routerCoupon } = require ('./routers/couponRouter');
+const { routerRoom } = require ('./routers/roomController');
 
 
 
@@ -42,7 +43,8 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerOwner, routerMessage, routerRating, routerOrder, routerCoupon);
+app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport,
+   routerOwner, routerMessage, routerRating, routerOrder, routerCoupon, routerRoom);
 
 // Server các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));
