@@ -5,7 +5,7 @@ const routerHotel = express.Router();
 routerHotel.get("/api/hotel/get", getHotel);
 routerHotel.get("/api/hotel/get/:id", getHotelByOwner)
 
-routerHotel.post("/api/hotel/add", addHotel);
+routerHotel.post("/api/hotel/add/:id", addHotel);
 routerHotel.post("/api/hotel/addImg/:id", addImgHotel);
 
 routerHotel.put("/api/hotel/update/:id", updateHotel);

@@ -1,6 +1,6 @@
 <template>
 
-    <div class="w-full  lg:pl-5 mt-2">
+    <div class="w-full lg:pl-5 mt-2">
             <div class="flex flex-wrap">
                 <div class="w-1/2 lg:w-1/4 p-2">
                     <img class="rounded-lg shadow mt-0 w-full"
