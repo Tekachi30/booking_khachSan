@@ -19,7 +19,8 @@ const { routerMessage } = require ('./routers/messageRouter');
 const { routerRating } = require ('./routers/ratingRouter');
 const { routerOrder } = require ('./routers/orderRouter');
 const { routerCoupon } = require ('./routers/couponRouter');
-const { routerRoom } = require ('./routers/roomController');
+const { routerRoom } = require ('./routers/roomRouter');
+
 
 
 

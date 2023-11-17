@@ -18,10 +18,13 @@ module.exports = {
         }
       },
       type_room: {
-        type: Sequelize.ENUM("Đơn","Đôi")
+        type: Sequelize.ENUM("SGL","TWL","DBL","TRPL_1","TRPL_2")
       },
-      book_status: {
-        type: Sequelize.BOOLEAN
+      quantity: {
+        type: Sequelize.INTEGER
+      },
+      real_quantity: {
+        type: Sequelize.INTEGER
       },
       price: {
         type: Sequelize.INTEGER

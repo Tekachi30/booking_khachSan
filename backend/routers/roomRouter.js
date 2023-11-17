@@ -2,9 +2,9 @@ const express = require("express");
 const { getRoom, addRoom, addImgRoom, updateRoom, updateImgRoom, updateStatusRoom, deleteRoom, deleteImgRoom } = require("../controllers/roomController");
 const routerRoom = express.Router();
 
-routerRoom.get("/api/room/get", getRoom);
+routerRoom.get("/api/room/get/:id", getRoom);
 
-routerRoom.post("/api/room/add", addRoom);
+routerRoom.post("/api/room/add/:id", addRoom);
 routerRoom.post("/api/room/addImg/:id", addImgRoom);
 
 routerRoom.put("/api/room/update/:id", updateRoom);

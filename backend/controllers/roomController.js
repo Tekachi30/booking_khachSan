@@ -4,6 +4,38 @@ const ImgRoom = db.img_room;
 const Hotel = db.hotel;
 const Owner = db.owner;
 
+const fs = require("fs"); // package thao tác vs file 
+const multer = require("multer"); // package sử dụng để thao tác upload file
+// Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./uploads/");
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}_${file.originalname}`);
+    },
+});
+
+// Hàm sử dụng để thao tác với file = multer
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // giới hạn dung lượng file 5MB
+    },
+});
+
+// Sử dụng hàm để xóa file khỏi thư mục upload
+const deleteFile = (filePath) => {
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log(`File ${filePath} has been deleted`);
+    });
+}
+
 const getRoom = async (req, res) => {
     try {
         const id = req.params.id
@@ -22,14 +54,34 @@ const getRoom = async (req, res) => {
 
 const addRoom = async (req, res) => {
     try {
-        const { id_hotel,type_room,book_status,price } = req.body;
-        await Room.create({
-            id_hotel: id_hotel,
-            type_room: type_room,
-            book_status: book_status,
-            price: price,
-        })
-        return res.status(200).json({message: 'Thêm phòng thành công.'});
+        const id = req.params.id 
+        const { type_room,quantity,price } = req.body;
+        // check id_hotel real 
+        const existRoom = await Room.findOne({where:{type_room}})
+        const exitsHotel = await Hotel.findByPk(id);
+        if(exitsHotel)
+        {
+           if(!existRoom)
+           {
+            const room =  await Room.create({
+                id_hotel: id,
+                type_room: type_room,
+                quantity:quantity,
+                real_quantity:quantity, // lúc đó thì chưa ai đặt nên bằng nhau 
+                price: price,
+            })
+            return res.status(200).json({message: 'Thêm phòng thành công.',room});
+           }
+           else
+           {
+            return res.status(201).json({message: 'Tồn tại loại phòng này'});
+
+           }
+        }
+        else
+        {
+            return res.status(201).json({message: 'Không tìm thấy khách sạn'});
+        }
     } catch (error) {
         console.log(error);
     }
@@ -55,7 +107,7 @@ const addImgRoom = async (req, res) => {
       
                     for (let i = 0; i < req.files.length; i++) {
                         const imageUrl = `${req.protocol}://${req.get('host')}/${req.files[i].filename}`;
-                        const img = await ImgHotel.create({url: imageUrl, name_img: req.files[i].filename, id_room: id});
+                        const img = await ImgRoom.create({url: imageUrl, name_img: req.files[i].filename, id_room: id});
                         imgs.push(img);
                     }
                     return res.status(200).json({ message: "Thêm thành công" })

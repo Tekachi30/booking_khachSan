@@ -19,8 +19,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   room_hotel.init({
     id_hotel: DataTypes.INTEGER,
-    type_room: DataTypes.ENUM("Đơn","Đôi"),
-    book_status: DataTypes.BOOLEAN,
+    type_room: DataTypes.ENUM("SGL","TWL","DBL","TRPL_1","TRPL_2"),
+    real_quantity: DataTypes.INTEGER,
+    quantity: DataTypes.INTEGER,
     price: DataTypes.INTEGER
   }, {
     sequelize,
