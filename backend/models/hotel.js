@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       hotel.hasMany(models.room_hotel, { foreignKey: 'id_hotel' });
+      hotel.hasMany(models.MathLevel, { foreignKey: 'id_hotel' });
       hotel.hasMany(models.favorate_hotel, { foreignKey: 'id_hotel' });
       hotel.hasMany(models.img_hotel, { foreignKey: 'id_hotel' });
       hotel.hasMany(models.report_hotel, { foreignKey: 'id_hotel' });

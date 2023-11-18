@@ -1,5 +1,5 @@
 const express = require("express");
-const { getHotel, addHotel, updateHotel, deleteHotel, getHotelByOwner, addImgHotel, updateImgHotel, deleteImgHotel } = require("../controllers/hotelController");
+const { getHotel, addHotel, updateHotel, deleteHotel, getHotelByOwner, addImgHotel, updateImgHotel, deleteImgHotel,mathLevel } = require("../controllers/hotelController");
 const routerHotel = express.Router();
 
 routerHotel.get("/api/hotel/get", getHotel);
@@ -16,7 +16,7 @@ routerHotel.delete("/api/hotel/delete/:id", deleteHotel);
 routerHotel.delete("/api/hotel/deleteImg/:id", deleteImgHotel);
 
 
-
+routerHotel.get("/api/hotel/mathLevel",mathLevel)
 
 module.exports = {
   routerHotel,
