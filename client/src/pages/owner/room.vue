@@ -42,7 +42,7 @@
                     <p class="mb-3 font-normal text-gray-700 ">{{ room.real_quanlity }}</p>
                     <p class="mb-3 font-normal text-gray-700 ">{{ room.price }}</p>
 
-                    <a @click="openUpdate(); select(hotel)"
+                    <a @click="openUpdate(); select(room)"
                         class="inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
                         Cập nhật
                     </a>
@@ -179,7 +179,7 @@ export default {
     data() {
         return {
             hotels: [], rooms: [], imgs: [],
-            owner: '', hotel_id: '',
+            owner: '', hotel_id: '', room: '',
             isAdd: false, isDelete: false, isUpdate: false,
             type_room:'',price:'',quantity:''
         };

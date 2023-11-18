@@ -75,7 +75,6 @@ const addRoom = async (req, res) => {
            else
            {
             return res.status(201).json({message: 'Tồn tại loại phòng này'});
-
            }
         }
         else
@@ -124,17 +123,30 @@ const addImgRoom = async (req, res) => {
 
 const updateRoom = async (req, res) => {
     try {
-        const id = req.pramas.id;
-        const existRoom = await Room.findByPk(id);
-        const { type_room,price } = req.body;
-        if(!existRoom){
-            return res.status(201).json({message: 'Không tìm thấy phòng.'});
-        }else{
-            await Room.update({
+        const id = req.params.id 
+        const { type_room,quantity,price } = req.body;
+        // check id_hotel real 
+        const existTypeRoom = await Room.findOne({where:{type_room}})
+        const exitsRoom = await Hotel.findByPk(id);
+        if(exitsRoom)
+        {
+           if(existTypeRoom)
+           {
+            const room =  await Room.update({
                 type_room: type_room,
+                quantity:quantity,
                 price: price,
             })
-            return res.status(200).json({message: 'thành công.'});
+            return res.status(200).json({message: 'cập nhật phòng thành công.',room});
+           }
+           else
+           {
+            return res.status(201).json({message: 'Tồn tại loại phòng này'});
+           }
+        }
+        else
+        {
+            return res.status(201).json({message: 'Không tìm thấy phòng'});
         }
     } catch (error) {
         console.log(error);
@@ -198,7 +210,9 @@ const deleteRoom = async (req, res) => {
         if(!existRoom){
             return res.status(201).json({message: 'Không tìm thấy phòng.'});
         }else{
+            await ImgRoom.destroy({ where: {id_room: id}})
             await existRoom.destroy();
+            return res.status(200).json({message: 'xóa thành công.'});
         }
     } catch (error) {
         console.log(error);

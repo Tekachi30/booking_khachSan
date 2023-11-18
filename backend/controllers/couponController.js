@@ -7,6 +7,7 @@ const getCoupon= async (req, res) => {
     try {
         const id = req.params.id;
         const coupon = await Coupon.findAll({
+            //where:{id_hotel:id},
             include:[
                 {model: Hotel, attributes: ['id_owner','name_hotel']},
             ]

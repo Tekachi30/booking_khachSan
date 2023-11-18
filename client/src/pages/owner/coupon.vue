@@ -6,6 +6,17 @@
             <div class=" relative shadow-md sm:rounded-lg overflow-hidden"> 
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
+                        <!--view getHotel => option value lấy ra id_hotel-->
+                        <!-- <div class="hotel mb-2">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn khách sạn</label>
+                            <select v-model="hotel_id" @change="getRoom()"
+                                class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
+                                <option disabled selected>Chọn khách sạn</option>
+                                <option v-for="hotel in hotels" :key="hotel.id" :value="hotel.id">
+                                    {{ hotel.name_hotel }}
+                                </option>
+                            </select>
+                        </div> -->
 
                         <!--button thêm-->
                         <button @click="openAdd()" type="button"
@@ -24,7 +35,7 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-4 py-4">STT</th>
-                                <th scope="col" class="px-4 py-3">Khách sạn</th>
+                                <!-- <th scope="col" class="px-4 py-3">Khách sạn</th> -->
                                 <th scope="col" class="px-4 py-3">Mã code</th>
                                 <th scope="col" class="px-4 py-3">Giảm giá</th>
                                 <th scope="col" class="px-4 py-3">Ngày tạo</th>
@@ -38,9 +49,9 @@
                                 <th scope="row"
                                     class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                         1 }}</th>
-                                <td class="px-4 py-3">
+                                <!-- <td class="px-4 py-3">
                                     {{ coupon.id_hotel }}
-                                </td>
+                                </td> -->
                                 <td class="px-4 py-3"> {{ coupon.code_coupon }}</td>
                                 <td class="px-4 py-3"> {{ coupon.discount }}</td>
                                 <td class="px-4 py-3"> {{ formatTime(coupon.createdAt) }} </td>
@@ -245,9 +256,9 @@ export default
 {
   data(){
     return {
-        coupons: [], coupon: '', owner: '',
+        coupons: [], hotels: [], coupon: '', owner: '', id_hotel: '',
         isAdd: false, isUpdate: false, isDelete: false,
-        code_coupon: '', discount: '', date_coupon: ''
+        code_coupon: '', discount: '', date_coupon: '',
     }
   },
   mounted(){
@@ -295,7 +306,8 @@ export default
     
     async getCoupon() {
        try {
-           const result = await this.$axios.get('coupon/get');
+           //const result = await this.$axios.get(`coupon/get/${this.id_hotel}`);
+           const result = await this.$axios.get(`coupon/get`);
            this.coupons = result.data.filter((item) => item.hotel.id_owner == this.owner.id); //lọc ra những coupon của chính owner đó theo id
            console.log(result.data);
        } catch (error) {
@@ -305,7 +317,7 @@ export default
 
     async addCoupon() {
        try {
-        const result = await this.$axios.post(`coupon/add/${this.owner.id}`,{ // thêm bằng id của hotel 
+        const result = await this.$axios.post(`coupon/add/${this.id_hotel}`,{ // thêm bằng id của hotel 
             "code_coupon": this.code_coupon,
             "discount": this.discount,
             "date_coupon": this.date_coupon
