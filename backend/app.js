@@ -6,7 +6,7 @@ require('./config/connect');
 const http = require('http');
 const app = express();
 const server = http.createServer(app)
-
+const cron = require('node-cron');
 
 // const {???} = require ('???')
 const { routerUser } = require ('./routers/userRouter');
@@ -21,11 +21,18 @@ const { routerOrder } = require ('./routers/orderRouter');
 const { routerCoupon } = require ('./routers/couponRouter');
 const { routerRoom } = require ('./routers/roomRouter');
 
+// node cron
 
+const mathlevelController = require('./controllers/mathlevelController')
+// 0 1 1 * * 1h 1 tây hằng tháng
+// const task = cron.schedule('* * * * *', () => {
+//   mathlevelController.mathLevel()
+// }, {
+//   scheduled: true,
+//   timeZone: 'Asia/Ho_Chi_Minh'
+// });
 
-
-
-
+// task.start()
 // Thiết lập body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
