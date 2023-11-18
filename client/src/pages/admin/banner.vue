@@ -71,7 +71,7 @@
                                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                                         d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
                                                 </svg>
-                                                Cập nhập
+                                                Cập nhật
                                             </button>
                                         </li>
 
@@ -166,7 +166,7 @@
             <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                 <!-- Modal header -->
                 <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Cập nhập banner</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Cập nhật banner</h3>
 
                     <button @click="openUpdate()" type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -211,7 +211,7 @@
                                 d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                 clip-rule="evenodd" />
                         </svg>
-                        Cập nhập banner
+                        Cập nhật banner
                     </button>
                 </div>
             </div>
@@ -303,9 +303,9 @@ export default {
             formData.append('title_banner', this.title_banner)
             formData.append('content_banner', this.content_banner)
             try {
-                // Kiểm tra xem các thông tin có được nhập đầy đủ không
+                // Kiểm tra xem các thông tin có được nhật đầy đủ không
                 if (!this.avatar || !this.title_banner || !this.content_banner) {
-                alert("Vui lòng nhập đầy đủ thông tin.")
+                alert("Vui lòng nhật đầy đủ thông tin.")
                 return;
                 }else{
                     const result = await this.$axios.post(`banner/add`, formData, {
@@ -332,9 +332,9 @@ export default {
             formData.append('content_banner', this.content_banner)
 
             try {
-                // Kiểm tra xem các thông tin có được nhập đầy đủ không
+                // Kiểm tra xem các thông tin có được nhật đầy đủ không
                 if (!this.avatar || !this.title_banner || !this.content_banner) {
-                alert("Vui lòng nhập đầy đủ thông tin.")
+                alert("Vui lòng nhật đầy đủ thông tin.")
                 return;
                 }else{
                     const result = await this.$axios.put(`banner/update/${this.banner.id}`, formData, {

@@ -126,13 +126,12 @@ const updateRoom = async (req, res) => {
     try {
         const id = req.pramas.id;
         const existRoom = await Room.findByPk(id);
-        const { type_room,book_status,price } = req.body;
+        const { type_room,price } = req.body;
         if(!existRoom){
             return res.status(201).json({message: 'Không tìm thấy phòng.'});
         }else{
             await Room.update({
                 type_room: type_room,
-                book_status: book_status,
                 price: price,
             })
             return res.status(200).json({message: 'thành công.'});

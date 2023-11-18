@@ -3,25 +3,19 @@
     <section class=" p-3 sm:p-5 antialiased">
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
             <!-- Start coding here -->
-            <div class=" relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class=" relative shadow-md sm:rounded-lg overflow-hidden"> 
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <form class="flex items-center">
-                            <label for="simple-search" class="sr-only">Tìm kiếm</label>
-                            <div class="relative w-full">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                        fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <input type="text" id="simple-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Tìm theo tiêu đề" required="">
-                            </div>
-                        </form>
+
+                        <!--button thêm-->
+                        <button @click="openAdd()" type="button"
+                            class="flex items-center justify-center  bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2  focus:outline-none ">
+                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                            </svg>
+                            Thêm
+                        </button>
                     </div>
                 </div>
                 <!--nội dung-->
@@ -64,7 +58,7 @@
                                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                                         d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
                                                 </svg>
-                                                Cập nhập
+                                                Cập nhật
                                             </button>
                                         </li>
 
@@ -90,6 +84,66 @@
     </section>
     <!-- End block -->
 
+    <!-- Create modal -->
+    <div v-if="isAdd" id="createProductModal"
+        class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-400 sm:p-5">
+                <!-- Modal header -->
+                <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thêm Coupon</h3>
+
+                    <button @click="openAdd()" type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-target="createProductModal" data-modal-toggle="createProductModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div>
+
+                    <div>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã code</label>
+                        <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Nhập mã code" required="">
+                    </div>
+
+                    <div>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm giá</label>
+                        <input v-model="discount" type="text" name="discount" id="discount"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Nhập giảm giá" required="">
+                    </div>
+
+                        
+                    <div class="py-2">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ngày hết hạn</label>
+                        <input v-model="date_coupon" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Select date">
+                    </div>
+
+                    <button @click="addCoupon()" type="button"
+                        class=" inline-flex items-center bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Thêm Coupon
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Update modal -->
     <div v-if="isUpdate" id="createProductModal"
         class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
@@ -98,7 +152,7 @@
             <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                 <!-- Modal header -->
                 <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Cập nhập banner</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Cập nhật banner</h3>
 
                     <button @click="openUpdate()" type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -114,23 +168,26 @@
                 </div>
                 <!-- Modal body -->
                 <div>
-                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    
 
-                        <div>
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã code</label>
-                            <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Nhập mã code" required="">
-                        </div>
+                <div>
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã code</label>
+                    <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Nhập mã code" required="">
+                </div>
+                <div>
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm giá</label>
+                    <input v-model="discount" type="text" name="discount" id="discount"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Nhập giảm giá" required="">
+                </div>
+                <div class="py-2">
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ngày hết hạn</label>
+                    <input v-model="date_coupon" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Select date">
+                </div>
 
-                        <div>
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm giá</label>
-                            <input v-model="discount" type="text" name="discount" id="discount"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Nhập giảm giá" required="">
-                        </div>
-
-                    </div>
+                    
                     <button @click="updateCoupon()" 
                         class=" inline-flex items-center bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
@@ -139,7 +196,7 @@
                                 d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                 clip-rule="evenodd" />
                         </svg>
-                        Cập nhập coupon
+                        Cập nhật coupon
                     </button>
                 </div>
             </div>
@@ -189,16 +246,20 @@ export default
   data(){
     return {
         coupons: [], coupon: '', owner: '',
-        isUpdate: false, isDelete: false,
-        code_coupon: '', discount: '',
+        isAdd: false, isUpdate: false, isDelete: false,
+        code_coupon: '', discount: '', date_coupon: ''
     }
   },
   mounted(){
     this.owner = this.getToken()
+    this.getHotel();
     this.getCoupon();
   },
   components: {},
   methods: {
+    openAdd() {
+        this.isAdd = !this.isAdd
+    },
     openUpdate() {
         this.isUpdate = !this.isUpdate
     },
@@ -208,7 +269,8 @@ export default
     selectCoupon(select) {
         this.coupon = select,
         this.code_coupon = select.code_coupon,
-        this.discount = select.discount
+        this.discount = select.discount,
+        this.date_coupon = formatTime(select.date_coupon)
     },
 
     // định dạng thời gian thông qua dayjs
@@ -221,6 +283,15 @@ export default
       let owner = JSON.parse(localStorage.getItem("owner"));
       return owner;
     },
+
+    async getHotel() {
+        try {
+            const result = await this.$axios.get(`hotel/get/${this.owner.id}`)
+            this.hotels = result.data
+        } catch (error) {
+            console.log(error)
+        }
+    },
     
     async getCoupon() {
        try {
@@ -232,11 +303,33 @@ export default
        }
     },
 
+    async addCoupon() {
+       try {
+        const result = await this.$axios.post(`coupon/add/${this.owner.id}`,{ // thêm bằng id của hotel 
+            "code_coupon": this.code_coupon,
+            "discount": this.discount,
+            "date_coupon": this.date_coupon
+        });
+        console.log(result.data.coupon.id)
+        if (result.status == 200) {
+            this.openAdd()
+            this.getCoupon()
+            alert(result.data.message)
+        }else{
+            alert(result.data.message)
+        }
+       } catch (error) {
+           console.log(error)
+       }
+    },
+
     async updateCoupon() {
         try {
+            // cập nhật coupon theo id
             const result = await this.$axios.put(`coupon/update/${this.coupon.id}`,{
-                code_coupon: this.code_coupon,
-                discount: this.discount,
+                "code_coupon": this.code_coupon,
+                "discount": this.discount,
+                "date_coupon": this.date_coupon
             });
             if (result.status == 200) {
                 this.openUpdate()
@@ -252,6 +345,7 @@ export default
     },
     async deleteCoupon() {
         try {
+            // xóa coupon theo id
             const result = await this.$axios.delete(`coupon/delete/${this.coupon.id}`);
             if (result.status == 200) {
                 this.openDelete()

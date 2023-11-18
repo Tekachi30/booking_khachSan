@@ -51,7 +51,7 @@
           <p class="mb-3 font-normal text-gray-700 ">{{ hotel.address }}</p>
           <a @click="openUpdate(); select(hotel)"
             class="inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
-            Cập nhập
+            Cập nhật
           </a>
           <a
             class="ml-2 inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
@@ -208,7 +208,7 @@
       <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-400 sm:p-5">
         <!-- Modal header -->
         <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Cập nhập khách sạn</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Cập nhật khách sạn</h3>
 
           <button @click="openUpdate()" type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -344,7 +344,7 @@
                 d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                 clip-rule="evenodd" />
             </svg>
-            Cập nhập khách sạn
+            Cập nhật khách sạn
           </button>
         </div>
       </div>
@@ -566,7 +566,7 @@ export default {
 
         // xử lý thêm ảnh
         /*
-         + lưu ý 1 là phải cập nhập thành công thông tin hotel
+         + lưu ý 1 là phải cập nhật thành công thông tin hotel
          + lưu ý 2 là phải có ảnh mới => ko có bỏ qua
         */
         if (result.status == 200 && this.imgs.length > 0) {

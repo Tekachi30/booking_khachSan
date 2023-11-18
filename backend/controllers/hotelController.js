@@ -261,6 +261,8 @@ const deleteHotel = async (req, res) => {
                 await Favorate.destroy({ where: { id_hotel: existHotel.id } });
                 await ImgHotel.destroy({ where: { id_hotel: existHotel.id } });
                 await coupon.destroy({ where: { id_hotel: existHotel.id } });
+                await MathLevel.destroy({ where: { id_hotel: existHotel.id } });
+                
                 await existHotel.destroy();
                 return res.status(200).json({ message: 'Xóa thành công.' });
             }
