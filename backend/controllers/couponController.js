@@ -1,13 +1,14 @@
 const db = require("../models");
 const Coupon = db.coupon_owner;
 const Hotel = db.hotel;
+const MathLevel = db.MathLevel;
 
 
 const getCoupon= async (req, res) => {
     try {
         const id = req.params.id;
         const coupon = await Coupon.findAll({
-            //where:{id_hotel:id},
+            where:{id_hotel:id},
             include:[
                 {model: Hotel, attributes: ['id_owner','name_hotel']},
             ]
@@ -18,13 +19,14 @@ const getCoupon= async (req, res) => {
     }
 }
 
+
 const addCoupon = async (req, res) => {
     try {
         const id = req.params.id;
         const { code_coupon, discount, date_coupon } = req.body;
         const existHotel = await Hotel.findByPk(id);
         // check id hotel
-        if(existHotel){ 
+        if(existHotel){
             await Coupon.create({
                 code_coupon: code_coupon,
                 discount: discount,

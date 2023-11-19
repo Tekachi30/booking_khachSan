@@ -4,6 +4,7 @@ const Owner = db.owner;
 const Order = db.order;
 const OD = db.order_detail;
 const ImgHotel = db.img_hotel;
+const ImgRoom = db.img_room;
 const room = db.room_hotel;
 const Rating = db.rating_hotel;
 const Report = db.report_hotel;
@@ -54,6 +55,7 @@ const getHotel = async (req, res) => {
         const hotel = await Hotel.findAll({
             include: [
                 { model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'] },
+                { model: MathLevel, attributes: ['level']}
             ]
         });
         res.status(200).json(hotel);
@@ -72,6 +74,9 @@ const getHotelByOwner = async (req, res) => {
                     raw: true,
                     nest: true,
                     required: true
+                },
+                {
+                    model: MathLevel, attributes: ['level'],
                 },
                 {
                     model: Owner, attributes: ['id', 'fullname'],
@@ -254,12 +259,27 @@ const deleteHotel = async (req, res) => {
                 return res.status(201).json({ message: `Không thể xóa hotel - Xóa sau thời gian: ${result_last}` });
             }
             else {
+                const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
+                if (img_hotel.length > 0) {
+                      for (const img of img_hotel) {
+                      const imagePath = `./uploads/${img.image_name}`;
+                      deleteFile(imagePath);
+                      await img.destroy();
+                    }
+                }
+                const img_room = await ImgRoom.findAll({ where: { id_hotel: existHotel.id } });
+                if (img_room.length > 0) {
+                      for (const img of img_room) {
+                      const imagePath = `./uploads/${img.image_name}`;
+                      deleteFile(imagePath);
+                      await img.destroy();
+                    }
+                }
                 await Order.destroy({ where: { id_hotel: existHotel.id } });
                 await room.destroy({ where: { id_hotel: existHotel.id } });
                 await Rating.destroy({ where: { id_hotel: existHotel.id } });
                 await Report.destroy({ where: { id_hotel: existHotel.id } });
                 await Favorate.destroy({ where: { id_hotel: existHotel.id } });
-                await ImgHotel.destroy({ where: { id_hotel: existHotel.id } });
                 await coupon.destroy({ where: { id_hotel: existHotel.id } });
                 await MathLevel.destroy({ where: { id_hotel: existHotel.id } });
                 

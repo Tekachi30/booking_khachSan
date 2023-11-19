@@ -7,26 +7,28 @@
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
                         <!--view getHotel => option value lấy ra id_hotel-->
-                        <!-- <div class="hotel mb-2">
+                        <div class="hotel mb-2">
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn khách sạn</label>
-                            <select v-model="hotel_id" @change="getRoom()"
+                            <select v-model="id_hotel" @change="getCoupon()"
                                 class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
                                 <option disabled selected>Chọn khách sạn</option>
                                 <option v-for="hotel in hotels" :key="hotel.id" :value="hotel.id">
                                     {{ hotel.name_hotel }}
                                 </option>
                             </select>
-                        </div> -->
+                        </div>
 
-                        <!--button thêm-->
-                        <button @click="openAdd()" type="button"
-                            class="flex items-center justify-center  bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2  focus:outline-none ">
-                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path clip-rule="evenodd" fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>
-                            Thêm
-                        </button>
+                        <div v-if="id_hotel != ''">
+                            <!--button thêm-->
+                            <button @click="openAdd()" type="button"
+                                class="flex items-center justify-center  bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2  focus:outline-none ">
+                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                </svg>
+                                Thêm
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <!--nội dung-->
@@ -195,6 +197,7 @@
                 </div>
                 <div class="py-2">
                     <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ngày hết hạn</label>
+                    <div> {{ date_coupon }}</div>
                     <input v-model="date_coupon" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Select date">
                 </div>
 
@@ -258,13 +261,13 @@ export default
     return {
         coupons: [], hotels: [], coupon: '', owner: '', id_hotel: '',
         isAdd: false, isUpdate: false, isDelete: false,
-        code_coupon: '', discount: '', date_coupon: '',
+        code_coupon: '', discount: '', date_coupon: '',formattedDate: '' 
     }
   },
   mounted(){
     this.owner = this.getToken()
     this.getHotel();
-    this.getCoupon();
+    this.formatDate();
   },
   components: {},
   methods: {
@@ -281,13 +284,22 @@ export default
         this.coupon = select,
         this.code_coupon = select.code_coupon,
         this.discount = select.discount,
-        this.date_coupon = formatTime(select.date_coupon)
+        this.date_coupon = select.date_coupon
     },
 
     // định dạng thời gian thông qua dayjs
     formatTime(time){
         return dayjs(time).format('DD-MM-YYYY');
     },
+
+    // formatDate(dateString) {
+    //   // Chuyển đổi chuỗi ngày sang định dạng YYYY-MM-DD
+    //   const dateObject = new Date(dateString);
+    //   const year = dateObject.getFullYear();
+    //   const month = ('0' + (dateObject.getMonth() + 1)).slice(-2);
+    //   const day = ('0' + dateObject.getDate()).slice(-2);
+    //   return `${day}-${month}-${year}`;
+    // },
 
     // lấy thông tin của chính owner đã đăng nhập trên local storage
     getToken() {
@@ -306,8 +318,8 @@ export default
     
     async getCoupon() {
        try {
-           //const result = await this.$axios.get(`coupon/get/${this.id_hotel}`);
-           const result = await this.$axios.get(`coupon/get`);
+           const result = await this.$axios.get(`coupon/get/${this.id_hotel}`);
+        //    const result = await this.$axios.get(`coupon/get`);
            this.coupons = result.data.filter((item) => item.hotel.id_owner == this.owner.id); //lọc ra những coupon của chính owner đó theo id
            console.log(result.data);
        } catch (error) {
@@ -322,7 +334,6 @@ export default
             "discount": this.discount,
             "date_coupon": this.date_coupon
         });
-        console.log(result.data.coupon.id)
         if (result.status == 200) {
             this.openAdd()
             this.getCoupon()
