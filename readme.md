@@ -23,3 +23,6 @@
 + chatgpt
 + bard google
 + https://viblo.asia/p/cron-job-voi-nodejs-qua-vi-du-don-gian-tu-dong-tong-hop-doanh-thu-va-xuat-ra-file-excel-luc-23h-hang-ngay-4P856R6B5Y3
+
+# pass: admin
+# pass: owner1234+
