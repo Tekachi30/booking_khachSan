@@ -53,7 +53,8 @@
             class="inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
             Cập nhật
           </a>
-          <a
+          <a 
+          @click="openDelete();select(hotel)"
             class="ml-2 inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
             Xóa
           </a>
@@ -64,7 +65,27 @@
   </div>
   <!-- chưa thêm xong ?-->
   <div class="w-full" v-if="isUnActive">
-    chưa xong
+    <div class="grid grid-cols-4 gap-4">
+      <div class=" bg-white border border-gray-200 rounded-lg shadow " v-for="hotel in hotel_nons">
+        <!-- view ảnh khách sạn-->
+        <swiper :pagination="{
+          dynamicBullets: true,
+        }" :modules="modules" class="mySwiper ">
+          <swiper-slide v-for="img in hotel.img_hotels">
+            <img class="rounded-t-lg p-1 " :src="img.url" alt="" />
+          </swiper-slide>
+        </swiper>
+
+        <div class="p-5">
+          <a>
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">{{ hotel.name_hotel }}</h5>
+          </a>
+          <p class="mb-3 font-normal text-gray-700 ">{{ hotel.information }}</p>
+          <p class="mb-3 font-normal text-gray-700 ">{{ hotel.address }}</p>
+        </div>
+      </div>
+
+    </div>
   </div>
   <!--Thêm hotel-->
   <!-- form thứ 1 thêm information cho hotel-->
@@ -350,6 +371,40 @@
       </div>
     </div>
   </div>
+
+  <!-- Delete modal -->
+  <div id="deleteModal"  v-if="isDelete"
+        class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                <button @click="openDelete()" type="button"
+                    class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-toggle="deleteModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+
+                </button>
+                <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
+                    fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                </svg>
+                <p class="mb-4 text-gray-500 dark:text-gray-300">Bạn có muốn xóa tài khoản này ?</p>
+                <div class="flex justify-center items-center space-x-4">
+                    <button data-modal-toggle="deleteModal" type="button" @click="openDelete()"
+                        class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Hủy</button>
+                    <button type="submit" @click="deleteHotel()"
+                        class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -366,12 +421,12 @@ import AddressService from '../../plugins/addressService'
 export default {
   data() {
     return {
-      hotels: [], citys: [], districts: [], wards: [], imgs: [], hotel: '', imgs_old: [],
+      hotels: [], citys: [], districts: [], wards: [], imgs: [], hotel: '', imgs_old: [],hotel_nons:[],
       // tạo ra 1 mảng mới gọi là img_old_delete để lưu cái ảnh sẽ xóa
       img_old_delete: [],
       city_id: '', districts_code: '', ward_code: '', name_hotel: '', information: '', address: '',
       owner: '', activeTab: 'active',
-      isActive: true, isUnActive: false, isAdd: false, isUpdate: false
+      isActive: true, isUnActive: false, isAdd: false, isUpdate: false,isDelete:false
 
     };
   },
@@ -409,11 +464,14 @@ export default {
       this.activeTab = 'active'
       this.isActive = true
       this.isUnActive = false
+      
     },
     unActiveHotel() {
       this.activeTab = 'unactive'
       this.isActive = false
       this.isUnActive = true
+    
+      this.getNonHotel()
     },
     getToken() {
       let owner = JSON.parse(localStorage.getItem("owner"));
@@ -430,7 +488,10 @@ export default {
       this.imgs_old = []
       this.isUpdate = !this.isUpdate
     },
-
+    openDelete()
+    {
+      this.isDelete = !this.isDelete
+    },
     select(update) {
       this.hotel = update
       this.city_id = update.city_code
@@ -489,6 +550,15 @@ export default {
       try {
         const result = await this.$axios.get(`hotel/get/${this.owner.id}`)
         this.hotels = result.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getNonHotel()
+    {
+      try {
+        const result = await this.$axios.get(`hotel/get_non/${this.owner.id}`)
+        this.hotel_nons = result.data
       } catch (error) {
         console.log(error)
       }
@@ -603,7 +673,24 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+
+    async deleteHotel()
+    {
+      try {
+        const result = await this.$axios.delete(`hotel/delete/${this.hotel.id}`);
+                if (result.status === 200) {
+                    this.getHotel();
+                    this.openDelete();
+                    alert(result.data.message);
+                } else {
+                    alert(result.data.message);
+                }
+      } catch (error) {
+        console.log(error)
+      }
     }
+
   },
 };
 </script>

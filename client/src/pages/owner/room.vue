@@ -1,11 +1,41 @@
 <template>
+    <!--nút chuyển đổi qua lại-->
+  <div
+    class="text-sm mb-2 font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+    <ul class="flex flex-wrap">
+      <li class="mr-2 cursor-pointer ">
+        <a @click="activeHotel()"
+          :class="['inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300', { 'text-blue-600 border-blue-600 rounded-t-lg font-bold': activeTab === 'active' }]"
+          class=" active inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Danh
+          sách hoàn thiện</a>
+      </li>
+      <li class="mr-2 cursor-pointer">
+        <a @click="unActiveHotel()"
+          :class="['inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300', { 'text-blue-600 border-blue-600 rounded-t-lg font-bold': activeTab === 'unactive' }]"
+          class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Chờ
+          hoàn thiện</a>
+      </li>
+
+    </ul>
+  </div>
     <!--view getHotel => option value lấy ra id_hotel-->
-    <div class="hotel mb-2">
+    <div class="hotel mb-2" v-if="isActive">
         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn khách sạn</label>
         <select v-model="hotel_id" @change="getRoom()"
             class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
             <option disabled selected>Chọn khách sạn</option>
             <option v-for="hotel in hotels" :key="hotel.id" :value="hotel.id">
+                {{ hotel.name_hotel }}
+            </option>
+        </select>
+    </div>
+
+    <div class="hotel mb-2" v-if="isUnActive">
+        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn khách sạn</label>
+        <select v-model="hotel_id" @change="getRoom()"
+            class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
+            <option disabled selected>Chọn khách sạn</option>
+            <option v-for="hotel in hotel_nons" :key="hotel.id" :value="hotel.id">
                 {{ hotel.name_hotel }}
             </option>
         </select>
@@ -178,9 +208,10 @@ import { Pagination } from 'swiper/modules';
 export default {
     data() {
         return {
-            hotels: [], rooms: [], imgs: [],
+            hotels: [], rooms: [], imgs: [],hotel_nons:[],
             owner: '', hotel_id: '', room: '',
             isAdd: false, isDelete: false, isUpdate: false,
+            isActive: true, isUnActive: false,activeTab: 'active',
             type_room:'',price:'',quantity:''
         };
     },
@@ -199,6 +230,21 @@ export default {
         };
     },
     methods: {
+        activeHotel() {
+      this.activeTab = 'active'
+      this.isActive = true
+      this.isUnActive = false
+      this.hotel_id = ''
+      this.rooms = []
+    },
+    unActiveHotel() {
+      this.activeTab = 'unactive'
+      this.isActive = false
+      this.isUnActive = true
+      this.hotel_id = ''
+      this.rooms = []
+      this.getNonHotel()
+    },
         getToken() {
             let owner = JSON.parse(localStorage.getItem("owner"));
             return owner;
@@ -244,6 +290,15 @@ export default {
                 console.log(error)
             }
         },
+        async getNonHotel()
+    {
+      try {
+        const result = await this.$axios.get(`hotel/get_non/${this.owner.id}`)
+        this.hotel_nons = result.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
         async addRoom() {
             try {
                 if (this.imgs.length > 0) {

@@ -5,11 +5,13 @@ const Order = db.order;
 const OD = db.order_detail;
 const ImgHotel = db.img_hotel;
 const ImgRoom = db.img_room;
-const room = db.room_hotel;
+const Room = db.room_hotel;
 const Rating = db.rating_hotel;
 const Report = db.report_hotel;
 const Favorate = db.favorate_hotel;
 const coupon = db.coupon_owner;
+const imgRating = db.img_rating
+const imgReport = db.img_report
 
 const MathLevel = db.MathLevel
 const sequelize = require('sequelize');
@@ -54,8 +56,18 @@ const getHotel = async (req, res) => {
     try {
         const hotel = await Hotel.findAll({
             include: [
-                { model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'] },
-                { model: MathLevel, attributes: ['level']}
+                {
+                    model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'], raw: true,
+                    nest: true,
+                    required: true
+                },
+                { model: MathLevel, attributes: ['level'] },
+                {
+                    model: Room,
+                    raw: true,
+                    nest: true,
+                    required: true
+                },
             ]
         });
         res.status(200).json(hotel);
@@ -68,6 +80,7 @@ const getHotelByOwner = async (req, res) => {
     const idOwner = req.params.id;
     try {
         const hotel = await Hotel.findAll({
+            where: { id_owner: idOwner },
             include: [
                 {
                     model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'],
@@ -76,18 +89,59 @@ const getHotelByOwner = async (req, res) => {
                     required: true
                 },
                 {
+                    model: Room,
+                    raw: true,
+                    nest: true,
+                    required: true
+                },
+                {
+                    model: MathLevel, attributes: ['level'],
+                    required: true
+                },
+                {
+                    model: Owner, attributes: ['id', 'fullname'],
+                },
+            ]
+        });
+      
+        res.status(200).json(hotel);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getHotelNon = async (req, res) => {
+    const idOwner = req.params.id;
+    try {
+        const hotel = await Hotel.findAll({
+            where: { id_owner: idOwner },
+            include: [
+                {
+                    model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'],
+                    raw: true,
+                    nest: true,
+                },
+                {
+                    model: Room,
+                    raw: true,
+                    nest: true,      
+                },
+                {
                     model: MathLevel, attributes: ['level'],
                 },
                 {
                     model: Owner, attributes: ['id', 'fullname'],
                     raw: true,
                     nest: true,
-                    required: true, // loại bỏ các thành phần bị thiếu ?
-                    where: { id: idOwner }
                 },
             ]
         });
-        res.status(200).json(hotel);
+        const hotelsWithMissingData = hotel.filter(hotel => {
+            const hasNoImages = !hotel.img_hotels || hotel.img_hotels.length === 0;;
+            const hasNoRooms = !hotel.room_hotels || hotel.room_hotels.length === 0;
+            return hasNoImages || hasNoRooms;
+        });
+        res.status(200).json(hotelsWithMissingData);
     } catch (error) {
         console.log(error);
     }
@@ -112,6 +166,9 @@ const addHotel = async (req, res) => {
                 isactive: true,
                 id_owner: id
             })
+            if (hotel) {
+                await MathLevel.create({ level: 0, point: 0, id_hotel: hotel.id })
+            }
             return res.status(200).json({ message: 'Thêm khách sạn thành công.', hotel });
         }
     } catch (error) {
@@ -261,29 +318,65 @@ const deleteHotel = async (req, res) => {
             else {
                 const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
                 if (img_hotel.length > 0) {
-                      for (const img of img_hotel) {
-                      const imagePath = `./uploads/${img.image_name}`;
-                      deleteFile(imagePath);
-                      await img.destroy();
+                    for (const img of img_hotel) {
+                        const imagePath = `./uploads/${img.name_img}`;
+                        deleteFile(imagePath);
+                        await img.destroy();
                     }
                 }
-                const img_room = await ImgRoom.findAll({ where: { id_hotel: existHotel.id } });
+                /*
+                    tìm X
+                    lấy list img_X từ X tìm được (id_X)
+                */
+                const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
+                const roomIds = room.map((r) => r.id);
+                const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
                 if (img_room.length > 0) {
-                      for (const img of img_room) {
-                      const imagePath = `./uploads/${img.image_name}`;
-                      deleteFile(imagePath);
-                      await img.destroy();
+                    for (const img of img_room) {
+                        const imagePath = `./uploads/${img.name_img}`;
+                        deleteFile(imagePath);
+                        await img.destroy();
                     }
                 }
-                await Order.destroy({ where: { id_hotel: existHotel.id } });
-                await room.destroy({ where: { id_hotel: existHotel.id } });
+                await Room.destroy({ where: { id_hotel: existHotel.id } });
+
+                const order = await Order.findAll({ where: { id_hotel: existHotel.id } })
+                const orderId = order.map((r) => r.id);
+                await OD.destroy({ where: { id_order: orderId } });
+                await Order.destroy({ where: { id_hotel: existHotel.id } })
+
+                const rating = await Rating.findAll({ where: { id_hotel: existHotel.id } })
+                const ratingID = rating.map((r) => r.id)
+                const img_rating = await imgRating.findAll({ where: { id_rating: ratingID } });
+                if (img_rating.length > 0) {
+                    for (const img of img_rating) {
+                        const imagePath = `./uploads/${img.name_img}`;
+                        deleteFile(imagePath);
+                        await img.destroy();
+                    }
+                }
                 await Rating.destroy({ where: { id_hotel: existHotel.id } });
+
+                const report = await Report.findAll({ where: { id_hotel: existHotel.id } })
+                const ReportID = report.map((r) => r.id)
+                const img_report = await imgReport.findAll({ where: { id_report: ReportID } });
+                if (img_report.length > 0) {
+                    for (const img of img_report) {
+                        const imagePath = `./uploads/${img.name_img}`;
+                        deleteFile(imagePath);
+                        await img.destroy();
+                    }
+                }
                 await Report.destroy({ where: { id_hotel: existHotel.id } });
+
                 await Favorate.destroy({ where: { id_hotel: existHotel.id } });
+
                 await coupon.destroy({ where: { id_hotel: existHotel.id } });
+
                 await MathLevel.destroy({ where: { id_hotel: existHotel.id } });
-                
+
                 await existHotel.destroy();
+
                 return res.status(200).json({ message: 'Xóa thành công.' });
             }
         }
@@ -314,6 +407,7 @@ const deleteImgHotel = async (req, res) => {
 
 module.exports = {
     getHotel,
+    getHotelNon,
     getHotelByOwner,
     addHotel,
     addImgHotel,
@@ -321,5 +415,5 @@ module.exports = {
     updateImgHotel,
     deleteHotel,
     deleteImgHotel,
- 
+
 }
