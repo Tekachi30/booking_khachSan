@@ -210,7 +210,15 @@ const deleteRoom = async (req, res) => {
         if(!existRoom){
             return res.status(201).json({message: 'Không tìm thấy phòng.'});
         }else{
-            await ImgRoom.destroy({ where: {id_room: id}})
+            const img_room = await ImgRoom.findAll({ where: { id_room: existRoom.id } });
+            if (img_room.length > 0) {
+                for (const img of img_room) {
+                    const imagePath = `./uploads/${img.name_img}`;
+                    deleteFile(imagePath);
+                    await img.destroy();
+                }
+            }
+            
             await existRoom.destroy();
             return res.status(200).json({message: 'xóa thành công.'});
         }
