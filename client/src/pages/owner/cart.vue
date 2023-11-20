@@ -1,9 +1,9 @@
 <template>
     <!-- Start block -->
     <section class=" p-3 sm:p-5 antialiased">
-        <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <div class=" px-4 ">
             <!-- Start coding here -->
-            <div class=" relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class=" relative overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
                         <form class="flex items-center">
