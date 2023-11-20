@@ -127,16 +127,17 @@ const updateRoom = async (req, res) => {
         const { type_room,quantity,price } = req.body;
         // check id_hotel real 
         const existTypeRoom = await Room.findOne({where:{type_room}})
-        const exitsRoom = await Hotel.findByPk(id);
+        const exitsRoom = await Room.findByPk(id);
         if(exitsRoom)
         {
            if(existTypeRoom)
            {
-            const room =  await Room.update({
+                const room =  await Room.update({
                 type_room: type_room,
                 quantity:quantity,
                 price: price,
-            })
+            },
+            {where:{id:id}})
             return res.status(200).json({message: 'cập nhật phòng thành công.',room});
            }
            else
@@ -147,23 +148,6 @@ const updateRoom = async (req, res) => {
         else
         {
             return res.status(201).json({message: 'Không tìm thấy phòng'});
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-// update status room
-const updateStatusRoom = async (req, res) => {
-    try {
-        const id = req.pramas.id;
-        const existRoom = await Room.findByPk(id);
-        if(!existRoom){
-            return res.status(201).json({message: 'Không tìm thấy phòng.'});
-        }else{
-            await Room.update({
-                book_status: true,
-            })
-            return res.status(200).json({message: 'Thành công.'});
         }
     } catch (error) {
         console.log(error);
@@ -243,7 +227,6 @@ module.exports = {
     addRoom,
     addImgRoom,
     updateRoom,
-    updateStatusRoom,
     updateImgRoom,
     deleteRoom,
     deleteImgRoom
