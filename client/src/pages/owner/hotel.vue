@@ -574,46 +574,51 @@ export default {
     */
     async addHotel() {
       try {
-        if (this.imgs.length > 0) {
-          const result = await this.$axios.post(`hotel/add/${this.owner.id}`,
-            {
-              "name_hotel": this.name_hotel,
-              "address": this.address,
-              "city_code": this.city_id,
-              "district_code": this.districts_code,
-              "ward_code": this.ward_code,
-              "information": this.information
-            })
-          console.log(result.data.hotel.id)
-          if (result.status == 200) {
-            const formImg = new FormData();
-            // thêm ảnh tại đây khi thêm thông tin thành công
-            for (let i = 0; i < this.imgs.length; i++) {
-              const file = this.imgs[i].file;
-              formImg.append("avatar", file);
-            }
-            try {
-              const addimg = await this.$axios.post(`hotel/addImg/${result.data.hotel.id}`, formImg,
-                {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                })
-              if (addimg.status == 200) {
-                console.log(result.data.message)
-                this.getHotel()
-                this.openAdd()
-              }
-            } catch (error) {
-              console.log(error)
-            }
+        // Kiểm tra xem các thông tin có được nhật đầy đủ không
+        if (!this.code_coupon || !this.discount || !this.date_coupon) {
+              alert("Vui lòng nhật đầy đủ thông tin.")
+              return;
+        }else{
+          if (this.imgs.length > 0) {
+            const result = await this.$axios.post(`hotel/add/${this.owner.id}`,
+              {
+                "name_hotel": this.name_hotel,
+                "address": this.address,
+                "city_code": this.city_id,
+                "district_code": this.districts_code,
+                "ward_code": this.ward_code,
+                "information": this.information
+              })
+            console.log(result.data.hotel.id)
 
+            if (result.status == 200) {
+              const formImg = new FormData();
+              // thêm ảnh tại đây khi thêm thông tin thành công
+              for (let i = 0; i < this.imgs.length; i++) {
+                const file = this.imgs[i].file;
+                formImg.append("avatar", file);
+              }
+              try {
+                const addimg = await this.$axios.post(`hotel/addImg/${result.data.hotel.id}`, formImg,
+                  {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                  })
+                if (addimg.status == 200) {
+                  console.log(result.data.message)
+                  this.getHotel()
+                  this.openAdd()
+                }
+              } catch (error) {
+                console.log(error)
+              }
+            }
+          }
+          else {
+            alert('Them ảnh vào')
           }
         }
-        else {
-          alert('Them ảnh vào')
-        }
-
       } catch (error) {
         console.log(error)
       }
@@ -621,25 +626,30 @@ export default {
 
     async updateHotel() {
       try {
-        // bước 1: sẽ thực hiện việc update thông tin trước
-        const result = await this.$axios.put(`hotel/update/${this.hotel.id}`,
-          {
-            "name_hotel": this.name_hotel,
-            "address": this.address,
-            "city_code": this.city_id,
-            "district_code": this.districts_code,
-            "ward_code": this.ward_code,
-            "information": this.information
-          });
+        // Kiểm tra xem các thông tin có được nhật đầy đủ không
+        if (!this.name_hotel || !this.address || !this.city_id || !this.districts_code || !this.ward_code || !this.information) {
+              alert("Vui lòng nhập đầy đủ thông tin.")
+              return;
+        }else{
+          // bước 1: sẽ thực hiện việc update thông tin trước
+          const result = await this.$axios.put(`hotel/update/${this.hotel.id}`,
+            {
+              "name_hotel": this.name_hotel,
+              "address": this.address,
+              "city_code": this.city_id,
+              "district_code": this.districts_code,
+              "ward_code": this.ward_code,
+              "information": this.information
+            });
 
-        console.log(result.data.message)
+          console.log(result.data.message)
 
-        // xử lý thêm ảnh
-        /*
-         + lưu ý 1 là phải cập nhật thành công thông tin hotel
-         + lưu ý 2 là phải có ảnh mới => ko có bỏ qua
-        */
-        if (result.status == 200 && this.imgs.length > 0) {
+          // xử lý thêm ảnh
+          /*
+           + lưu ý 1 là phải cập nhật thành công thông tin hotel
+           + lưu ý 2 là phải có ảnh mới => ko có bỏ qua
+          */
+          if (result.status == 200 && this.imgs.length > 0) {
             const formImg = new FormData();
             // thêm ảnh tại đây khi thêm thông tin thành công
             for (let i = 0; i < this.imgs.length; i++) {
@@ -658,8 +668,8 @@ export default {
             }
 
           }
-        // xử lý xóa ảnh
-        if (result.status == 200 && this.img_old_delete.length > 0) {
+          // xử lý xóa ảnh
+          if (result.status == 200 && this.img_old_delete.length > 0) {
             
             // thêm ảnh tại đây khi thêm thông tin thành công
             for (let i = 0; i < this.img_old_delete.length; i++) {
@@ -667,9 +677,9 @@ export default {
               const result = await this.$axios.delete(`hotel/deleteImg/${id}`)
             }
           }
-        this.openUpdate()
-        this.getHotel()
-
+          this.openUpdate()
+          this.getHotel()
+        }
       } catch (error) {
         console.log(error)
       }

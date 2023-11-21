@@ -42,20 +42,26 @@ export default {
   methods: {
     async login() {
       try {
-        const result = await this.$axios.post('admin/login',
-          {
-            "account": this.account,
-            "password": this.password
-          });
-        if (result.status == 200) {
-          // xử lý 1 biến lưu trữ local storage
-          const data = result.data;
-          localStorage.setItem("admin", JSON.stringify(data));
-          // Chuyển hướng đến trang dashboard.
-          this.$router.push('/admin')
-        }
-        else {
-          alert(result.data.message)
+        // Kiểm tra xem các thông tin có được nhập đầy đủ không
+        if (!this.account || !this.password) {
+                alert("Vui lòng nhập đầy đủ thông tin.")
+                return;
+        }else{
+            const result = await this.$axios.post('admin/login',
+              {
+                "account": this.account,
+                "password": this.password
+              });
+            if (result.status == 200) {
+              // xử lý 1 biến lưu trữ local storage
+              const data = result.data;
+              localStorage.setItem("admin", JSON.stringify(data));
+              // Chuyển hướng đến trang dashboard.
+              this.$router.push('/admin')
+            }
+            else {
+              alert(result.data.message)
+            }
         }
       } catch (error) {
         console.log(error)

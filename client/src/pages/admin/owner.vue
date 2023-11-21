@@ -204,20 +204,32 @@ export default
 
     async addOwner() {
         try {
-            const result = await this.$axios.post('owner/add',{
-                account: this.account,
-                fullname: this.fullname,
-                address: this.address,
-                phone: this.phone,
-                password: this.password,
-                email: this.email
-            });
-            if (result.status == 200) {
-                this.openAdd()
-                this.getOwner()
-            }
-            else {
-                alert(result.data.message)
+            // Kiểm tra xem các thông tin có được nhật đầy đủ không
+            if (!this.account || !this.fullname || !this.address || !this.phone || !this.password || !this.email) {
+                alert("Vui lòng nhập đầy đủ thông tin.")
+                return;
+            }else{
+                // Kiểm tra xem account có chứa dấu không
+                if (/[^a-zA-Z0-9]/.test(this.account)) {
+                    alert("Tài khoản không được chứa dấu.")
+                    return;
+                }else{
+                        const result = await this.$axios.post('owner/add',{
+                        account: this.account,
+                        fullname: this.fullname,
+                        address: this.address,
+                        phone: this.phone,
+                        password: this.password,
+                        email: this.email
+                    });
+                    if (result.status == 200) {
+                        this.openAdd()
+                        this.getOwner()
+                    }
+                    else {
+                        alert(result.data.message)
+                    }
+                }
             }
         } catch (error) {
             console.log(error);
