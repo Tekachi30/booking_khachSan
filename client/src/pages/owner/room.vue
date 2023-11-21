@@ -122,7 +122,7 @@
                         <div class="price">
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá
                                 phòng</label>
-                            <input v-model="price" type="text" name="price" id="price"
+                            <input v-model="price" type="number" name="price" id="price"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập gỉá phòng" required="">
                         </div>
@@ -448,44 +448,48 @@ export default {
         },
         async addRoom() {
             try {
-                if (this.imgs.length > 0) {
-                    const result = await this.$axios.post(`room/add/${this.hotel_id}`,
+                if (!this.type_room || !this.quantity || !this.price) {
+                    alert("Vui lòng nhập đầy đủ thông tin.")
+                    return;
+                }else{
+                    if (this.imgs.length > 0) {
+                        const result = await this.$axios.post(`room/add/${this.hotel_id}`,
                         {
                             "type_room": this.type_room,
                             "quantity": this.quantity,
                             "price": this.price
                         })
 
-                    if (result.status == 201) {
-                        console.log(result.data.message)
-                    }
-                    if (result.status == 200) {
-                        const formImg = new FormData();
-                        // thêm ảnh tại đây khi thêm thông tin thành công
-                        for (let i = 0; i < this.imgs.length; i++) {
-                            const file = this.imgs[i].file;
-                            formImg.append("avatar", file);
+                        if (result.status == 201) {
+                            console.log(result.data.message)
                         }
-                        try {
-                            const addimg = await this.$axios.post(`room/addImg/${result.data.room.id}`, formImg,
-                                {
-                                    headers: {
-                                        "Content-Type": "multipart/form-data",
-                                    },
-                                })
-                            if (addimg.status == 200) {
-                                console.log(result.data.message)
-                                this.getRoom()
-                                this.openAdd()
+                        if (result.status == 200) {
+                            const formImg = new FormData();
+                            // thêm ảnh tại đây khi thêm thông tin thành công
+                            for (let i = 0; i < this.imgs.length; i++) {
+                                const file = this.imgs[i].file;
+                                formImg.append("avatar", file);
                             }
-                        } catch (error) {
-                            console.log(error)
+                            try {
+                                const addimg = await this.$axios.post(`room/addImg/${result.data.room.id}`, formImg,
+                                    {
+                                        headers: {
+                                            "Content-Type": "multipart/form-data",
+                                        },
+                                    })
+                                if (addimg.status == 200) {
+                                    console.log(result.data.message)
+                                    this.getRoom()
+                                    this.openAdd()
+                                }
+                            } catch (error) {
+                                console.log(error)
+                            }
                         }
-
                     }
-                }
-                else {
-                    alert('Them ảnh vào')
+                    else {
+                        alert('Them ảnh vào')
+                    }
                 }
             } catch (error) {
                 console.log(error)
@@ -501,52 +505,55 @@ export default {
         },
         async updateRoom() {
             try {
-                
-                // bước 1: sẽ thực hiện việc update thông tin trước
-                const result = await this.$axios.put(`room/update/${this.room.id}`,
-                    {
-                        "type_room": this.type_room,
-                        "quantity": this.quantity,
-                        "price": this.price
-                    });
+                if (!this.type_room || !this.quantity || !this.price) {
+                    alert("Vui lòng nhập đầy đủ thông tin.")
+                    return;
+                }else{
+                    // bước 1: sẽ thực hiện việc update thông tin trước
+                    const result = await this.$axios.put(`room/update/${this.room.id}`,
+                        {
+                            "type_room": this.type_room,
+                            "quantity": this.quantity,
+                            "price": this.price
+                        });
 
-                console.log(result.data.message)
+                    console.log(result.data.message)
 
-                // xử lý thêm ảnh
-                /*
-                 + lưu ý 1 là phải cập nhật thành công thông tin hotel
-                 + lưu ý 2 là phải có ảnh mới => ko có bỏ qua
-                */
-                if (result.status == 200 && this.imgs.length > 0) {
-                    const formImg = new FormData();
-                    // thêm ảnh tại đây khi thêm thông tin thành công
-                    for (let i = 0; i < this.imgs.length; i++) {
-                        const file = this.imgs[i].file;
-                        formImg.append("avatar", file);
+                    // xử lý thêm ảnh
+                    /*
+                     + lưu ý 1 là phải cập nhật thành công thông tin hotel
+                     + lưu ý 2 là phải có ảnh mới => ko có bỏ qua
+                    */
+                    if (result.status == 200 && this.imgs.length > 0) {
+                        const formImg = new FormData();
+                        // thêm ảnh tại đây khi thêm thông tin thành công
+                        for (let i = 0; i < this.imgs.length; i++) {
+                            const file = this.imgs[i].file;
+                            formImg.append("avatar", file);
+                        }
+                        try {
+                            const addimg = await this.$axios.post(`room/addImg/${this.room.id}`, formImg,
+                                {
+                                    headers: {
+                                        "Content-Type": "multipart/form-data",
+                                    },
+                                })
+                        } catch (error) {
+                            console.log(error)
+                        }
                     }
-                    try {
-                        const addimg = await this.$axios.post(`room/addImg/${this.room.id}`, formImg,
-                            {
-                                headers: {
-                                    "Content-Type": "multipart/form-data",
-                                },
-                            })
-                    } catch (error) {
-                        console.log(error)
-                    }
+                    // xử lý xóa ảnh
+                    if (result.status == 200 && this.img_old_delete.length > 0) {
 
+                        // thêm ảnh tại đây khi thêm thông tin thành công
+                        for (let i = 0; i < this.img_old_delete.length; i++) {
+                            const id = this.img_old_delete[i].id;
+                            const result = await this.$axios.delete(`room/deleteImg/${id}`)
+                        }
+                    }
+                    this.openUpdate()
+                    this.getRoom()
                 }
-                // xử lý xóa ảnh
-                if (result.status == 200 && this.img_old_delete.length > 0) {
-
-                    // thêm ảnh tại đây khi thêm thông tin thành công
-                    for (let i = 0; i < this.img_old_delete.length; i++) {
-                        const id = this.img_old_delete[i].id;
-                        const result = await this.$axios.delete(`room/deleteImg/${id}`)
-                    }
-                }
-                this.openUpdate()
-                this.getRoom()
             } catch (error) {
                 console.log(error)
             }

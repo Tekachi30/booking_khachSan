@@ -199,7 +199,7 @@
                             code</label>
                         <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Nhập mã code" required="">
+                            placeholder="Nhập mã code" required="" maxlength="7">
                     </div>
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm
@@ -335,17 +335,23 @@ export default
 
             async addCoupon() {
                 try {
-                    const result = await this.$axios.post(`coupon/add/${this.id_hotel}`, { // thêm bằng id của hotel 
-                        "code_coupon": this.code_coupon,
-                        "discount": this.discount,
-                        "date_coupon": this.date_coupon
-                    });
-                    if (result.status == 200) {
-                        this.openAdd()
-                        this.getCoupon()
-                        alert(result.data.message)
-                    } else {
-                        alert(result.data.message)
+                        // Kiểm tra xem các thông tin có được nhật đầy đủ không
+                        if (!this.code_coupon || !this.discount || !this.date_coupon) {
+                            alert("Vui lòng nhập đầy đủ thông tin.")
+                            return;
+                        }else{
+                        const result = await this.$axios.post(`coupon/add/${this.id_hotel}`, { // thêm bằng id của hotel 
+                            "code_coupon": this.code_coupon,
+                            "discount": this.discount,
+                            "date_coupon": this.date_coupon
+                        });
+                        if (result.status == 200) {
+                            this.openAdd()
+                            this.getCoupon()
+                            alert(result.data.message)
+                        } else {
+                            alert(result.data.message)
+                        }
                     }
                 } catch (error) {
                     console.log(error)
@@ -372,19 +378,25 @@ export default
             },
             async updateCoupon() {
                 try {
-                    // cập nhật coupon theo id
-                    const result = await this.$axios.put(`coupon/update/${this.coupon.id}`, {
-                        "code_coupon": this.code_coupon,
-                        "discount": this.discount,
-                        "date_coupon": this.date_coupon
-                    });
-                    if (result.status == 200) {
-                        this.openUpdate()
-                        this.getCoupon()
-                        alert(result.data.message)
-                    }
-                    else {
-                        alert(result.data.message)
+                    // Kiểm tra xem các thông tin có được nhật đầy đủ không
+                    if (!this.code_coupon || !this.discount || !this.date_coupon) {
+                        alert("Vui lòng nhập đầy đủ thông tin.")
+                        return;
+                    }else{
+                        // cập nhật coupon theo id
+                        const result = await this.$axios.put(`coupon/update/${this.coupon.id}`, {
+                            "code_coupon": this.code_coupon,
+                            "discount": this.discount,
+                            "date_coupon": this.date_coupon
+                        });
+                        if (result.status == 200) {
+                            this.openUpdate()
+                            this.getCoupon()
+                            alert(result.data.message)
+                        }
+                        else {
+                            alert(result.data.message)
+                        }
                     }
                 } catch (error) {
                     console.log(error)

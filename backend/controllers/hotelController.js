@@ -220,9 +220,9 @@ const updateHotel = async (req, res) => {
         if (exsitHotel) {
             if (!exsitName_hotel) {
                 exsitHotel.name_hotel = name_hotel,
-                    exsitHotel.address = address,
-                    exsitHotel.city_code = city_code,
-                    exsitHotel.district_code = district_code
+                exsitHotel.address = address,
+                exsitHotel.city_code = city_code,
+                exsitHotel.district_code = district_code
                 exsitHotel.ward_code = ward_code
                 exsitHotel.information = information
 
