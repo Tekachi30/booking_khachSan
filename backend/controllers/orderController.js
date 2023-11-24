@@ -17,7 +17,7 @@ const getOrder = async (req, res) => {
     }
 }
 
-const updateOder = async (req, res) => {
+const updateOrder = async (req, res) => {
     try {
         const id = req.params.id;
         const { status } = req.body;
@@ -52,5 +52,5 @@ const updateOder = async (req, res) => {
 
 module.exports = {
     getOrder,
-    updateOder,
+    updateOrder,
 }

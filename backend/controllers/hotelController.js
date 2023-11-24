@@ -1,8 +1,6 @@
 const db = require("../models");
 const Hotel = db.hotel;
 const Owner = db.owner;
-const Order = db.order;
-const OD = db.order_detail;
 const ImgHotel = db.img_hotel;
 const ImgRoom = db.img_room;
 const Room = db.room_hotel;
@@ -10,10 +8,7 @@ const Rating = db.rating_hotel;
 const Report = db.report_hotel;
 const Favorate = db.favorate_hotel;
 const coupon = db.coupon_owner;
-const imgRating = db.img_rating
-const imgReport = db.img_report
 
-const MathLevel = db.MathLevel
 const sequelize = require('sequelize');
 const Op = sequelize.Op
 const dayjs = require('dayjs');
@@ -50,7 +45,7 @@ const deleteFile = (filePath) => {
     });
 }
 
-// start
+// start 
 
 const getHotel = async (req, res) => {
     try {
@@ -61,7 +56,6 @@ const getHotel = async (req, res) => {
                     nest: true,
                     required: true
                 },
-                { model: MathLevel, attributes: ['level'] },
                 {
                     model: Room,
                     raw: true,
@@ -95,10 +89,6 @@ const getHotelByOwner = async (req, res) => {
                     required: true
                 },
                 {
-                    model: MathLevel, attributes: ['level'],
-                    required: true
-                },
-                {
                     model: Owner, attributes: ['id', 'fullname'],
                 },
             ]
@@ -125,9 +115,6 @@ const getHotelNon = async (req, res) => {
                     model: Room,
                     raw: true,
                     nest: true,      
-                },
-                {
-                    model: MathLevel, attributes: ['level'],
                 },
                 {
                     model: Owner, attributes: ['id', 'fullname'],
@@ -164,11 +151,10 @@ const addHotel = async (req, res) => {
                 ward_code: ward_code,
                 information: information,
                 isactive: true,
+                point: 0,
+                level: 0, 
                 id_owner: id
             })
-            if (hotel) {
-                await MathLevel.create({ level: 0, point: 0, id_hotel: hotel.id })
-            }
             return res.status(200).json({ message: 'Thêm khách sạn thành công.', hotel });
         }
     } catch (error) {
@@ -279,106 +265,42 @@ const deleteHotel = async (req, res) => {
         if (!existHotel) {
             return res.status(200).json({ message: 'Không tìm thấy khách sạn.' });
         } else {
-            // xử lý hóa đơn
-            const exitsOrder = await Order.findOne({
-                where: {
-                    id_hotel: id,
-                    [Op.or]: [{ status: 'Đã Thanh Toán' }, { status: 'Đã Đặt' }]
-                }
-            });
-            if (exitsOrder) {
-                /*
-                 note command
-                 Khi tồn tại hóa đơn chưa trả phòng
-                 Thực hiện => lấy ngày cuối cùng họ trả phòng để report lại owner
-                 Thực hiện bằng cách cú pháp find kết hợp ...
-                */
-                const last_checkout = await OD.findOne({
-                    attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
-                    where: {
-                        '$order.status$': 'Đã Thanh Toán'
-                    },
-                    include: [
-                        {
-                            model: Order,
-                            as: 'order',
-                            attributes: [],
-                            where: {
-                                status: 'Đã Thanh Toán',
-                            },
-                        },
-                    ],
-                    group: ['id_order'],
-                    order: [[sequelize.fn('MAX', sequelize.col('check_out')), 'DESC']],
-                })
-                const time = new Date(last_checkout.getDataValue('latest_checkout'))
-                var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
-                return res.status(201).json({ message: `Không thể xóa hotel - Xóa sau thời gian: ${result_last}` });
-            }
-            else {
-                const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
-                if (img_hotel.length > 0) {
-                    for (const img of img_hotel) {
-                        const imagePath = `./uploads/${img.name_img}`;
-                        deleteFile(imagePath);
-                        await img.destroy();
-                    }
-                }
-                /*
-                    tìm X
-                    lấy list img_X từ X tìm được (id_X)
-                */
-                const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
-                const roomIds = room.map((r) => r.id);
-                const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
-                if (img_room.length > 0) {
-                    for (const img of img_room) {
-                        const imagePath = `./uploads/${img.name_img}`;
-                        deleteFile(imagePath);
-                        await img.destroy();
-                    }
-                }
-                await Room.destroy({ where: { id_hotel: existHotel.id } });
+               const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
+               if (img_hotel.length > 0) {
+                   for (const img of img_hotel) {
+                       const imagePath = `./uploads/${img.name_img}`;
+                       deleteFile(imagePath);
+                       await img.destroy();
+                   }
+               }
+               /*
+                   tìm X
+                   lấy list img_X từ X tìm được (id_X)
+               */
+               const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
+               const roomIds = room.map((r) => r.id);
+               const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
+               if (img_room.length > 0) {
+                   for (const img of img_room) {
+                       const imagePath = `./uploads/${img.name_img}`;
+                       deleteFile(imagePath);
+                       await img.destroy();
+                   }
+               }
+               await Room.destroy({ where: { id_hotel: existHotel.id } });
 
-                const order = await Order.findAll({ where: { id_hotel: existHotel.id } })
-                const orderId = order.map((r) => r.id);
-                await OD.destroy({ where: { id_order: orderId } });
-                await Order.destroy({ where: { id_hotel: existHotel.id } })
+               await Rating.destroy({ where: { id_hotel: existHotel.id } }); // xóa hết luôn hả
+                   
+               await Report.destroy({ where: { id_hotel: existHotel.id } });
 
-                const rating = await Rating.findAll({ where: { id_hotel: existHotel.id } })
-                const ratingID = rating.map((r) => r.id)
-                const img_rating = await imgRating.findAll({ where: { id_rating: ratingID } });
-                if (img_rating.length > 0) {
-                    for (const img of img_rating) {
-                        const imagePath = `./uploads/${img.name_img}`;
-                        deleteFile(imagePath);
-                        await img.destroy();
-                    }
-                }
-                await Rating.destroy({ where: { id_hotel: existHotel.id } });
+               await Favorate.destroy({ where: { id_hotel: existHotel.id } }); // xóa hotel =>  => xóa OD 
 
-                const report = await Report.findAll({ where: { id_hotel: existHotel.id } })
-                const ReportID = report.map((r) => r.id)
-                const img_report = await imgReport.findAll({ where: { id_report: ReportID } });
-                if (img_report.length > 0) {
-                    for (const img of img_report) {
-                        const imagePath = `./uploads/${img.name_img}`;
-                        deleteFile(imagePath);
-                        await img.destroy();
-                    }
-                }
-                await Report.destroy({ where: { id_hotel: existHotel.id } });
+               await coupon.destroy({ where: { id_hotel: existHotel.id } }); // t có face của vân đâu
 
-                await Favorate.destroy({ where: { id_hotel: existHotel.id } });
+               await existHotel.destroy();
 
-                await coupon.destroy({ where: { id_hotel: existHotel.id } });
-
-                await MathLevel.destroy({ where: { id_hotel: existHotel.id } });
-
-                await existHotel.destroy();
-
-                return res.status(200).json({ message: 'Xóa thành công.' });
-            }
+               return res.status(200).json({ message: 'Xóa thành công.' });
+            
         }
     } catch (error) {
         console.log(error);

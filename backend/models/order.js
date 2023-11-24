@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       order.hasMany(models.order_detail, { foreignKey: 'id_order' });
       order.belongsTo(models.User, { foreignKey: 'id_user' });
-      order.belongsTo(models.hotel, { foreignKey: 'id_hotel' });
     }
   }
   order.init({

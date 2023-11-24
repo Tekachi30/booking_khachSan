@@ -17,14 +17,6 @@ module.exports = {
           key: 'id'
         }
       },
-      id_hotel: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'hotels',
-          key: 'id'
-        }
-      },
       status: {
         type: Sequelize.ENUM("Đã Đặt","Đã Thanh Toán","Đã Hủy","Đã Trả Phòng")
       },

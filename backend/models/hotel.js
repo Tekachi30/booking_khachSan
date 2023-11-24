@@ -12,13 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       hotel.hasMany(models.room_hotel, { foreignKey: 'id_hotel' });
-      hotel.hasMany(models.MathLevel, { foreignKey: 'id_hotel' });
       hotel.hasMany(models.favorate_hotel, { foreignKey: 'id_hotel' });
-      hotel.hasMany(models.img_hotel, { foreignKey: 'id_hotel' });
-      hotel.hasMany(models.report_hotel, { foreignKey: 'id_hotel' });
+      hotel.hasMany(models.img_hotel, { foreignKey: 'id_hotel' }); 
+      hotel.hasMany(models.report_hotel, { foreignKey: 'id_hotel' }); 
       hotel.hasMany(models.coupon_owner, { foreignKey: 'id_hotel' });
       hotel.hasMany(models.rating_hotel, { foreignKey: 'id_hotel' });
-      hotel.hasMany(models.order, { foreignKey: 'id_hotel' });
       
       hotel.belongsTo(models.owner, { foreignKey: 'id_owner' });
 
@@ -32,7 +30,9 @@ module.exports = (sequelize, DataTypes) => {
     ward_code: DataTypes.INTEGER,
     id_owner: DataTypes.INTEGER,
     information: DataTypes.STRING,
-    isactive: DataTypes.BOOLEAN
+    isactive: DataTypes.BOOLEAN,
+    point: DataTypes.INTEGER,
+    level: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'hotel',

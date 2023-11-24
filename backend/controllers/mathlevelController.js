@@ -1,15 +1,7 @@
 const db = require("../models");
 const Hotel = db.hotel;
-const Owner = db.owner;
 const Order = db.order;
-const OD = db.order_detail;
-const ImgHotel = db.img_hotel;
-const room = db.room_hotel;
 const Rating = db.rating_hotel;
-const Report = db.report_hotel;
-const Favorate = db.favorate_hotel;
-const coupon = db.coupon_owner;
-const MathLevel = db.MathLevel
 const sequelize = require('sequelize');
 const Op = sequelize.Op
 const dayjs = require('dayjs');
@@ -57,9 +49,11 @@ const final_score = async () => {
             };
         });
 
+        // vậy cái t cần là phải deleteHotel sao cho xóa luôn được thằng order đúng hong? còn cái order này cũng phải truy nó ra để lấy điểm
+        // truy từ room => order_detail =>
         // Tính điểm theo hóa đơn
         const hotel_orders = await Hotel.findAll({
-            attributes: ['id', [sequelize.fn('COUNT', sequelize.col('Orders.id')), 'order_count']],
+            attributes: ['id', [sequelize.fn('COUNT', sequelize.col('Orders.id')), 'order_count']], // tìm bằng truy vấn tương tự này á?
             include: [
                 {
                     model: Order,
@@ -98,7 +92,7 @@ const final_score = async () => {
     }
 }
 
-// tính level của hotel
+// tính level của hotel 
 const result_math_level = (X, point) => {
     /*
     Cách tính level

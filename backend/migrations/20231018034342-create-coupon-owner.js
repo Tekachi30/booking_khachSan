@@ -17,6 +17,14 @@ module.exports = {
           key: 'id'
         }
       },
+      id_owner: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'owners',
+          key: 'id'
+        }
+      },
       code_coupon: {
         type: Sequelize.STRING
       },

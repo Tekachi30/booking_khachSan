@@ -28,7 +28,7 @@ module.exports = {
       quanlity: {
         type: Sequelize.INTEGER
       },
-      sigle_price: {
+      single_price: {
         type: Sequelize.INTEGER
       },
       check_in: {

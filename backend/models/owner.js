@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       owner.hasMany(models.messager, { foreignKey: 'id_owner' });
       owner.hasMany(models.hotel, { foreignKey: 'id_owner' });
+      owner.hasMany(models.coupon_owner, { foreignKey: 'id_owner' });
 
     }
   }
