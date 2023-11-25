@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   order.init({
     id_user: DataTypes.INTEGER,
-    id_hotel: DataTypes.INTEGER,
     status: DataTypes.ENUM("Đã Đặt","Đã Thanh Toán","Đã Hủy","Đã Trả Phòng"),
     provider: DataTypes.ENUM("MOMO","VNPAY")
   }, {
