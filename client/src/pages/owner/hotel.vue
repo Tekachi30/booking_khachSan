@@ -118,6 +118,7 @@
               <input v-model="name_hotel" type="text" name="name_hotel" id="name_hotel"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập tên khách sạn" required="">
+              <p v-if="!name_hotel && name_hotel_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tên khách sạn!</p>
             </div>
 
             <div class="address">
@@ -125,7 +126,9 @@
               <input v-model="address" type="text" name="address" id="address"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập Địa chỉ" required="">
+              <p v-if="!address && address_forcus" style="color: darkred; font-weight: bold;">Chưa nhập địa chỉ!</p>
             </div>
+
 
             <div class="city">
               <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn thành
@@ -137,7 +140,10 @@
                   {{ city.name }}
                 </option>
               </select>
+              <p v-if="!city_id && city_id_forcus" style="color: darkred; font-weight: bold;">Chưa chọn thành phố!</p>
+
             </div>
+
 
             <div class="district">
               <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quận huyện</label>
@@ -148,7 +154,9 @@
                   {{ district.name }}
                 </option>
               </select>
+              <p v-if="!districts_code && districts_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn quận/huyện!</p>
             </div>
+
 
             <div class="ward">
               <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Xã</label>
@@ -159,8 +167,8 @@
                   {{ ward.name }}
                 </option>
               </select>
+              <p v-if="!ward_code && ward_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn xã/phường!</p>
             </div>
-
           </div>
 
           <div class="information">
@@ -169,6 +177,7 @@
             <textarea v-model="information" type="text" name="information" id="information"
               class="bg-gray-50 border mt-2 mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Nhập thông tin khách sạn" required=""></textarea>
+            <p v-if="!information && information_forcus" style="color: darkred; font-weight: bold;">Nội dung mô tả chưa được nhập!</p>
           </div>
 
           <!--hiển thị ảnh đã chọn tại đây đi ???-->
@@ -206,6 +215,8 @@
               <input id="dropzone-file" type="file" class="hidden" @change="onFileSelected" multiple />
             </label>
           </div>
+          <!-- <p v-if="!avatar && avatar_forcus">Thêm ít nhất 1 ảnh!</p> -->
+          
 
           <button @click="addHotel()" type="button"
             class="  inline-flex items-center bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
@@ -251,6 +262,7 @@
               <input v-model="name_hotel" type="text" name="name_hotel" id="name_hotel"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập tên khách sạn" required="">
+              <p v-if="!name_hotel && name_hotel_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tên khách sạn!</p>
             </div>
 
             <div class="address">
@@ -258,6 +270,7 @@
               <input v-model="address" type="text" name="address" id="address"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập Địa chỉ" required="">
+              <p v-if="!address && address_forcus" style="color: darkred; font-weight: bold;">Chưa nhập địa chỉ!</p>
             </div>
 
             <div class="city">
@@ -270,6 +283,7 @@
                   {{ city.name }}
                 </option>
               </select>
+              <p v-if="!city_id && city_id_forcus" style="color: darkred; font-weight: bold;">Chưa chọn thành phố!</p>
             </div>
 
             <div class="district">
@@ -281,6 +295,7 @@
                   {{ district.name }}
                 </option>
               </select>
+              <p v-if="!districts_code && districts_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn quận/huyện!</p>
             </div>
 
             <div class="ward">
@@ -292,6 +307,7 @@
                   {{ ward.name }}
                 </option>
               </select>
+              <p v-if="!ward_code && ward_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn xã/phường!</p>
             </div>
 
           </div>
@@ -302,6 +318,7 @@
             <textarea v-model="information" type="text" name="information" id="information"
               class="bg-gray-50 border mt-2 mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Nhập thông tin khách sạn" required=""></textarea>
+            <p v-if="!information && information_forcus" style="color: darkred; font-weight: bold;">Nội dung mô tả chưa được nhập!</p>
           </div>
 
           <!--view ảnh mới-->
@@ -425,8 +442,10 @@ export default {
       // tạo ra 1 mảng mới gọi là img_old_delete để lưu cái ảnh sẽ xóa
       img_old_delete: [],
       city_id: '', districts_code: '', ward_code: '', name_hotel: '', information: '', address: '',
-      owner: '', activeTab: 'active',
-      isActive: true, isUnActive: false, isAdd: false, isUpdate: false,isDelete:false
+      owner: '', avatar: null, activeTab: 'active',
+      isActive: true, isUnActive: false, isAdd: false, isUpdate: false,isDelete:false,
+      name_hotel_forcus: false, address_forcus: false, city_id_forcus: false, districts_code_forcus: false,
+      ward_code_forcus: false, information_forcus: false, avatar_forcus: false
 
     };
   },
@@ -459,7 +478,6 @@ export default {
     };
   },
   methods: {
-
     activeHotel() {
       this.activeTab = 'active'
       this.isActive = true
@@ -574,50 +592,63 @@ export default {
     */
     async addHotel() {
       try {
-        // Kiểm tra xem các thông tin có được nhật đầy đủ không
-        if (!this.code_coupon || !this.discount || !this.date_coupon) {
-              alert("Vui lòng nhật đầy đủ thông tin.")
-              return;
+        // kiểm tra nhập nội dung đầy đủ chưa
+        if (!this.name_hotel || !this.address || !this.city_id || !this.districts_code || !this.ward_code || !this.information ) { // || !this.avatar
+          this.name_hotel_forcus = true;
+          this.address_forcus = true;
+          this.city_id_forcus = true;
+          this.districts_code_forcus = true;
+          this.ward_code_forcus = true;
+          this.information_forcus = true;
+          // this.avatar_forcus = true;
         }else{
-          if (this.imgs.length > 0) {
-            const result = await this.$axios.post(`hotel/add/${this.owner.id}`,
-              {
-                "name_hotel": this.name_hotel,
-                "address": this.address,
-                "city_code": this.city_id,
-                "district_code": this.districts_code,
-                "ward_code": this.ward_code,
-                "information": this.information
-              })
-            console.log(result.data.hotel.id)
+         if (this.imgs.length > 0) {
+           const result = await this.$axios.post(`hotel/add/${this.owner.id}`,
+             {
+               "name_hotel": this.name_hotel,
+               "address": this.address,
+               "city_code": this.city_id,
+               "district_code": this.districts_code,
+               "ward_code": this.ward_code,
+               "information": this.information
+             })
+           console.log(result.data.hotel.id)
 
-            if (result.status == 200) {
-              const formImg = new FormData();
-              // thêm ảnh tại đây khi thêm thông tin thành công
-              for (let i = 0; i < this.imgs.length; i++) {
-                const file = this.imgs[i].file;
-                formImg.append("avatar", file);
-              }
-              try {
-                const addimg = await this.$axios.post(`hotel/addImg/${result.data.hotel.id}`, formImg,
-                  {
-                    headers: {
-                      "Content-Type": "multipart/form-data",
-                    },
-                  })
-                if (addimg.status == 200) {
-                  console.log(result.data.message)
-                  this.getHotel()
-                  this.openAdd()
-                }
-              } catch (error) {
-                console.log(error)
-              }
-            }
-          }
-          else {
-            alert('Them ảnh vào')
-          }
+           if (result.status == 200) {
+             const formImg = new FormData();
+             // thêm ảnh tại đây khi thêm thông tin thành công
+             for (let i = 0; i < this.imgs.length; i++) {
+               const file = this.imgs[i].file;
+               formImg.append("avatar", file);
+             }
+             try {
+               const addimg = await this.$axios.post(`hotel/addImg/${result.data.hotel.id}`, formImg,
+                 {
+                   headers: {
+                     "Content-Type": "multipart/form-data",
+                   },
+                 })
+               if (addimg.status == 200) {
+                this.name_hotel_forcus = false;
+                this.address_forcus = false;
+                this.city_id_forcus = false;
+                this.districts_code_forcus = false;
+                this.ward_code_forcus = false;
+                this.information_forcus = false;
+                // this.avatar_forcus = false;
+                console.log(result.data.message)
+                this.getHotel()
+                this.openAdd()
+                 
+               }
+             } catch (error) {
+               console.log(error)
+             }
+           }
+         }
+         else {
+           alert('Them ảnh vào')
+         }
         }
       } catch (error) {
         console.log(error)
@@ -627,9 +658,14 @@ export default {
     async updateHotel() {
       try {
         // Kiểm tra xem các thông tin có được nhật đầy đủ không
-        if (!this.name_hotel || !this.address || !this.city_id || !this.districts_code || !this.ward_code || !this.information) {
-              alert("Vui lòng nhập đầy đủ thông tin.")
-              return;
+        if (!this.name_hotel || !this.address || !this.city_id || !this.districts_code || !this.ward_code || !this.information ) { // || !this.avatar
+          this.name_hotel_forcus = true;
+          this.address_forcus = true;
+          this.city_id_forcus = true;
+          this.districts_code_forcus = true;
+          this.ward_code_forcus = true;
+          this.information_forcus = true;
+          // this.avatar_forcus = true;
         }else{
           // bước 1: sẽ thực hiện việc update thông tin trước
           const result = await this.$axios.put(`hotel/update/${this.hotel.id}`,
@@ -650,6 +686,13 @@ export default {
            + lưu ý 2 là phải có ảnh mới => ko có bỏ qua
           */
           if (result.status == 200 && this.imgs.length > 0) {
+            this.name_hotel_forcus = false;
+            this.address_forcus = false;
+            this.city_id_forcus = false;
+            this.districts_code_forcus = false;
+            this.ward_code_forcus = false;
+            this.information_forcus = false;
+            
             const formImg = new FormData();
             // thêm ảnh tại đây khi thêm thông tin thành công
             for (let i = 0; i < this.imgs.length; i++) {

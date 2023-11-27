@@ -24,6 +24,19 @@ const { routerRoom } = require ('./routers/roomRouter');
 // node cron
 
 const mathlevelController = require('./controllers/mathlevelController')
+
+
+app.get('/api/level/get', async (req, res) => {
+  try {
+    const result = await mathlevelController.hotel_orders();
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+}
+});
+
+
 // 0 1 1 * * 1h 1 tây hằng tháng
 // const task = cron.schedule('* * * * *', () => {
 //   mathlevelController.mathLevel()

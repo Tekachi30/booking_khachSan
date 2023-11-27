@@ -1,6 +1,8 @@
 const db = require("../models");
 const Hotel = db.hotel;
 const Order = db.order;
+const OD = db.order_detail;
+const Room = db.room_hotel;
 const Rating = db.rating_hotel;
 const sequelize = require('sequelize');
 const Op = sequelize.Op
@@ -49,20 +51,24 @@ const final_score = async () => {
             };
         });
 
-        // vậy cái t cần là phải deleteHotel sao cho xóa luôn được thằng order đúng hong? còn cái order này cũng phải truy nó ra để lấy điểm
-        // truy từ room => order_detail =>
+        // deleteHotel sao cho xóa luôn được order
+        // truy từ order => order_detail => room_hotel => hotel
         // Tính điểm theo hóa đơn
         const hotel_orders = await Hotel.findAll({
-            attributes: ['id', [sequelize.fn('COUNT', sequelize.col('Orders.id')), 'order_count']], // tìm bằng truy vấn tương tự này á?
+            attributes: ['id', 'name_hotel', [sequelize.literal('COUNT(DISTINCT orders.id)'), 'order_count']],
             include: [
                 {
-                    model: Order,
-                    attributes: [],
-                    where: {
-                        id_hotel: sequelize.col('Hotel.id'),
-                        status: "Đã Trả Phòng"
-                    },
-                    required: false
+                    model: Room, attributes: [],
+                    include: [{
+                        model: OD, attributes: [],
+                        include: [{
+                            model: Order, attributes: [],
+                            where: {
+                                status: "Đã Trả Phòng"
+                            },
+                            required: false,
+                        }]
+                    }]
                 }
             ],
             group: ['Hotel.id']
@@ -84,9 +90,7 @@ const final_score = async () => {
                 finalScore: score_final
             };
         });
-
         return finalScore
-
     } catch (error) {
         console.log(error)
     }

@@ -134,6 +134,7 @@
                         <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập mã code" required="">
+                        <p v-if="!code_coupon && code_coupon_forcus" style="color: darkred; font-weight: bold;">Mã code chưa được nhập!</p>
                     </div>
 
                     <div>
@@ -142,6 +143,7 @@
                         <input v-model="discount" type="number" name="discount" id="discount" @change="checkDiscount(e)"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập giảm giá" required="">
+                        <p v-if="!discount && discount_forcus" style="color: darkred; font-weight: bold;">Giảm giá chưa được nhập!</p>
                     </div>
 
 
@@ -151,6 +153,7 @@
                         <input v-model="date_coupon" type="date"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Select date">
+                        <p v-if="!date_coupon && date_coupon_forcus" style="color: darkred; font-weight: bold;">Chưa chọn ngày hết hạn!</p>
                     </div>
 
                     <button @click="addCoupon()" type="button"
@@ -200,6 +203,7 @@
                         <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập mã code" required="" maxlength="7">
+                        <p v-if="!code_coupon && code_coupon_forcus" style="color: darkred; font-weight: bold;">Mã code chưa được nhập!</p>
                     </div>
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm
@@ -207,6 +211,7 @@
                         <input v-model="discount" type="text" name="discount" id="discount"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập giảm giá" required="">
+                        <p v-if="!discount && discount_forcus" style="color: darkred; font-weight: bold;">Giảm giá chưa được nhập!</p>
                     </div>
                     <div class="py-2">
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ngày hết
@@ -215,6 +220,7 @@
                         <input v-model="date_coupon" type="date"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Select date">
+                        <p v-if="!date_coupon && date_coupon_forcus" style="color: darkred; font-weight: bold;">Chưa chọn ngày hết hạn!</p>
                     </div>
 
 
@@ -277,6 +283,7 @@ export default
                 coupons: [], hotels: [], coupon: '', owner: '', id_hotel: '', level: '', hotel: '', max_discount: '',
                 isAdd: false, isUpdate: false, isDelete: false,
                 code_coupon: '', discount: '', date_coupon: '',
+                code_coupon_forcus: false, discount_forcus: false, date_coupon_forcus: false
             }
         },
         mounted() {
@@ -337,8 +344,9 @@ export default
                 try {
                         // Kiểm tra xem các thông tin có được nhật đầy đủ không
                         if (!this.code_coupon || !this.discount || !this.date_coupon) {
-                            alert("Vui lòng nhập đầy đủ thông tin.")
-                            return;
+                            this.code_coupon_forcus = true;
+                            this.discount_forcus = true;
+                            this.date_coupon_forcus = true;
                         }else{
                         const result = await this.$axios.post(`coupon/add/${this.id_hotel}`, { // thêm bằng id của hotel 
                             "code_coupon": this.code_coupon,
@@ -346,6 +354,9 @@ export default
                             "date_coupon": this.date_coupon
                         });
                         if (result.status == 200) {
+                            this.code_coupon_forcus = false;
+                            this.discount_forcus = false;
+                            this.date_coupon_forcus = false;
                             this.openAdd()
                             this.getCoupon()
                             alert(result.data.message)
@@ -380,8 +391,9 @@ export default
                 try {
                     // Kiểm tra xem các thông tin có được nhật đầy đủ không
                     if (!this.code_coupon || !this.discount || !this.date_coupon) {
-                        alert("Vui lòng nhập đầy đủ thông tin.")
-                        return;
+                            this.code_coupon_forcus = true;
+                            this.discount_forcus = true;
+                            this.date_coupon_forcus = true;
                     }else{
                         // cập nhật coupon theo id
                         const result = await this.$axios.put(`coupon/update/${this.coupon.id}`, {
@@ -390,6 +402,9 @@ export default
                             "date_coupon": this.date_coupon
                         });
                         if (result.status == 200) {
+                            this.code_coupon_forcus = false;
+                            this.discount_forcus = false;
+                            this.date_coupon_forcus = false;
                             this.openUpdate()
                             this.getCoupon()
                             alert(result.data.message)

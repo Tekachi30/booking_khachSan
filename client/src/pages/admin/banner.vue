@@ -130,12 +130,14 @@
                             <input v-model="title_banner" type="text" name="name" id="name"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tiêu đề" required="">
+                            <p v-if="!title_banner && title_banner_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tiêu đề!</p>
                         </div>
                         <div class="sm:col-span-2"><label for="description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nội dung</label>
                             <textarea v-model="content_banner" id="description" rows="4"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập nội dung"></textarea>
+                            <p v-if="!content_banner && content_banner_forcus" style="color: darkred; font-weight: bold;">Chưa nhập nội dung!</p>
                         </div>
                         <div>
                             <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hình
@@ -189,18 +191,21 @@
                             <input v-model="title_banner" type="text" name="name" id="name"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tiêu đề" required="">
+                            <p v-if="!title_banner && title_banner_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tiêu đề!</p>
                         </div>
                         <div class="sm:col-span-2"><label for="description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nội dung</label>
                             <textarea v-model="content_banner" id="description" rows="4"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập nội dung"></textarea>
+                            <p v-if="!content_banner && content_banner_forcus" style="color: darkred; font-weight: bold;">Chưa nhập nội dung!</p>
                         </div>
                         <div>
                             
                             <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hình
                                 ảnh</label>
                             <input type="file" @change="onFileSelectedUpdate($event)">
+                            <p v-if="!avatar && avatar_forcus" style="color: darkred; font-weight: bold;">Chưa nhập nội dung!</p>
                         </div>
                     </div>
                     <button @click="updateBanner()" 
@@ -259,6 +264,7 @@ export default {
             banners: [], banner: '',
             isAdd: false, isUpdate: false, isDelete: false,
             avatar: '', title_banner: '', content_banner: '',
+            avatar_forcus: false, title_banner_forcus: false, content_banner_forcus: false,
             new_avatar: ''
         };
     },
@@ -305,8 +311,9 @@ export default {
             try {
                 // Kiểm tra xem các thông tin có được nhật đầy đủ không
                 if (!this.avatar || !this.title_banner || !this.content_banner) {
-                alert("Vui lòng nhật đầy đủ thông tin.")
-                return;
+                    this.avatar_forcus = true;
+                    this.title_banner_forcus = true;
+                    this.content_banner_forcus = true;
                 }else{
                     const result = await this.$axios.post(`banner/add`, formData, {
                         headers: {
@@ -314,6 +321,9 @@ export default {
                         }
                     });
                     if (result.status == 200) {
+                        this.avatar_forcus = false;
+                        this.title_banner_forcus = false;
+                        this.content_banner_forcus = false;
                         this.openAdd()
                         this.getBanner()
                     }
@@ -334,8 +344,9 @@ export default {
             try {
                 // Kiểm tra xem các thông tin có được nhật đầy đủ không
                 if (!this.avatar || !this.title_banner || !this.content_banner) {
-                alert("Vui lòng nhật đầy đủ thông tin.")
-                return;
+                        this.avatar_forcus = true;
+                        this.title_banner_forcus = true;
+                        this.content_banner_forcus = true;
                 }else{
                     const result = await this.$axios.put(`banner/update/${this.banner.id}`, formData, {
                     headers: {
@@ -343,6 +354,10 @@ export default {
                     }
                     });
                     if (result.status === 200) {
+                        this.avatar_forcus = false;
+                        this.title_banner_forcus = false;
+                        this.content_banner_forcus = false;
+                        
                         alert(result.data.message)
                         this.openUpdate();
                         this.getBanner();

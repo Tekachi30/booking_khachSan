@@ -2,13 +2,21 @@ const db = require('../models');
 const Order = db.order;
 const User = db.User;
 const Hotel = db.hotel;
+const OD = db.order_detail;
+const Room = db.room_hotel;
 
 const getOrder = async (req, res) => {
     try {
         const order = await Order.findAll({
             include:[
-                {model: Hotel, attributes: ['id_owner','name_hotel']},
-                {model: User, attributes: ['Fullname']}
+                {model: User, attributes: ['Fullname']},
+                {model: OD, attributes: ['id_order', "id_room",'quanlity','sigle_price','checkin','checkout','createdAt'],
+                include: [{
+                    model: Room, attributes: ['id_hotel','type_room','real_quantity','quantity','price'],
+                    include: [{
+                        model: Hotel, attributes: ['id','name_hotel'],
+                    }]
+                }]}
             ]
         });
         res.json(order);

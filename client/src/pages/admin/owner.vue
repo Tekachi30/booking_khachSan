@@ -114,6 +114,8 @@
                             <input v-model="account" type="text" name="account" id="account"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tài khoản" required="">
+                            <p v-if="!account && account_forcus" style="color: darkred; font-weight: bold;">Chưa nhập nội dung!</p>
+                            <p v-if="validAccount(account) && account_forcus" style="color: darkred; font-weight: bold;">Tài khoản không được chứa dấu!</p>
                         </div>
 
                         <div>
@@ -121,6 +123,7 @@
                             <input v-model="fullname" type="text" name="fullname" id="fullname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập Họ tên" required="">
+                            <p v-if="!fullname && fullname_forcus" style="color: darkred; font-weight: bold;">Chưa nhập họ tên!</p>
                         </div>
 
                         <div>
@@ -128,6 +131,7 @@
                             <input v-model="address" type="text" name="address" id="address"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập Địa chỉ" required="">
+                            <p v-if="!address && address_forcus" style="color: darkred; font-weight: bold;">Chưa nhập địa chỉ!</p>
                         </div>
 
                         <div>
@@ -135,6 +139,7 @@
                             <input v-model="phone" type="number" name="phone" id="phone"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập Số điện thoại" required="">
+                            <p v-if="!phone && phone_forcus" style="color: darkred; font-weight: bold;">Chưa nhập số điện thoại!</p>
                         </div>
 
                         <div>
@@ -142,6 +147,9 @@
                             <input v-model="password" type="text" name="password" id="password"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập Mật khẩu" required="">
+                            <p v-if="!password && password_forcus" style="color: darkred; font-weight: bold;">Chưa nhập mật khẩu!</p>
+                            <p v-if="!validPassword(password) && password_forcus" style="color: darkred; font-weight: bold;">Mật khẩu phải có 1 ký tự đặt biệt!</p>
+                            <p v-if="!validPassword2(password) && password_forcus" style="color: darkred; font-weight: bold;">Mật khẩu phải có 1 chữ cái viết hoa!</p>
                         </div>
 
                         <div>
@@ -149,6 +157,7 @@
                             <input v-model="email" type="email" name="email" id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập email" required="">
+                            <p v-if="!email && email_forcus" style="color: darkred; font-weight: bold;">Chưa nhập email!</p>
                         </div>
                        
                     </div>
@@ -176,7 +185,8 @@ export default
     return {
         owners: [], owner: '',
         isAdd: false,isDelete: false,
-        account: '',fullname: '',address: '',phone: '',password: '',email: ''
+        account: '',fullname: '',address: '',phone: '',password: '',email: '',
+        account_forcus: false, fullname_forcus: false, address_forcus: false, phone_forcus: false, password_forcus: false, email_forcus: false,
     }
   },
   mounted(){
@@ -184,6 +194,22 @@ export default
   },
   components: {},
   methods: {
+
+    // các hàm validate start
+    validAccount(account){
+        const re = /[^a-zA-Z0-9]/; // kiểm tra có dấu hay không
+        return re.test(account);
+    },
+    validPassword(password) {
+      const re = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/; // kiểm tra có ký tự đặc biệt hay không
+      return re.test(password);
+    },
+    validPassword2(password) {
+      const re = /[A-Z]/; // kiểm tra có viết hoa hay không
+      return re.test(password);
+    },
+    // các hàm validate end
+
     openAdd() {
         this.isAdd = !this.isAdd
     },
@@ -205,31 +231,36 @@ export default
     async addOwner() {
         try {
             // Kiểm tra xem các thông tin có được nhật đầy đủ không
-            if (!this.account || !this.fullname || !this.address || !this.phone || !this.password || !this.email) {
-                alert("Vui lòng nhập đầy đủ thông tin.")
-                return;
+            if ((!this.account && this.validAccount(this.account)) || !this.fullname || !this.address || !this.phone || (!this.password && this.validPassword(this.password) && this.validPassword2(this.password)) || !this.email) {
+                this.account_forcus = true;
+                this.fullname_forcus = true;
+                this.address_forcus = true;
+                this.phone_forcus = true;
+                this.password_forcus = true;
+                this.email_forcus = true;
             }else{
-                // Kiểm tra xem account có chứa dấu không
-                if (/[^a-zA-Z0-9]/.test(this.account)) {
-                    alert("Tài khoản không được chứa dấu.")
-                    return;
-                }else{
-                        const result = await this.$axios.post('owner/add',{
-                        account: this.account,
-                        fullname: this.fullname,
-                        address: this.address,
-                        phone: this.phone,
-                        password: this.password,
-                        email: this.email
-                    });
-                    if (result.status == 200) {
-                        this.openAdd()
-                        this.getOwner()
-                    }
-                    else {
-                        alert(result.data.message)
-                    }
-                }
+                const result = await this.$axios.post('owner/add',{
+                account: this.account,
+                fullname: this.fullname,
+                address: this.address,
+                phone: this.phone,
+                password: this.password,
+                email: this.email
+            });
+            if (result.status == 200) {
+                this.account_forcus = false;
+                this.fullname_forcus = false;
+                this.address_forcus = false;
+                this.phone_forcus = false;
+                this.password_forcus = false;
+                this.email_forcus = false;
+
+                this.openAdd()
+                this.getOwner()
+            }
+            else {
+                alert(result.data.message)
+            }
             }
         } catch (error) {
             console.log(error);
