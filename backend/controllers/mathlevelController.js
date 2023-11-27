@@ -54,34 +54,27 @@ const final_score = async () => {
         // deleteHotel sao cho xóa luôn được order
         // truy từ order => order_detail => room_hotel => hotel
         // Tính điểm theo hóa đơn
-        const hotel_orders = await Hotel.findAll({
-            attributes: ['id', 'name_hotel', [sequelize.literal('COUNT(DISTINCT orders.id)'), 'order_count']],
+        //
+        const hotels = await Hotel.findAll({
             include: [
-                {
-                    model: Room, attributes: [],
-                    include: [{
-                        model: OD, attributes: [],
-                        include: [{
-                            model: Order, attributes: [],
-                            where: {
-                                status: "Đã Trả Phòng"
-                            },
-                            required: false,
-                        }]
-                    }]
-                }
+              {
+                model: Room,
+                include: {
+                  model: OD,
+                  include: Order,
+                },
+              },
             ],
-            group: ['Hotel.id']
-        });
-
-        const hotelOrdersArray = hotel_orders.map(hotelOrder => ({
-            id: hotelOrder.id,
-            orderCount: hotelOrder.get('order_count')
-        }));
-
+          });
+      
+          const hotel_orders = hotels.map((hotel) => ({
+            id: hotel.id,
+            orderCount: hotel.room_hotels.flatMap((room) => room.order_details.map((detail) => detail.order)).length,
+          }));
+       
         const finalScore = hotelWithTotalScore.map((hotel) => {
             const totalScore = hotel.totalScore;
-            const orderCount = hotelOrdersArray.find(hotelOrder => hotelOrder.id === hotel.id)?.orderCount || 0;
+            const orderCount = hotel_orders.find(hotelOrder => hotelOrder.id === hotel.id)?.orderCount || 0;
 
             const score_final = totalScore + orderCount;
 
@@ -166,5 +159,6 @@ const test = () =>{
 
 module.exports = {
     test,
-    mathLevel
+    mathLevel,
+    final_score
 }

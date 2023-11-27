@@ -28,7 +28,7 @@ const mathlevelController = require('./controllers/mathlevelController')
 
 app.get('/api/level/get', async (req, res) => {
   try {
-    const result = await mathlevelController.hotel_orders();
+    const result = await mathlevelController.final_score();
     res.send(result);
   } catch (error) {
     console.error(error);
