@@ -120,10 +120,8 @@ const mathLevel = async (req, res) => {
             id: math.id
         }))
         for (let i = 0; i < points.length; i++) {
-            let hotelExists = false;
             for (let x = 0; x < array_mathLevel.length; x++) {
                 if (points[i].id == array_mathLevel[x].id) {
-                    hotelExists = true;
                     const level = result_math_level(2, points[i].finalScore)
                     await Hotel.update({
                         level: level,
@@ -136,22 +134,11 @@ const mathLevel = async (req, res) => {
                     break; 
                 }
             }
-            if (!hotelExists) {
-                const level = result_math_level(2, points[i].finalScore)
-                const createdMathLevel = await Hotel.create({
-                    level: level,
-                    point: points[i].finalScore,
-                });
-            }
         }
         console.log('Hoàn thành cập nhập');
     } catch (error) {
         console.log(error);
     }
-}
-
-const test = () =>{
-    console.log('test')
 }
 
 module.exports = {
