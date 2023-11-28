@@ -25,6 +25,14 @@ const getOrder = async (req, res) => {
     }
 }
 
+const addOrder = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const updateOrder = async (req, res) => {
     try {
         const id = req.params.id;

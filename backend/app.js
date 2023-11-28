@@ -26,15 +26,15 @@ const { routerRoom } = require ('./routers/roomRouter');
 const mathlevelController = require('./controllers/mathlevelController')
 
 
-app.get('/api/level/get', async (req, res) => {
-  try {
-    const result = await mathlevelController.final_score();
-    res.send(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-}
-});
+// app.get('/api/level/get', async (req, res) => {
+//   try {
+//     const result = await mathlevelController.final_score();
+//     res.send(result);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send(error);
+// }
+// });
 
 
 // 0 1 1 * * 1h 1 tây hằng tháng

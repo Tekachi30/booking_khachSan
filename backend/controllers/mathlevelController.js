@@ -27,7 +27,7 @@ const final_score = async () => {
        score_rating <= 1 => totalScore = -10;
        */
         // Tính toán totalScore cho từng khách sạn
-        const hotelWithTotalScore = hotel_rating.map((hotel) => {
+        const hotelWithTotalScore = hotel_rating.map((hotel) => { // lặp qua từng khách sạn trong mảng hotels
             const totalScore = hotel.rating_hotels.reduce((acc, rating) => {
                 const score_rating = rating.score_rating;
 
@@ -54,7 +54,6 @@ const final_score = async () => {
         // deleteHotel sao cho xóa luôn được order
         // truy từ order => order_detail => room_hotel => hotel
         // Tính điểm theo hóa đơn
-        //
         const hotels = await Hotel.findAll({
             include: [
               {
@@ -67,9 +66,10 @@ const final_score = async () => {
             ],
           });
       
-          const hotel_orders = hotels.map((hotel) => ({
+          const hotel_orders = hotels.map((hotel) => ({ //lặp qua từng khách sạn trong mảng hotels
             id: hotel.id,
-            orderCount: hotel.room_hotels.flatMap((room) => room.order_details.map((detail) => detail.order)).length,
+            // flatMap được sử dụng để làm phẳng các mảng lồng nhau.
+            orderCount: hotel.room_hotels.flatMap((room) => room.order_details.map((detail) => detail.order)).length, //  Ánh xạ qua từng phòng, sau đó qua từng chi tiết đơn đặt phòng trong phòng đó, và cuối cùng trích xuất thông tin về đơn đặt từ mỗi chi tiết.
           }));
        
         const finalScore = hotelWithTotalScore.map((hotel) => {
@@ -113,9 +113,8 @@ const result_math_level = (X, point) => {
 const mathLevel = async (req, res) => {
     try {
         const points = await final_score();
-        const get_mathLevel = await MathLevel.findAll();
+        const get_mathLevel = await Hotel.findAll();
         const array_mathLevel = get_mathLevel.map(math => ({
-            id_hotel: math.id_hotel,
             level: math.level,
             point: math.point,
             id: math.id
@@ -123,16 +122,15 @@ const mathLevel = async (req, res) => {
         for (let i = 0; i < points.length; i++) {
             let hotelExists = false;
             for (let x = 0; x < array_mathLevel.length; x++) {
-                if (points[i].id_hotel == array_mathLevel[x].id_hotel) {
+                if (points[i].id == array_mathLevel[x].id) {
                     hotelExists = true;
                     const level = result_math_level(2, points[i].finalScore)
-                    await MathLevel.update({
+                    await Hotel.update({
                         level: level,
                         point: points[i].point,
                     }, {
                         where: {
                             id: array_mathLevel[x].id,
-                            id_hotel: array_mathLevel[x].id_hotel,
                         }
                     })
                     break; 
@@ -140,10 +138,9 @@ const mathLevel = async (req, res) => {
             }
             if (!hotelExists) {
                 const level = result_math_level(2, points[i].finalScore)
-                const createdMathLevel = await MathLevel.create({
+                const createdMathLevel = await Hotel.create({
                     level: level,
                     point: points[i].finalScore,
-                    id_hotel: points[i].id_hotel,
                 });
             }
         }
