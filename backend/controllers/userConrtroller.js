@@ -212,6 +212,24 @@ const deleteUser = async (req, res) => {
   }
 }
 
+const searchUser = async(req,res)=>
+{
+  try {
+    const {search}= req.body
+    const result = await User.findAll(
+    {
+      where: {
+        fullname: {
+          [Op.like]: `%${search}%`
+        }
+      }
+    }
+    )
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
 module.exports = {
   getUser,
   getUserById,
@@ -219,4 +237,5 @@ module.exports = {
   updateUser,
   login,
   deleteUser,
+  searchUser 
 };

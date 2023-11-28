@@ -115,6 +115,7 @@ const updateOwner = async (req, res) => {
     }
 }
 
+// làm lại
 const deleteOwner = async (req, res) => {
     try {
         const id = req.params.id;
