@@ -142,7 +142,6 @@ const mathLevel = async (req, res) => {
 }
 
 module.exports = {
-    test,
     mathLevel,
     final_score
 }

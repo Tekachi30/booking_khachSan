@@ -1,5 +1,7 @@
 const db = require("../models");
-const Banner = db.banner
+const Banner = db.banner;
+const sequelize = require('sequelize');
+const Op  = sequelize.Op
 
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
@@ -126,9 +128,30 @@ const deleteBanner = async (req, res) => {
         return res.status(500).json({ error: 'Xóa thất bại' });
     }
 }
+
+const searchBanner = async(req,res)=>
+{
+  try {
+    const {search}= req.body
+    const result = await Banner.findAll(
+    {
+      where: {
+        title_banner: {
+          [Op.like]: `%${search}%`
+        }
+      }
+    }
+    )
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
     getBanner,
     addBanner,
     updateBanner,
-    deleteBanner
+    deleteBanner,
+    searchBanner
 }

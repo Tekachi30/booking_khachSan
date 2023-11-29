@@ -12,6 +12,7 @@ routerUser.put("/api/user/update/:id", updateUser);
 routerUser.delete("/api/user/delete/:id", deleteUser);
 
 routerUser.post("/api/user/search",searchUser )
+
 module.exports = {
   routerUser,
 };

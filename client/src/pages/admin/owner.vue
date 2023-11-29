@@ -6,7 +6,7 @@
             <div class=" relative shadow-md sm:rounded-lg overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <form class="flex items-center">
+                        <div class="flex items-center">
                             <label for="simple-search" class="sr-only">Tìm kiếm</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -17,11 +17,11 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input type="text" id="simple-search"
+                                <input type="text" id="simple-search" v-on:keyup.enter="search()" v-model="value_search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Tìm theo tiêu đề" required="">
+                                    placeholder="Tìm theo tên..." required="">
                             </div>
-                        </form>
+                        </div>
                     </div>
                     <button @click="openAdd()" type="button"
                         class="flex items-center justify-center  bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2  focus:outline-none ">
@@ -183,7 +183,7 @@ export default
 {
   data(){
     return {
-        owners: [], owner: '',
+        owners: [], owner: '',value_search: '',
         isAdd: false,isDelete: false,
         account: '',fullname: '',address: '',phone: '',password: '',email: '',
         account_forcus: false, fullname_forcus: false, address_forcus: false, phone_forcus: false, password_forcus: false, email_forcus: false,
@@ -265,7 +265,20 @@ export default
         } catch (error) {
             console.log(error);
         }
-    }
+    },
+
+    async search()
+        {
+           try {
+                const result = await this.$axios.post('owner/search',
+                {
+                    "search":this.value_search
+                });
+                this.owners = result.data
+           } catch (error) {
+            console.log(error)
+           }
+        }    
   }
 }
 </script>

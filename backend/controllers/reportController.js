@@ -1,6 +1,8 @@
 const db = require("../models");
 const Report = db.report_hotel;
 const User = db.User;
+const sequelize = require('sequelize');
+const Op  = sequelize.Op
 
 const getReport = async (req, res) => {
     try {
@@ -29,7 +31,27 @@ const addReport = async (req, res) => {
     }
 }
 
+const searchReport = async(req,res)=>
+{
+  try {
+    const {search}= req.body
+    const result = await Report.findAll(
+    {
+      where: {
+        id_hotel: {
+          [Op.like]: `%${search}%`
+        }
+      }
+    }
+    )
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
     getReport,
     addReport,
+    searchReport
 }

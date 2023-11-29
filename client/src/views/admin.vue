@@ -92,15 +92,15 @@
         <!-- buttom responsive thanh search-->
         <div class="flex items-center">
           <!--button responsive-->
-          <button class="text-gray-500 focus:outline-none lg:hidden" @click="isOpen = true">
+          <!-- <button class="text-gray-500 focus:outline-none lg:hidden" @click="isOpen = true">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" />
             </svg>
-          </button>
+          </button> -->
 
           <!--thanh search-->
-          <div class="relative mx-4 lg:mx-0">
+          <!-- <div class="relative mx-4 lg:mx-0">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
               <svg class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none">
                 <path
@@ -112,7 +112,7 @@
             <input
               class="w-32 pl-10 pr-4 text-indigo-600 border-gray-200 rounded-md sm:w-64 focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
               type="text" placeholder="Search" />
-          </div>
+          </div> -->
         </div>
 
         <!--bên phải header-->

@@ -295,7 +295,7 @@ const deleteHotel = async (req, res) => {
 
                await Favorate.destroy({ where: { id_hotel: existHotel.id } }); // xóa hotel =>  => xóa OD 
 
-               await coupon.destroy({ where: { id_hotel: existHotel.id } }); // t có face của vân đâu
+               await coupon.destroy({ where: { id_hotel: existHotel.id } }); 
 
                await existHotel.destroy();
 

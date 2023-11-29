@@ -2,6 +2,8 @@ const db = require('../models');
 const Rating = db.rating_hotel;
 const User = db.User;
 const Hotel = db.hotel;
+const sequelize = require('sequelize');
+const Op  = sequelize.Op
 
 const getRating = async (req, res) => {
     try {
@@ -33,7 +35,27 @@ const deleteRating = async (req, res) => {
     }
 }
 
+const searchRating = async(req,res)=>
+{
+  try {
+    const {search}= req.body
+    const result = await Rating.findAll(
+    {
+      where: {
+        id_hotel: {
+          [Op.like]: `%${search}%`
+        }
+      }
+    }
+    )
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
     getRating,
-    deleteRating
+    deleteRating,
+    searchRating
 }
