@@ -331,9 +331,8 @@ export default
 
             async getCoupon() {
                 try {
-                    
-                    this.level = this.hotel.level
-                    this.math_counpon(this.level)
+                    this.level = this.hotel.level;
+                    this.math_counpon(this.level);
                     const result = await this.$axios.get(`coupon/get/${this.hotel.id}`);
                     this.coupons = result.data
                 } catch (error) {
@@ -343,6 +342,8 @@ export default
 
             async addCoupon() {
                 try {
+                        const ownerData = localStorage.getItem("owner"); // Lấy thông tin owner từ localStorage
+                        const ownerObject = JSON.parse(ownerData); // Chuyển đổi chuỗi JSON thành đối tượng JavaScript
                         // Kiểm tra xem các thông tin có được nhật đầy đủ không
                         if (!this.code_coupon || !this.discount || !this.date_coupon) {
                             this.code_coupon_forcus = true;
@@ -377,11 +378,11 @@ export default
              if(this.discount >= 0)
              {
                  if (this.discount > this.max_discount) {
-                     this.discount = this.max_discount;
+                    alert(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`)
                  }
              }else{
-                 this.discount = 0;
-             }  
+                alert(`Giá giảm phải lớn hơn 0.`)
+             }
             },
             math_counpon(level) {
                 const step = 10; // Khoảng cách giữa các level
