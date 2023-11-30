@@ -331,7 +331,8 @@ export default
 
             async getCoupon() {
                 try {
-                    this.level = this.hotel.MathLevels[0].level
+                    
+                    this.level = this.hotel.level
                     this.math_counpon(this.level)
                     const result = await this.$axios.get(`coupon/get/${this.hotel.id}`);
                     this.coupons = result.data
@@ -350,7 +351,7 @@ export default
                         }else{
                         const ownerData = localStorage.getItem("owner"); // Lấy thông tin owner từ localStorage
                         const ownerObject = JSON.parse(ownerData); // Chuyển đổi chuỗi JSON thành đối tượng JavaScript
-                        const result = await this.$axios.post(`coupon/add/${this.id_hotel}`, { // thêm bằng id của hotel 
+                        const result = await this.$axios.post(`coupon/add/${this.hotel.id}`, { // thêm bằng id của hotel 
                             "code_coupon": this.code_coupon,
                             "discount": this.discount,
                             "date_coupon": this.date_coupon,
@@ -373,18 +374,16 @@ export default
             },
 
             checkDiscount(e) {
-            // if(this.discount >= 0)
-            // {
-            //     if (this.discount > this.max_discount) {
-            //         this.discount = this.max_discount;
-            //     }
-            // }else{
-            //     this.discount = 0;
-            // }
-                
+             if(this.discount >= 0)
+             {
+                 if (this.discount > this.max_discount) {
+                     this.discount = this.max_discount;
+                 }
+             }else{
+                 this.discount = 0;
+             }  
             },
             math_counpon(level) {
-
                 const step = 10; // Khoảng cách giữa các level
                 const delta = 5; // Bước nhảy giữa các level
                 const basecoupon = 5; // Giá trị cơ bản của coupon
