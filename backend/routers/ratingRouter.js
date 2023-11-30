@@ -4,7 +4,7 @@ const routerRating = express.Router();
 
 routerRating.get("/api/rating/get", getRating);
 
-routerRating.post("/api/rating/search", searchRating)
+routerRating.post("/api/rating/search", searchRating);
 
 
 

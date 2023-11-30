@@ -1,7 +1,7 @@
 const db = require("../models");
 const Coupon = db.coupon_owner;
 const Hotel = db.hotel;
-const MathLevel = db.MathLevel;
+const Owner = db.owner;
 
 
 const getCoupon= async (req, res) => {
@@ -9,9 +9,10 @@ const getCoupon= async (req, res) => {
         const id = req.params.id;
         const coupon = await Coupon.findAll({
             where:{id_hotel:id},
-            include:[
-                {model: Hotel, attributes: ['id_owner','name_hotel']},
-            ]
+            include:[{
+                model: Hotel, attributes: ['id_owner','name_hotel'],
+                model: Owner, attributes: ['id','fullname'],
+            }]
         });
         res.json(coupon);
     } catch (error) {
@@ -23,7 +24,7 @@ const getCoupon= async (req, res) => {
 const addCoupon = async (req, res) => {
     try {
         const id = req.params.id;
-        const { code_coupon, discount, date_coupon } = req.body;
+        const { id_owner, code_coupon, discount, date_coupon } = req.body;
         const existHotel = await Hotel.findByPk(id);
         // check id hotel
         if(existHotel){
@@ -31,6 +32,7 @@ const addCoupon = async (req, res) => {
                 code_coupon: code_coupon,
                 discount: discount,
                 date_coupon: date_coupon,
+                id_owner: id_owner,
                 id_hotel: id
             });
             return res.status(200).json({message: 'Thêm thành công.'});

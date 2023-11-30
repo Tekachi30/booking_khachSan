@@ -6,7 +6,13 @@ const Op  = sequelize.Op
 
 const getReport = async (req, res) => {
     try {
-        const report = await Report.findAll();
+        const report = await Report.findAll({
+          where:{id_hotel:id},
+          include:[{
+              model: Hotel, attributes: ['id_owner','name_hotel'],
+              model: Owner, attributes: ['id','fullname'],
+          }]
+        });
         res.json(report);
     } catch (error) {
         console.log(error);
@@ -20,7 +26,8 @@ const addReport = async (req, res) => {
     if(exsitUser){
         try {
             const report = await Report.create({
-                comment_report: comment_report
+                comment_report: comment_report,
+                id_user: iduser
             })
             return res.status(200).json({ message:"Thêm báo cáo thành công."});
         } catch (error) {

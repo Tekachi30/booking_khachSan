@@ -442,7 +442,7 @@ export default {
       // tạo ra 1 mảng mới gọi là img_old_delete để lưu cái ảnh sẽ xóa
       img_old_delete: [],
       city_id: '', districts_code: '', ward_code: '', name_hotel: '', information: '', address: '',
-      owner: '', avatar: null, activeTab: 'active',
+        owner: '', avatar: null, activeTab: 'active',
       isActive: true, isUnActive: false, isAdd: false, isUpdate: false,isDelete:false,
       name_hotel_forcus: false, address_forcus: false, city_id_forcus: false, districts_code_forcus: false,
       ward_code_forcus: false, information_forcus: false, avatar_forcus: false

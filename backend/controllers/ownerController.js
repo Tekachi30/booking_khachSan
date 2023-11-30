@@ -117,16 +117,52 @@ const updateOwner = async (req, res) => {
 
 // làm lại
 const deleteOwner = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const exsitOnwer = await Owner.findByPk(id);
-        const existHotel = await Hotel.findOne({ where: { id_owner: id } }); //tìm khách sạn của owner
-        if(!exsitOnwer){
-          return res.status(400).json({message: 'Không tìm thấy tài khoản.'}); 
+  try {
+      const id = req.params.id;
+      const exsitOnwer = await Owner.findByPk(id);
+      const existHotel = await Hotel.findOne({ where: { id_owner: id } }); //tìm khách sạn của owner
+      if(!exsitOnwer){
+        return res.status(400).json({message: 'Không tìm thấy tài khoản.'}); 
+      }else{
+        if(!existHotel){
+          return res.status(400).json({message: `Không tìm thấy khách sạn.`});
         }else{
-          if(!existHotel){
-            return res.status(400).json({message: `Không tìm thấy khách sạn.`});
-          }else{
+          // xử lý hóa đơn
+          const exitsOrder = await Order.findOne({
+            where: { 
+              [Op.or]: [{ status: 'Đã Thanh Toán' }, { status: 'Đã Đặt' }]
+            }
+          });
+          if (exitsOrder) {
+            /*
+             note command
+             Khi tồn tại hóa đơn chưa trả phòng
+             Thực hiện => lấy ngày cuối cùng họ trả phòng để report lại admin
+             Thực hiện bằng cách cú pháp find kết hợp ...
+            */
+            const last_checkout = await OD.findOne({
+              attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
+              where: {
+                '$order.status$': 'Đã Thanh Toán',
+              },
+              include: [
+                {
+                  model: Order,
+                  as: 'order',
+                  attributes: [],
+                  where: {
+                    status: 'Đã Thanh Toán',
+                  },
+                },
+              ],
+              group: ['id_order'],
+              order: [[sequelize.fn('MAX', sequelize.col('check_out')), 'DESC']],
+            })
+            const time = new Date(last_checkout.getDataValue('latest_checkout'))
+            var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
+            return res.status(201).json({ message: `Không thể xóa owner - Xóa sau thời gian: ${result_last}` });
+          }
+          else {
             await Order.destroy({ where: { id_hotel: existHotel.id } });
             await Room.destroy({ where: { id_hotel: existHotel.id } });
             await Rating.destroy({ where: { id_hotel: existHotel.id } });
@@ -134,15 +170,17 @@ const deleteOwner = async (req, res) => {
             await Favorate.destroy({ where: { id_hotel: existHotel.id } });
             await Img.destroy({ where: { id_hotel: existHotel.id } });
             await coupon.destroy({ where: { id_hotel: existHotel.id } });
+
             await Hotel.destroy({ where: { id_owner: id } });
             await Mess.destroy({ where: { id_owner: id } }); 
             await Owner.destroy();
             return res.status(200).json({ message: 'Xóa thành công.' });
-            }
           }
-    } catch (error) {
-        console.log(error);
-    }
+        }
+      }
+  } catch (error) {
+      console.log(error);
+  }
 }
 
 const searchOwner = async(req,res)=>

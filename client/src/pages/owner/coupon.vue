@@ -348,10 +348,13 @@ export default
                             this.discount_forcus = true;
                             this.date_coupon_forcus = true;
                         }else{
+                        const ownerData = localStorage.getItem("owner"); // Lấy thông tin owner từ localStorage
+                        const ownerObject = JSON.parse(ownerData); // Chuyển đổi chuỗi JSON thành đối tượng JavaScript
                         const result = await this.$axios.post(`coupon/add/${this.id_hotel}`, { // thêm bằng id của hotel 
                             "code_coupon": this.code_coupon,
                             "discount": this.discount,
-                            "date_coupon": this.date_coupon
+                            "date_coupon": this.date_coupon,
+                            "id_owner": ownerObject.id
                         });
                         if (result.status == 200) {
                             this.code_coupon_forcus = false;
@@ -368,15 +371,17 @@ export default
                     console.log(error)
                 }
             },
+
             checkDiscount(e) {
-                if(this.discount < 0)
-                {
-                    this.discount = 0
-                }
-                if (this.discount > this.max_discount) {
-                    alert('Ho roi')
-                    this.discount = this.max_discount
-                }
+            // if(this.discount >= 0)
+            // {
+            //     if (this.discount > this.max_discount) {
+            //         this.discount = this.max_discount;
+            //     }
+            // }else{
+            //     this.discount = 0;
+            // }
+                
             },
             math_counpon(level) {
 
@@ -389,17 +394,19 @@ export default
             },
             async updateCoupon() {
                 try {
+                    
                     // Kiểm tra xem các thông tin có được nhật đầy đủ không
                     if (!this.code_coupon || !this.discount || !this.date_coupon) {
-                            this.code_coupon_forcus = true;
-                            this.discount_forcus = true;
-                            this.date_coupon_forcus = true;
+                        this.code_coupon_forcus = true;
+                        this.discount_forcus = true;
+                        this.date_coupon_forcus = true;
                     }else{
+                        
                         // cập nhật coupon theo id
                         const result = await this.$axios.put(`coupon/update/${this.coupon.id}`, {
                             "code_coupon": this.code_coupon,
                             "discount": this.discount,
-                            "date_coupon": this.date_coupon
+                            "date_coupon": this.date_coupon,
                         });
                         if (result.status == 200) {
                             this.code_coupon_forcus = false;
