@@ -152,7 +152,7 @@ const addHotel = async (req, res) => {
                 information: information,
                 isactive: true,
                 point: 0,
-                level: 0, 
+                level: 1, 
                 id_owner: id
             })
             return res.status(200).json({ message: 'Thêm khách sạn thành công.', hotel });

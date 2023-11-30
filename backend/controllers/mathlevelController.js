@@ -90,18 +90,20 @@ const final_score = async () => {
 }
 
 // tính level của hotel 
+
 const result_math_level = (X, point) => {
     /*
     Cách tính level
     + Tạo ra một biến delta = X
-        + Level 0: point < delta => Đây là mức level khi mới tạo khách sạn và phát triển ngắn hạn mặc định tạo ra ở level 0 và point = 0
-        + Từ level tiếp theo nghĩa là level 1 : level = Math.floor((point) / delta);
+        + Level 1: point < delta => Đây là mức level khi mới tạo khách sạn và phát triển ngắn hạn mặc định tạo ra ở level 1 và point = 0
+        + từ 0 < delta là level 1 => 
+        + Từ level tiếp theo nghĩa là level 2 : level = Math.floor((point) / delta);
     */
     const delta = X;
     let level = 0; // Change const to let
 
     if (point < delta) {
-        level = 0;
+        level = 1;
     } else {
         level = Math.floor(point / delta);
     }
