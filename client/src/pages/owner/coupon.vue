@@ -331,9 +331,10 @@ export default
 
             async getCoupon() {
                 try {
-                    
                     this.level = this.hotel.level
+                    console.log(this.level)
                     this.math_counpon(this.level)
+                    console.log(this.max_discount)
                     const result = await this.$axios.get(`coupon/get/${this.hotel.id}`);
                     this.coupons = result.data
                 } catch (error) {
@@ -384,6 +385,7 @@ export default
              }  
             },
             math_counpon(level) {
+                // từ 1-10 => 5% bước qua 11 sẽ là 10%
                 const step = 10; // Khoảng cách giữa các level
                 const delta = 5; // Bước nhảy giữa các level
                 const basecoupon = 5; // Giá trị cơ bản của coupon
