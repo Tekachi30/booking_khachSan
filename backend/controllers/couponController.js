@@ -47,13 +47,13 @@ const addCoupon = async (req, res) => {
 const updateCoupon= async (req, res) => {
     try {
         const id = req.params.id;
-        const { code_coupon, discount, date_coupon } = req.body;
+        const { code_coupon, discount } = req.body;
         const existCoupon = await Coupon.findByPk(id);
         if(!existCoupon){
             return res.status(201).json({message: 'Không tìm thấy mã.'});
           }else{
             await existCoupon.update({
-                code_coupon: code_coupon, discount: discount, date_coupon: date_coupon
+                code_coupon: code_coupon, discount: discount
             });
             return res.status(200).json({message: 'Cập nhật thành công.'});
           }
