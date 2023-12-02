@@ -67,7 +67,7 @@
               <button
                 v-if="showProfile"
                 @click="logout()"
-                class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl px-4 py-2 transition duration-100 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black bg-red-500 border border-transparent rounded shadow-sm hover:bg-red-600"
+                class="absolute right-0 z-20 w-48 mt-2 bg-white px-4 py-2 transition duration-100 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black border border-transparent rounded shadow-sm hover:bg-red-600"
               >
                 Đăng xuất
               </button>
