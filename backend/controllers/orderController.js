@@ -1,9 +1,12 @@
 const db = require('../models');
 const Order = db.order;
 const User = db.User;
+const Owner = db.owner;
 const Hotel = db.hotel;
 const OD = db.order_detail;
 const Room = db.room_hotel;
+const sequelize = require('sequelize');
+const Op  = sequelize.Op
 
 const getOrder = async (req, res) => {
     try {
@@ -66,7 +69,47 @@ const updateOrder = async (req, res) => {
 
 */
 
+// chưa xong
+const searchOrder = async(req,res) => {
+  try {
+    const {search}= req.body
+    const result = await Order.findAll(
+    {
+      where: {
+        status: {
+          [Op.like]: `%${search}%`
+        }
+      },
+      include: [
+        {
+          model: User,
+          where: {
+            fullname: {
+              [Op.like]: `%${search}%`
+            }
+          },
+          attributes: []
+        },
+        {
+          model: Hotel,
+          attributes: [],
+          include: [
+            {
+              model: Owner,
+              attributes: []
+            }
+          ]
+        }
+      ]
+    });
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
     getOrder,
     updateOrder,
+    searchOrder,
 }
