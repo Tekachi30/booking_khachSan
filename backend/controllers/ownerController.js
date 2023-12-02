@@ -131,7 +131,28 @@ const deleteOwner = async (req, res) => {
           const exitsOrder = await Order.findOne({
             where: { 
               [Op.or]: [{ status: 'Đã Thanh Toán' }, { status: 'Đã Đặt' }]
-            }
+            },
+            include: [
+              {
+                model: OD,
+                attributes: [],
+                include:[
+                  {
+                    model: Room,
+                    attributes: [],
+                    include: [
+                      {
+                        model: Hotel,
+                        attributes: [],
+                        where: {
+                          id_owner: exsitOnwer.id
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+            ]
           });
           if (exitsOrder) {
             /*
@@ -154,13 +175,26 @@ const deleteOwner = async (req, res) => {
                     status: 'Đã Thanh Toán',
                   },
                 },
+                {
+                  model: Room,
+                  attributes: [],
+                  include: [
+                    {
+                      model: Hotel,
+                      attributes: [],
+                      where: {
+                        id_owner: exsitOnwer.id
+                      }
+                    }
+                  ]
+                },
               ],
               group: ['id_order'],
               order: [[sequelize.fn('MAX', sequelize.col('check_out')), 'DESC']],
             })
             const time = new Date(last_checkout.getDataValue('latest_checkout'))
             var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
-            return res.status(201).json({ message: `Không thể xóa owner - Xóa sau thời gian: ${result_last}` });
+            return res.status(201).json({ message: `Không thể xóa chủ khách sạn - Xóa sau thời gian: ${result_last}` });
           }
           else {
             await Order.destroy({ where: { id_hotel: existHotel.id } });

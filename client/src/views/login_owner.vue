@@ -115,7 +115,7 @@ export default {
             const data = result.data;
             localStorage.setItem("owner", JSON.stringify(data));
             // Chuyển hướng đến trang dashboard.
-            this.$router.push('/owner')
+            this.$router.push('/owner');
           }
           else {
             alert(result.data.message)

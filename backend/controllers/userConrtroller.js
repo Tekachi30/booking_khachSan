@@ -193,7 +193,7 @@ const deleteUser = async (req, res) => {
         })
         const time = new Date(last_checkout.getDataValue('latest_checkout'))
         var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
-        return res.status(201).json({ message: `Không thể xóa user - Xóa sau thời gian: ${result_last}` });
+        return res.status(201).json({ message: `Không thể xóa khách hàng - Xóa sau thời gian: ${result_last}` });
       }
       else {
         await Order.destroy({ where: { id_user: id } });

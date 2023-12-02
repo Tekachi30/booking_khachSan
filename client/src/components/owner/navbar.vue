@@ -53,9 +53,25 @@
               <img class="h-8 w-8 rounded-full" src="https://cdn.discordapp.com/attachments/1137648162677456956/1143370950683930675/IMG_20230822_092740.jpg?ex=6540662d&is=652df12d&hm=fd7f5849fd2a34063a702249a2780ce1a02b5eb51cc66e27bb0ecdd77d18bc42&" alt="">
             </button>
           </div>
-          <div v-if="showProfile" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Đăng xuất</a>
-          </div>
+          <!-- <div v-if="showProfile" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+            <button @click="logout()" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Đăng xuất</button>
+          </div> -->
+          <transition
+              enter-active-class="transition duration-150 ease-out transform"
+              enter-from-class="scale-95 opacity-0"
+              enter-to-class="scale-100 opacity-100"
+              leave-active-class="transition duration-150 ease-in transform"
+              leave-from-class="scale-100 opacity-100"
+              leave-to-class="scale-95 opacity-0"
+>           
+              <button
+                v-if="showProfile"
+                @click="logout()"
+                class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl px-4 py-2 transition duration-100 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black bg-red-500 border border-transparent rounded shadow-sm hover:bg-red-600"
+              >
+                Đăng xuất
+              </button>
+            </transition>
         </div>
       </div>
     </div>
@@ -81,12 +97,14 @@
 export default {
   data() {
     return {
-      showProfile:false,
-      showNav:false
+      owner: '',
+      showProfile:false, showNav:false
     };
   },
+  mounted() {
+    this.owner = this.getToken()
+  },
   components: {
-   
   },
   methods: {
     openProfile()
@@ -96,7 +114,19 @@ export default {
     openNav()
     {
         this.showNav = !this.showNav
-    }
+    },
+
+    // lấy thông tin của chính owner đã đăng nhập trên local storage
+    getToken() 
+    {
+        let owner = JSON.parse(localStorage.getItem("owner"));
+        return owner;
+    },
+    logout() {
+      // Xóa thông tin owner từ localStorage
+      localStorage.removeItem("owner");
+      this.$router.push('/login_owner')
+    },
   },
 };
 </script>

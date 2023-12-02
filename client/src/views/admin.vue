@@ -127,16 +127,34 @@
 
             <div v-show="dropdownOpen" class="fixed z-20 w-full h-full" />
 
-            <transition enter-active-class="transition duration-150 ease-out transform"
+            <!-- <transition enter-active-class="transition duration-150 ease-out transform"
               enter-from-class="scale-95 opacity-0" enter-to-class="scale-100 opacity-100"
               leave-active-class="transition duration-150 ease-in transform" leave-from-class="scale-100 opacity-100"
               leave-to-class="scale-95 opacity-0">
               <div v-show="dropdownOpen" class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl">
-                <a to="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">
+                <a to="/" class="block px-4 py-2 transition duration-100 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-white bg-red-500 border border-transparent rounded shadow-sm hover:bg-red-600">
                   Đăng xuất
                 </a>
               </div>
+            </transition> -->
+
+            <transition
+              enter-active-class="transition duration-150 ease-out transform"
+              enter-from-class="scale-95 opacity-0"
+              enter-to-class="scale-100 opacity-100"
+              leave-active-class="transition duration-150 ease-in transform"
+              leave-from-class="scale-100 opacity-100"
+              leave-to-class="scale-95 opacity-0"
+>           
+              <button
+                v-show="dropdownOpen"
+                @click="logout()"
+                class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl px-4 py-2 transition duration-100 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black bg-red-500 border border-transparent rounded shadow-sm hover:bg-red-600"
+              >
+                Đăng xuất
+              </button>
             </transition>
+
           </div>
         </div>
       </header>
@@ -181,6 +199,11 @@ export default {
     },
     openDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
+    },
+    logout() {
+      // Xóa thông tin admin từ localStorage
+      localStorage.removeItem("admin");
+      this.$router.push('/login_admin')
     },
   },
 };
