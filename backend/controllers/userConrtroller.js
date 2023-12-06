@@ -79,7 +79,7 @@ const login = async (req, res) => {
   try {
     const { account, password } = req.body;
     // Tìm kiếm user bằng account hoặc email
-    const existingUser = await User.findOne({
+    const exsitUser = await User.findOne({
       where: {
         [Op.or]: [
           { account: account },

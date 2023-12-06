@@ -114,7 +114,7 @@
                             <input v-model="account" type="text" name="account" id="account"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tài khoản" required="">
-                            <p v-if="!account && account_forcus" style="color: darkred; font-weight: bold;">Chưa nhập nội dung!</p>
+                            <p v-if="!account && account_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tài khoản!</p>
                             <p v-if="validAccount(account) && account_forcus" style="color: darkred; font-weight: bold;">Tài khoản không được chứa dấu!</p>
                         </div>
 
@@ -284,21 +284,20 @@ export default
                 phone: this.phone,
                 password: this.password,
                 email: this.email
-            });
-            if (result.status == 200) {
-                this.account_forcus = false;
-                this.fullname_forcus = false;
-                this.address_forcus = false;
-                this.phone_forcus = false;
-                this.password_forcus = false;
-                this.email_forcus = false;
+                });
+                if (result.status == 200) {
+                    this.account_forcus = false;
+                    this.fullname_forcus = false;
+                    this.address_forcus = false;
+                    this.phone_forcus = false;
+                    this.password_forcus = false;
+                    this.email_forcus = false;
 
-                this.openAdd()
-                this.getOwner()
-            }
-            else {
-                alert(result.data.message)
-            }
+                    this.openAdd()
+                    this.getOwner()
+                }else {
+                    alert(result.data.message)
+                }
             }
         } catch (error) {
             console.log(error);
