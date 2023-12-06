@@ -19,6 +19,9 @@
             </div>
         </div>
          <!--render mảng hotel-->
+
+
+         
         <hotel/>
     </div>
     <toprating/>

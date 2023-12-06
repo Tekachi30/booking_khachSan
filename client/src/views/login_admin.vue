@@ -15,8 +15,14 @@
 
         <label class="block mt-3">
           <span class="text-sm text-gray-700">Mật khẩu</span>
-          <input v-model="password" type="password"
+          <div class="relative">
+            <input v-model="password" type="password" v-bind:type="[showPassword ? 'text' : 'password']"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500" />
+            <span class="absolute inset-y-0 right-0 flex items-center pr-3" @click="showPassword = !showPassword">
+                    <i class="fa" :class="[showPassword ? 'fa-eye' : 'fa-eye-slash']" aria-hidden="true"></i>
+            </span>
+          </div>
+          
         </label>
 
 
@@ -34,6 +40,7 @@
 export default {
   data() {
     return {
+      showPassword: false,
       account: '',
       password: ''
     };

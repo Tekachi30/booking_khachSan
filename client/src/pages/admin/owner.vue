@@ -228,7 +228,7 @@ export default
   },
   components: {},
   methods: {
-
+    
     // các hàm validate start
     validAccount(account){
         const re = /[^a-zA-Z0-9]/; // kiểm tra có dấu hay không

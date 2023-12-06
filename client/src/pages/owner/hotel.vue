@@ -1,5 +1,5 @@
 <template>
-  <!-- button thêm rõ ràng là v rùi -->
+  <!-- button thêm -->
   <button @click="openAdd()" type="button"
     class="flex items-center justify-center  bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2  focus:outline-none ">
     <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -60,10 +60,9 @@
           </a>
         </div>
       </div>
-
     </div>
   </div>
-  <!-- chưa thêm xong ?-->
+  <!-- -->
   <div class="w-full" v-if="isUnActive">
     <div class="grid grid-cols-4 gap-4">
       <div class=" bg-white border border-gray-200 rounded-lg shadow " v-for="hotel in hotel_nons">

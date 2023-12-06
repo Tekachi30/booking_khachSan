@@ -34,19 +34,26 @@
 
           <div class="mt-4">
             <label class="block text-gray-700">Mật khẩu</label>
-            <input
-              type="password"
-              name=""
-              id=""
-              placeholder="Nhập mật khẩu"
-              minlength="6"
-              class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-              required
-            />
+              <div class="relative">
+                <input
+                v-model="password"
+                type="password" 
+                v-bind:type="[showPassword ? 'text' : 'password']"
+                name=""
+                id=""
+                placeholder="Nhập mật khẩu"
+                minlength="6"
+                class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                required
+              />
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3" @click="showPassword = !showPassword">
+                      <i class="fa" :class="[showPassword ? 'fa-eye' : 'fa-eye-slash']" aria-hidden="true"></i>
+              </span>
+            </div>
           </div>
 
           <button
-            type="submit"
+            type="submit" 
             class="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg px-4 py-3 mt-6"
           >
             Đăng nhập
@@ -64,3 +71,14 @@
     </div>
   </section>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      showPassword: false,
+    };
+  },
+  methods: {},
+};
+</script>

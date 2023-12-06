@@ -55,7 +55,7 @@
               Trang đăng nhập chủ khách sạn
             </h1>
 
-            <label class="block">
+        <label class="block">
           <span class="text-sm text-gray-700">Tên tài khoản</span>
           <input v-model="account" type="text"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500" 
@@ -63,10 +63,16 @@
         </label>
 
         <label class="block mt-3">
-          <span class="text-sm text-gray-700">Mật khẩu</span>
-          <input v-model="password" type="password"
+          <span class="text-sm text-gray-700">Mật khẩu</span> 
+          <div class="relative">
+            <input v-model="password" type="password" v-bind:type="[showPassword ? 'text' : 'password']"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500" 
             placeholder="***************"/>
+            <span class="absolute inset-y-0 right-0 flex items-center pr-3" @click="showPassword = !showPassword">
+                    <i class="fa" :class="[showPassword ? 'fa-eye' : 'fa-eye-slash']" aria-hidden="true"></i>
+            </span>
+          </div>
+          
         </label>
 
             <!-- You should use a button here  -->
@@ -92,6 +98,7 @@
 export default {
   data() {
     return {
+      showPassword: false,
       account: '',
       password: ''
     };
