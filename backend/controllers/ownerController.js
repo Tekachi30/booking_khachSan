@@ -8,8 +8,9 @@ const Rating = db.rating_hotel;
 const Mess = db.messager;
 const Report = db.report_hotel;
 const Favorate = db.favorate_hotel;
-const Img = db.img_hotel;
-const coupon = db.coupon_owner;
+const ImgHotel = db.img_hotel;
+const ImgRoom = db.img_room;
+const Coupon = db.coupon_owner;
 
 
 const jwt = require("jsonwebtoken");
@@ -115,8 +116,9 @@ const updateOwner = async (req, res) => {
     }
 }
 
-// chưa xong
+//chưa xong
 const deleteOwner = async (req, res) => {
+  
   try {
       const id = req.params.id;
       const exsitOnwer = await Owner.findByPk(id);
@@ -165,15 +167,6 @@ const deleteOwner = async (req, res) => {
                 {
                   model: Room,
                   attributes: [],
-                  include: [
-                    {
-                      model: Hotel,
-                      attributes: [],
-                      where: {
-                        id_owner: exsitOnwer.id
-                      }
-                    }
-                  ]
                 },
               ],
               group: ['id_order'],
@@ -183,20 +176,97 @@ const deleteOwner = async (req, res) => {
             var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
             return res.status(201).json({ message: `Không thể xóa chủ khách sạn - Xóa sau thời gian: ${result_last}` });
           }
-          else {
-            await Order.destroy({ where: { id_hotel: existHotel.id } });
-            await Room.destroy({ where: { id_hotel: existHotel.id } });
-            await Rating.destroy({ where: { id_hotel: existHotel.id } });
-            await Report.destroy({ where: { id_hotel: existHotel.id } });
-            await Favorate.destroy({ where: { id_hotel: existHotel.id } });
-            await Img.destroy({ where: { id_hotel: existHotel.id } });
-            await coupon.destroy({ where: { id_hotel: existHotel.id } });
+          // else {
+          //   const hasRoom = await Room.findAll({ 
+          //     attributes: [],
+          //     where: { id_hotel: existHotel.id },
+          //     include: [{
+          //       model: Hotel, attributes: []
+          //     }]
+          //   }); 
 
-            await Hotel.destroy({ where: { id_owner: id } });
-            await Mess.destroy({ where: { id_owner: id } }); 
-            await Owner.destroy();
-            return res.status(200).json({ message: 'Xóa thành công.' });
+            
+            
+          //   if (hasRoom.length > 0) {
+          //     // Lặp qua từng phòng và tìm đơn đặt phòng tương ứng
+          //     for (const room of hasRoom) {
+          //       const hasOD = await OD.findOne({ 
+          //         attributes: [],
+          //         where: { id_room: room.id },
+          //         include: [{
+          //           model: Room, attributes: []
+          //         }]
+          //       });
+
+          //       if (hasOD) {
+          //         // Xử lý và xóa đơn đặt phòng
+          //         await hasOD.destroy();
+          //         await Order.destroy({ where: { id: hasOD.id_order } }); 
+          //       };
+          //       // Xóa từng ImgRoom có trong Room
+          //       await ImgRoom.destroy({ where: { id_room: room.id } });
+          //       // Xóa từng Room có trong Hotel
+          //       await Room.destroy({ where: { id: room.id } });
+  
+          //       await Rating.destroy({ where: { id_hotel: existHotel.id } });
+          //       await Report.destroy({ where: { id_hotel: existHotel.id } });
+          //       await Favorate.destroy({ where: { id_hotel: existHotel.id } });
+          //       await ImgHotel.destroy({ where: { id_hotel: existHotel.id } });
+          //       await Coupon.destroy({ where: { id_hotel: existHotel.id } });
+    
+          //       await Hotel.destroy({ where: { id_owner: id } });
+          //       await Mess.destroy({ where: { id_owner: id } }); 
+          //       await Owner.destroy();
+          //       return res.status(200).json({ message: 'Xóa thành công.' });
+          //     }
+          //   } else {
+          //     await Rating.destroy({ where: { id_hotel: existHotel.id } });
+          //     await Report.destroy({ where: { id_hotel: existHotel.id } });
+          //     await Favorate.destroy({ where: { id_hotel: existHotel.id } });
+          //     await ImgHotel.destroy({ where: { id_hotel: existHotel.id } });
+          //     await Coupon.destroy({ where: { id_hotel: existHotel.id } });
+  
+          //     await Hotel.destroy({ where: { id_owner: id } });
+          //     await Mess.destroy({ where: { id_owner: id } }); 
+          //     await Owner.destroy();
+          //     return res.status(200).json({ message: 'Xóa thành công.' });
+          //   }
+          // }
+          const hasRooms = await Room.findAll({
+            attributes: [],
+            where: { id_hotel: existHotel.id },
+            include: [{ model: Hotel, attributes: [] }]
+          });
+      
+          for (const room of hasRooms) {
+            const hasOD = await OD.findOne({
+              attributes: [],
+              where: { id_room: room.id },
+              include: [{ model: Room, attributes: [] }]
+            });
+      
+            if (hasOD) {
+              await hasOD.destroy();
+              await Order.destroy({ where: { id: hasOD.id_order } });
+            }
+      
+            await ImgRoom.destroy({ where: { id_room: room.id } });
+            await Room.destroy({ where: { id: room.id } });
           }
+      
+          // Các hoạt động làm sạch khác bên ngoài vòng lặp
+      
+          await Rating.destroy({ where: { id_hotel: existHotel.id } });
+          await Report.destroy({ where: { id_hotel: existHotel.id } });
+          await Favorate.destroy({ where: { id_hotel: existHotel.id } });
+          await ImgHotel.destroy({ where: { id_hotel: existHotel.id } });
+          await Coupon.destroy({ where: { id_hotel: existHotel.id } });
+      
+          await Hotel.destroy({ where: { id_owner: id } });
+          await Mess.destroy({ where: { id_owner: id } });
+          await Owner.destroy();
+      
+          return res.status(200).json({ message: 'Xóa thành công.' });
         }
       }
   } catch (error) {
@@ -204,107 +274,6 @@ const deleteOwner = async (req, res) => {
   }
 }
 
-// code cũ nhưng lỗi
-// const deleteOwner = async (req, res) => {
-//   try {
-//       const id = req.params.id;
-//       const exsitOnwer = await Owner.findByPk(id);
-//       const existHotel = await Hotel.findOne({ where: { id_owner: id } }); //tìm khách sạn của owner
-//       if(!exsitOnwer){
-//         return res.status(400).json({message: 'Không tìm thấy tài khoản.'}); 
-//       }else{
-//         if(!existHotel){
-//           return res.status(400).json({message: `Không tìm thấy khách sạn.`});
-//         }else{
-//           // xử lý hóa đơn
-//           const exitsOrder = await Order.findOne({
-//             where: { 
-//               [Op.or]: [{ status: 'Đã Thanh Toán' }, { status: 'Đã Đặt' }]
-//             },
-//             include: [ // Code sai sẽ fix lại sau
-//               {
-//                 model: OD,
-//                 attributes: [], // Code sai sẽ fix lại sau
-//                 include:[
-//                   {
-//                     model: Room, 
-//                     attributes: [], // Code sai sẽ fix lại sau
-//                     include: [
-//                       {
-//                         model: Hotel,
-//                         attributes: [], // Code sai sẽ fix lại sau
-//                         where: {
-//                           id_owner: exsitOnwer.id
-//                         }
-//                       }
-//                     ]
-//                   }
-//                 ]
-//               },
-//             ]
-//           });
-//           if (exitsOrder) {
-//             /*
-//              note command
-//              Khi tồn tại hóa đơn chưa trả phòng
-//              Thực hiện => lấy ngày cuối cùng họ trả phòng để report lại admin
-//              Thực hiện bằng cách cú pháp find kết hợp ...
-//             */
-//             const last_checkout = await OD.findOne({
-//               attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
-//               where: {
-//                 '$order.status$': 'Đã Thanh Toán',
-//               },
-//               include: [
-//                 {
-//                   model: Order,
-//                   as: 'order',
-//                   attributes: [],
-//                   where: {
-//                     status: 'Đã Thanh Toán',
-//                   },
-//                 },
-//                 {
-//                   model: Room,
-//                   attributes: [],
-//                   include: [
-//                     {
-//                       model: Hotel,
-//                       attributes: [],
-//                       where: {
-//                         id_owner: exsitOnwer.id
-//                       }
-//                     }
-//                   ]
-//                 },
-//               ],
-//               group: ['id_order'],
-//               order: [[sequelize.fn('MAX', sequelize.col('check_out')), 'DESC']],
-//             })
-//             const time = new Date(last_checkout.getDataValue('latest_checkout'))
-//             var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
-//             return res.status(201).json({ message: `Không thể xóa chủ khách sạn - Xóa sau thời gian: ${result_last}` });
-//           }
-//           else {
-//             await Order.destroy({ where: { id_hotel: existHotel.id } });
-//             await Room.destroy({ where: { id_hotel: existHotel.id } });
-//             await Rating.destroy({ where: { id_hotel: existHotel.id } });
-//             await Report.destroy({ where: { id_hotel: existHotel.id } });
-//             await Favorate.destroy({ where: { id_hotel: existHotel.id } });
-//             await Img.destroy({ where: { id_hotel: existHotel.id } });
-//             await coupon.destroy({ where: { id_hotel: existHotel.id } });
-
-//             await Hotel.destroy({ where: { id_owner: id } });
-//             await Mess.destroy({ where: { id_owner: id } }); 
-//             await Owner.destroy();
-//             return res.status(200).json({ message: 'Xóa thành công.' });
-//           }
-//         }
-//       }
-//   } catch (error) {
-//       console.log(error);
-//   }
-// }
 
 const searchOwner = async(req,res)=>
 {

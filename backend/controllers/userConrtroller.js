@@ -155,7 +155,7 @@ const deleteUser = async (req, res) => {
     const id = req.params.id;
     const exsitUser = await User.findByPk(id);
     if (!exsitUser) {
-      return res.status(404).json({ error: 'Không tìm thấy user' });
+      return res.status(404).json({ error: `Không tìm thấy user`  });
     } else {
       // xử lý hóa đơn
       const exitsOrder = await Order.findOne({
@@ -196,15 +196,18 @@ const deleteUser = async (req, res) => {
         return res.status(201).json({ message: `Không thể xóa khách hàng - Xóa sau thời gian: ${result_last}` });
       }
       else {
-        await Order.destroy({ where: { id_user: id } });
-        // mess - report - rating - ...
-        await Rating.destroy({ where: { id_user: id } });
-        await Mess.destroy({ where: { id_user: id } });
-        await Report.destroy({ where: { id_user: id } });
-        await Favorate.destroy({ where: { id_user: id } });
-        await Noti.destroy({ where: { id_user: id } });
-        await User.destroy()
-        return res.status(200).json({ message: 'Xóa thành công.' });
+          const needOrder = await Order.findOne({ where: { id_user: id}});
+
+          await OD.destroy({where: { id_order: needOrder.id }});
+          await Order.destroy({ where: { id_user: id } });
+          await Rating.destroy({ where: { id_user: id } });
+          await Mess.destroy({ where: { id_user: id } });
+          await Report.destroy({ where: { id_user: id } });
+          await Favorate.destroy({ where: { id_user: id } });
+          await Noti.destroy({ where: { id_user: id } });
+          await User.destroy({ where: { id: id } });
+          return res.status(200).json({ message: 'Xóa thành công.' });
+
       }
     }
   } catch (error) {

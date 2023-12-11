@@ -30,10 +30,44 @@ const getOrder = async (req, res) => {
 
 const addOrder = async (req, res) => {
     try {
-        
+      const id = req.params.id;
+      const { status, provider } = req.body;
+      const existUser = await User.findByPk(id);
+      if(!existUser){
+        return res.status(201).json({message: 'Không tìm thấy user.'});
+      }else{
+        await Order.create({
+          status: status,
+          provider: provider,
+          id_user: id
+        });
+        return res.status(200).json({message: 'Thêm thành công.'});
+      }
     } catch (error) {
         console.log(error);
     }
+}
+
+const addOrder_detail = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { quanlity, single_price, checkin, checkout } = req.body;
+    const existOrder = await User.findOne({ where: {id_user: id}});
+    // const hasOD = await OD.findOne({where: {}})
+    if(!existOrder){
+      return res.status(201).json({message: 'Không tìm thấy đơn đặt phòng.'});
+    }else{
+      await OD.create({
+        quanlity: quanlity,
+        single_price: single_price,
+        checkin: checkin,
+        checkout: checkout,
+        id_order: existOrder.id
+      });
+    }
+  } catch (error) {
+      console.log(error);
+  }
 }
 
 const updateOrder = async (req, res) => {
@@ -110,6 +144,8 @@ const searchOrder = async(req,res) => {
 
 module.exports = {
     getOrder,
+    addOrder,
+    addOrder_detail,
     updateOrder,
     searchOrder,
 }

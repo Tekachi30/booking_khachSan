@@ -125,7 +125,7 @@
                 alt="Your avatar" />
             </button>
 
-            <div v-show="dropdownOpen" class="fixed z-20 w-full h-full" />
+            <div v-show="dropdownOpen" class="fixed z-20 w-full h-full"/>
 
             <!-- <transition enter-active-class="transition duration-150 ease-out transform"
               enter-from-class="scale-95 opacity-0" enter-to-class="scale-100 opacity-100"
@@ -154,7 +154,6 @@
                 Đăng xuất
               </button>
             </transition>
-
           </div>
         </div>
       </header>
