@@ -9,14 +9,35 @@ const getRating = async (req, res) => {
     try {
         const rating = await Rating.findAll({
             include:[
-                {model: Hotel, attributes: ['id_owner','name_hotel']},
-                {model: User, attributes: ['Fullname']}
+                {model: Hotel, attributes: []},
+                {model: User, attributes: []}
             ]
         });
         res.json(rating);
     } catch (error) {
         console.log(error);
     }
+}
+
+const addRating = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {id_hotel ,score_rating, comment_rating} = req.body;
+    const existUser = User.findByPk(id);
+    if(!existUser){
+      return res.status(201).json({message: 'Không tìm thấy user'});
+    }else{
+      await rating_hotel.create({
+        score_rating: score_rating,
+        comment_rating: comment_rating,
+        id_hotel: id_hotel,
+        id_user: id,
+      });
+      return res.status(200).json({message: 'Đánh giá thành công'});
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 
@@ -28,7 +49,7 @@ const deleteRating = async (req, res) => {
             await exsitRating.destroy();
             return res.status(200).json({message: 'Xóa tin nhắn thành công'});
         }else{
-            return res.status(400).json({message: 'Đánh giá không tồn tại'});
+            return res.status(201).json({message: 'Đánh giá không tồn tại'});
         }
     } catch (error) {
         console.log(error);
@@ -56,6 +77,7 @@ const searchRating = async(req,res)=>
 
 module.exports = {
     getRating,
+    addRating,
     deleteRating,
     searchRating
 }

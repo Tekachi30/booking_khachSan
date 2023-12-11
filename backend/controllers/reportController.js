@@ -1,17 +1,20 @@
 const db = require("../models");
 const Report = db.report_hotel;
 const User = db.User;
+const Hotel = db.hotel;
+const Owner = db.owner;
 const sequelize = require('sequelize');
 const Op  = sequelize.Op
 
 const getReport = async (req, res) => {
     try {
-        const report = await Report.findAll({
+      const id = req.params.id;
+      const report = await Report.findAll({
           where:{id_hotel:id},
-          include:[{
-              model: Hotel, attributes: ['id_owner','name_hotel'],
-              model: Owner, attributes: ['id','fullname'],
-          }]
+          include:[
+            {model: Hotel, attributes: []},
+            {model: User, attributes: []}
+          ]
         });
         res.json(report);
     } catch (error) {
@@ -20,21 +23,22 @@ const getReport = async (req, res) => {
 }
 
 const addReport = async (req, res) => {
-    const iduser = req.query.id;
-    const {comment_report} = req.body;
-    const exsitUser = await User.findByPk(iduser);
-    if(exsitUser){
-        try {
-            const report = await Report.create({
-                comment_report: comment_report,
-                id_user: iduser
-            })
-            return res.status(200).json({ message:"Thêm báo cáo thành công."});
-        } catch (error) {
-            console.log(error);
-        }
-    }else{
-        return res.status(404).json({ message:"Tài khoản không tồn tại."});
+    try {
+      const id = req.params.id;
+      const {id_hotel , comment_report} = req.body;
+      const existUser = User.findByPk(id);
+      if(!existUser){
+        return res.status(201).json({message: 'Không tìm thấy user'});
+      }else{
+        await report_hotel.create({
+          comment_report: comment_report,
+          id_hotel: id_hotel,
+          id_user: id,
+        });
+        return res.status(200).json({message: 'Báo cáo thành công'});
+      }
+    } catch (error) {
+      console.log(error);
     }
 }
 
