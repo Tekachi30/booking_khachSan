@@ -12,14 +12,14 @@ const getRating = async (req, res) => {
         const rating = await Rating.findAll({
             include:[
                 {
-                  model: Hotel, attributes: [],
+                  model: Hotel, attributes: ['name_hotel'],
                   include: [{
                     model: Owner, 
                     attributes: [],
                     where: { id: ownerId }
                   }]
                 },
-                {model: User, attributes: []}
+                {model: User, attributes: ['fullname']}
             ]
         });
         res.json(rating);
