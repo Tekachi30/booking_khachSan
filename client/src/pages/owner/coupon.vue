@@ -134,7 +134,7 @@
                         <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập mã code" required="">
-                        <p v-if="!code_coupon && code_coupon_forcus" style="color: darkred; font-weight: bold;">Mã code chưa được nhập!</p>
+                        <p v-if="!code_coupon && code_coupon_forcus" class="text-red-500 text-sm ml-1">Mã code chưa được nhập!</p>
                     </div>
 
                     <div>
@@ -143,7 +143,7 @@
                         <input v-model="discount" type="number" name="discount" id="discount" @change="checkDiscount(e)"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập giảm giá" required="">
-                        <p v-if="!discount && discount_forcus" style="color: darkred; font-weight: bold;">Giảm giá chưa được nhập!</p>
+                        <p v-if="!discount && discount_forcus" class="text-red-500 text-sm ml-1">Giảm giá chưa được nhập!</p>
                     </div>
 
 
@@ -153,7 +153,7 @@
                         <input v-model="date_coupon" type="date" @change="handleDateChange"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Select date">
-                        <p v-if="!date_coupon && date_coupon_forcus" style="color: darkred; font-weight: bold;">Chưa chọn ngày hết hạn!</p>
+                        <p v-if="!date_coupon && date_coupon_forcus" class="text-red-500 text-sm ml-1">Chưa chọn ngày hết hạn!</p>
                     </div>
 
                     <button @click="addCoupon()" type="button" 
@@ -201,7 +201,7 @@
                         <input v-model="code_coupon" type="text" name="code_coupon" id="code_coupon"
                             class="bg-gray-50 border mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập mã code" required="" maxlength="7">
-                        <p v-if="!code_coupon && code_coupon_forcus" style="color: darkred; font-weight: bold;">Mã code chưa được nhập!</p>
+                        <p v-if="!code_coupon && code_coupon_forcus" class="text-red-500 text-sm ml-1">Mã code chưa được nhập!</p>
                     </div>
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm
@@ -209,7 +209,7 @@
                         <input v-model="discount" type="text" name="discount" id="discount"
                             class="bg-gray-50 border mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập giảm giá" required="">
-                        <p v-if="!discount && discount_forcus" style="color: darkred; font-weight: bold;">Giảm giá chưa được nhập!</p>
+                        <p v-if="!discount && discount_forcus" class="text-red-500 text-sm ml-1">Giảm giá chưa được nhập!</p>
                     </div>
 
                     <button @click="updateCoupon()"

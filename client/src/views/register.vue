@@ -1,202 +1,173 @@
 <template>
-  <div class="container mx-auto p-4 bg-white">
-    <div class="w-full md:w-1/2 lg:w-1/3 mx-auto my-12">
-      <h1 class="text-lg font-bold">ĐĂNG KÝ TÀi KHOẢN</h1>
-      <div class="flex flex-col mt-4">
-        <div>
-          <label
-            for="account"
-            class="block mt-4 text-sm font-medium text-gray-900 dark:text-white"
-            >Tài khoản</label
-          >
-          <input
-            v-model="account"
-            type="text"
-            name="account"
-            class="px-4 py-3 w-full rounded-md mb-2 bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
-            placeholder="Nhập Tài khoản"
-            required
-          />
-          <p v-if="!account && account_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tài khoản!</p>
-        </div>
+    <div class="min-h-screen py-4 bg-gradient-to-r from-indigo-100 via-blue-300 to-blue-200">
+      <div class="container mx-auto">
+        <div class="flex flex-col lg:flex-row w-10/12 lg:w-8/12 bg-white rounded-xl mx-auto shadow-lg overflow-hidden">
+          <div class="w-full py-16 px-12">
+            <h2 class="text-3xl mb-4">Đăng ký</h2>
+            <p class="mb-4">Chào mừng bạn đến với của chúng tôi !</p>
 
-        <div>
-          <label
-            for="fullname"
-            class="block mt-4 text-sm font-medium text-gray-900 dark:text-white"
-            >Họ và tên</label
-          >
-          <input
-            v-model="fullname"
-            type="text"
-            name="fullname"
-            class="px-4 py-3 w-full rounded-md mb-2 bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
-            placeholder="Nhập họ và tên"
-            required
-          />
-          <p v-if="!fullname && fullname_forcus" style="color: darkred; font-weight: bold;">Chưa nhập họ tên!</p>
-        </div>
-
-        <div>
-          <label
-            for="name"
-            class="block mt-4 text-sm font-medium text-gray-900 dark:text-white"
-            >Email</label
-          >
-          <input
-            v-model="email"
-            type="email"
-            name="email"
-            class="px-4 py-3 w-full rounded-md mb-2 bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
-            placeholder="Nhập email"
-            required
-          />
-          <p v-if="!email && email_forcus" style="color: darkred; font-weight: bold;">Chưa nhập email!</p>
-        </div>
-
-        <div> 
-          <label
-            for="name"
-            class="block mt-4 text-sm font-medium text-gray-900 dark:text-white"
-            >Mật khẩu</label
-          >
-
-          <div class="relative">
-              <input
-              v-model="password"
-              v-bind:type="[showPassword ? 'text' : 'password']"
-              type="password"
-              name="password"
-              class="px-4 py-3 w-full rounded-md mb-2 bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
-              placeholder="Nhập mật khẩu"
-              required
-            />
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3" @click="showPassword = !showPassword">
-                    <i class="fa" :class="[showPassword ? 'fa-eye' : 'fa-eye-slash']" aria-hidden="true"></i>
-              </span>
-              <p v-if="!password && password_forcus" style="color: darkred; font-weight: bold;">Chưa nhập mật khẩu!</p>
-              <p v-if="!validPassword(password) && password_forcus" style="color: darkred; font-weight: bold;">Mật khẩu phải có 1 ký tự đặt biệt!</p>
-              <p v-if="!validPassword2(password) && password_forcus" style="color: darkred; font-weight: bold;">Mật khẩu phải có 1 chữ cái viết hoa!</p>
-          </div>      
-        </div>
-
-
-        <div>
-          <label
-            for="sex"
-            class="block mt-4 text-sm font-medium text-gray-900 dark:text-white"
-            >Giới tính</label
-          >
-          <select
-            type="text"
-            v-model="sex"
-            class="px-4 py-3 w-full rounded-md mb-2 bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
-          >
-            <option disabled></option>
-            <option value="NAM">Nam</option>
-            <option value="NỮ">Nữ</option>
-            <option value="LGBT">LGBT</option>
-          </select>
-          <p v-if="!sex && sex_forcus" style="color: darkred; font-weight: bold;">Chưa chọn giới tính!</p>
-        </div>
-
-        <div>
-          <label
-            for="phone"
-            class="block mt-4 text-sm font-medium text-gray-900 dark:text-white"
-            >Số điện thoại</label
-          >
-          <input
-            v-model="phone"
-            type="tel"
-            name="phone"
-            class="px-4 py-3 w-full rounded-md mb-2 bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
-            pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" 
-            placeholder="Nhập số điện thoại"
-          />
-          <p v-if="!phone && phone_forcus" style="color: darkred; font-weight: bold;">Chưa nhập số điện thoại!</p>
-          <p v-if="!validatePhone(phone) && phone_forcus" style="color: darkred; font-weight: bold;">Chỉ được nhập số!</p>
-
-        </div>
-
-        <div>
-          <label
-            for="name"
-            class="block mt-4 text-sm font-medium text-gray-900 dark:text-white"
-            >Địa chỉ</label
-          >
-          <input
-            v-model="address"
-            type="text"
-            name="address"
-            class="px-4 py-3 w-full rounded-md mb-2 bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
-            placeholder="Nhập địa chỉ"
-          />
-          <p v-if="!address && address_forcus" style="color: darkred; font-weight: bold;">Chưa nhập địa chỉ!</p>
-        </div>
-
-        <button
-          type="button" @click="register()"
-          class="mt-4 px-4 py-3 leading-6 text-base rounded-md border border-transparent bg-blue-500 text-blue-100 hover:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer inline-flex w-full justify-center items-center font-medium focus:outline-none"
-        >
-          Đăng ký
-        </button>
-        <div class="flex flex-col items-center mt-5">
-          <p class="mt-1 text-xs font-light text-gray-500">
-            Đã có tài khoản?<router-link
-              class="ml-1 font-medium text-blue-400"
-              to="/login"
-              >Đăng nhập tại đây.</router-link
-            >
-          </p>
+            <div class="mt-5">
+              <input type="text" placeholder="Tài khoản"
+                class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                v-model="account" />
+            </div>
+            <p class="text-red-500 text-sm ml-1" v-if="!account && accountFocused">Tài khoản bị trống.</p>
+            <p class="text-red-500 text-sm ml-1"
+              v-else-if="validAccount(account) && accountFocused">Tài khoản không được để dấu hoặc khoảng cách.</p>
+  
+            <!--bắt đầu fullname
+            + v-model : fullname đại diện cho tên người dùng
+            + @focus -> checkfullnameError cho phép bật tắt việc check lỗi input fullname
+            + 2 if là check rỗng và độ dài fullname nhập vào input
+            -->
+  
+            <div class="mt-5">
+              <input type="text" placeholder="Họ và tên"
+                class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                v-model="fullname" />
+            </div>
+            <p class="text-red-500 text-sm ml-1" v-if="!fullname && fullnameFocused">Tên người dùng bị trống.</p>
+            <p class="text-red-500 text-sm ml-1"
+              v-else-if="!validFullName(fullname) && fullnameFocused">Tên người dùng phải từ 3 tới 50 ký tự</p>
+  
+            <!--kết thúc fullname-->
+  
+            <!--bắt đầu phone
+            + v-model : phone đại diện cho số điện thoại người dùng
+            + @focus -> checkphoneError cho phép bật tắt việc check lỗi input phone
+            + 2 if : 1 là check rỗng, 2 là check định dạng phone /^(0[1-9]|84[2-9])(\d{8})$/
+            -->
+            <div class="mt-5">
+              <input type="text" placeholder="Số điện thoại"
+                class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                v-model="phone" />
+            </div>
+            <p class="text-red-500 text-sm ml-1" v-if="!phone && phoneFocused">Số điện thoại bị trống.</p>
+            <p class="text-red-500 text-sm ml-1" v-else-if="!validPhone(phone) && phoneFocused">Số điện thoại sai định dạng.
+            </p>
+  
+            <!--kết thúc phone-->
+  
+            <!--bắt đầu email
+            + v-model: email đại diện cho email người dùng
+            + @focus => checkemailError cho phép bật tắc check lỗi input email
+            + 2 if là 1 cái check rỗng và else if check định dạng email 
+            : /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            -->
+            <div class="mt-5">
+              <input type="text" placeholder="Email"
+                class="px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none w-full"
+                v-model="email" />
+              <p class="text-red-500 text-sm ml-1" v-if="!email && emailFocused">Email bị trống.</p>
+              <p class="text-red-500 text-sm ml-1" v-else-if="!validEmail(email) && emailFocused">Email sai định dạng.</p>
+            </div>
+  
+            <!--kết thúc email-->
+  
+            <!--bắt đầu password
+            + v-model : password đại diện cho mật khẩu người dùng.
+            + @focus -> checkpasswordError cho phép bật tắt check lỗi password
+            + 4 if là check rỗng, check độ dài tối thiểu 8 kí tự , check kí tự đặc biệt, check chữ cái hoa
+            -->
+            <div class="mt-5">
+              <input type="password" placeholder="Mật khẩu"
+                class="px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none w-full"
+                v-model="password" />
+            </div>
+            <p class="text-red-500 text-sm ml-1" v-if="!password && passwordFocused">Mật khẩu bị trống.</p>
+            <p class="text-red-500 text-sm ml-1" v-else-if="password.length <= 7 && passwordFocused">Mật khẩu có tối thiểu 8
+              kí tự</p>
+            <p class="text-red-500 text-sm ml-1" v-else-if="!validPassword(password) && passwordFocused">Mật khẩu chứa kí tự
+              đặc biệt " ~ / ) [ * ^ $ .... "</p>
+            <p class="text-red-500 text-sm ml-1" v-else-if="!validPassword2(password) && passwordFocused">Mật khẩu có tối
+              thiểu 1 chữ cái hoa</p>
+            <!--kết thúc password -->
+  
+            <!--bắt đầu địa chỉ -->
+  
+            <!-- địa chỉ cụ thể:
+            + @focus -> checkaddressError() bật tắt chế độ kiểm tra
+            + v-model : address đại diện địa chỉ cụ thể
+            + 1 if kiểm tra rỗng và độ dài <= 10
+            -->
+            <div class="mt-5">
+              <input type="text" placeholder="Địa chỉ cụ thể:"
+                class="px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none w-full"
+                v-model="address" />
+            </div>
+  
+            <p class="text-red-500 text-sm ml-1" v-if="!address && addressFocusted">Địa chỉ cụ thể bị trống.</p>
+            <p class="text-red-500 text-sm ml-1" v-else-if="!validAddress(address) && addressFocusted">Địa chỉ tối đa 10 kí tự.</p>
+  
+            <!--kết thúc địa chỉ-->
+  
+          
+            <div class="mt-5">
+             
+  
+              <!-- button gọi method register-->
+              <button
+                class="w-full block bg-gradient-to-r from-indigo-500 via-blue-500 to-blue-500 text-white font-semibold rounded-lg px-4 py-3 mt-6"
+                @click="register">
+                Đăng ký
+              </button>
+            </div>
+  
+            <!-- chuyển sang login form-->
+            <p class="mt-8">
+              Bạn đã có tài khoản ?
+              <router-link to="/login" class="from-indigo-500 via-blue-500 to-blue-500 font-semibold">
+                Đăng nhập
+              </router-link>
+            </p>
+  
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</template>
+    <!--component toast thông báo !!!-->
+  
+  </template>
+  
+  <script>
 
-<script>
-export default {
-  data() {
-    return {
-      account: "", fullname: "", email: "", phone: "", password: "", sex: "",  address: "",
-      showPassword: false,
-      account_forcus: false, fullname_forcus: false, email_forcus: false, phone_forcus: false, sex_forcus: false, address_forcus: false,
-    };
-  },
-  components: {},
-  methods: {
+  export default {
+    data() {
+      return {
+        /* dữ liệu tạo ra để lưu trữ thông tin người dùng nhập vào*/
+        account: "", fullname: "", address: "", address: "", sex: "", phone: "", city_id: "", password: "", email: "",
+  
+        /* dữ liệu tạo ra để lưu trữ thông tin các api*/
+        citys: [], districts: [], communes: [],
+  
+        /* các biển kiểm tra bật tắt focus để validate form*/
+        fullnameFocused: false, emailFocused: false, passwordFocused: false, 
+        addressFocusted: false, phoneFocused: false, 
 
-    validAccount(account){
-        const re = /[^a-zA-Z0-9]/; // kiểm tra có dấu hay không
-        return re.test(account);
+      };
     },
-    validatePhone(phone) {
-      const re = /^[0-9]+$/; // Chỉ cho phép chứa số, không chứa chữ cái hoặc các ký tự khác
-      return re.test(phone);
+  
+    mounted() {
+      
     },
-    validPassword(password) {
-      const re = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/; // kiểm tra có ký tự đặc biệt hay không
-      return re.test(password);
+    components: {
+     
     },
-    validPassword2(password) {
-      const re = /[A-Z]/; // kiểm tra có viết hoa hay không
-      return re.test(password);
-    },
-
-    async register(){
-      try {
-        if ((!this.account && this.validAccount(this.account)) || !this.fullname || !this.address || (!this.phone && this.validatePhone(this.phone)) || (!this.password && this.validPassword(this.password) && this.validPassword2(this.password)) || !this.email) {
-          this.account_forcus = true;
-          this.fullname_forcus = true;
-          this.address_forcus = true;
-          this.sex_forcus = true;
-          this.phone_forcus = true;
-          this.password_forcus = true;
-          this.email_forcus = true;
-        }else{
+    methods: {
+      // xử lý các focus bật tắt validate
+ 
+      //hàm đăng kí
+      async register() {
+        // bật hết các focus validate
+        this.fullnameFocused = true, this.emailFocused = true,
+          this.passwordFocused = true, 
+          this.addressFocusted = true, this.phoneFocused = true
+  
+        //gọi lại hàm đăng kí từ authService
+        if (this.account && !this.validAccount(this.account) && this.validEmail(this.email) && this.validPassword(this.password) && this.validPhone(this.phone) &&  this.validPassword2(this.password) 
+        && this.address && this.fullname && this.validFullName(this.fullname) && this.validAddress(this.address)) {
           const result = await this.$axios.post('user/register',{
-              account: this.account,
+                account: this.account,
                 fullname: this.fullname,
                 address: this.address,
                 sex: this.sex,
@@ -204,24 +175,53 @@ export default {
                 password: this.password,
                 email: this.email
           });
-          if (result.status == 200) {
-              this.account_forcus = false;
-              this.fullname_forcus = false;
-              this.address_forcus = false;
-              this.phone_forcus = false;
-              this.password_forcus = false;
-              this.email_forcus = false;
+            
+            if (result.status == 200) {
+              this.fullnameFocused = false, this.emailFocused = false,
+              this.passwordFocused = false, this.cityFocused = false,  this.addressFocusted = false, this.phoneFocused = false
               alert(result.data.message);
               // Chuyển hướng đến trang đăng nhập.
               this.$router.push('/login')
-          }else {
-              alert(result.data.message);
           }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
+        }else
+          {
+            // bật hết các focus validate
+            this.fullnameFocused = true, this.emailFocused = true,
+              this.passwordFocused = true, 
+             this.addressFocusted = true, this.phoneFocused = true
+          }},
+
+      // các re ràng buộc
+      validAccount(account) {
+        const re = /[^a-zA-Z0-9]|[\s]/;
+        return re.test(account);
+      },
+      validEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+      },
+      validPhone(phone) {
+        const re = /^(0[1-9]|84[2-9])(\d{8})$/;
+        return re.test(phone);
+      },
+      validPassword(password) {
+        const re = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        return re.test(password);
+      },
+       validFullName(fullName) {
+        const re = /^.{3,50}$/; // Kiểm tra chuỗi từ 10 đến 50 ký tự
+    return re.test(fullName);
   },
-};
-</script>
+    validPassword2(password) {
+        const re = /[A-Z]/;
+        return re.test(password);
+      },
+      validAddress(address)
+      {
+        const re = /^.{1,10}$/; 
+        return re.test(address);
+      }
+  
+    },
+  };
+  </script>

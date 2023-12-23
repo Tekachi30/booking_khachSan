@@ -2,14 +2,23 @@ const db = require('../models');
 const Rating = db.rating_hotel;
 const User = db.User;
 const Hotel = db.hotel;
+const Owner = db.owner
 const sequelize = require('sequelize');
 const Op  = sequelize.Op
 
 const getRating = async (req, res) => {
     try {
+      const ownerId = req.params.id;
         const rating = await Rating.findAll({
             include:[
-                {model: Hotel, attributes: []},
+                {
+                  model: Hotel, attributes: [],
+                  include: [{
+                    model: Owner, 
+                    attributes: [],
+                    where: { id: ownerId }
+                  }]
+                },
                 {model: User, attributes: []}
             ]
         });

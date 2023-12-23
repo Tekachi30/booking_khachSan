@@ -20,6 +20,9 @@ const { routerRating } = require ('./routers/ratingRouter');
 const { routerOrder } = require ('./routers/orderRouter');
 const { routerCoupon } = require ('./routers/couponRouter');
 const { routerRoom } = require ('./routers/roomRouter');
+const { routerMail } = require ('./routers/mailRouter');
+const { routerPay } = require ('./routers/payMentRouter');
+
 
 // node cron
 
@@ -65,7 +68,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport,
-   routerOwner, routerMessage, routerRating, routerOrder, routerCoupon, routerRoom);
+   routerOwner, routerMessage, routerRating, routerOrder, routerCoupon, routerRoom, routerMail, routerPay);
 
 // Server các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));

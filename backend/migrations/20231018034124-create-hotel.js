@@ -38,6 +38,12 @@ module.exports = {
       isactive: {
         type: Sequelize.BOOLEAN
       },
+      longitude: {
+        type: Sequelize.DOUBLE
+      },
+      latitube: {
+        type: Sequelize.DOUBLE
+      },
       point: {
         type: Sequelize.INTEGER
       },

@@ -5,8 +5,10 @@ const Owner = db.owner;
 const Hotel = db.hotel;
 const OD = db.order_detail;
 const Room = db.room_hotel;
+const dotenv = require("dotenv");
 const sequelize = require('sequelize');
 const Op  = sequelize.Op
+dotenv.config();
 
 const getOrder = async (req, res) => {
     try {

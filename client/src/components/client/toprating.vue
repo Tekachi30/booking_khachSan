@@ -1,45 +1,63 @@
 <template>
-        <div class="container mx-auto flex-auto r p-2 mt-2">
-      <div class="sm:px-8 mt-9">
-            <div class=" w-full max-w-7xl ">
-                <div class="relative">
-                    <div class=" max-w-2xl lg:max-w-5xl">
-                        <div class="space-y-2 pb-6 pt-6 md:space-y-5 ">
-                            <h1
-                                class="text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 ">
-                                Đánh giá</h1>
-                            <p class="text-lg leading-7 text-gray-500 dark:text-gray-400"> Đây là những đánh giá của những khách hàng của chúng tôi cho các khách sạn họ đã đăt trong chuyến đi của họ.
-                            </p>
+    <section class="py-20">
+        <div class="container mx-auto ">
+            <div class="max-w-lg ml-10">
+                <p class="text-blueGray-400 leading-loose text-xl font-bold">Khách hàng chia sẻ về những kỷ niệm tuyệt vời trên chuyến du lịch
+                    <span class="text-blue-500"> với chúng tôi. </span>
+                </p>
+            </div>      
+                <swiper :pagination="true" :modules="modules" class="mySwipe" style="background-image: url('https://img4.thuthuatphanmem.vn/uploads/2020/12/25/background-don-sac-dep-cho-powerpoint_101110800.jpg');" >
+                    <swiper-slide >
+                        <div class="w-full  py-5 px-5">
+                            <div class="px-6 py-10 ">
+                                <div class=" mb-4">
+                                    <div class="">
+                                        <span class="inline-block py-1 px-3 text-xs font-semibold bg-blue-100 text-blue-600 rounded-xl">Tên khách sạn</span>
+                                    </div>
+                                </div>
+                                <p class="leading-loose text-blueGray-400 mb-5">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestiae eos dolore, quaerat non optio beatae aperiam minima corporis necessitatibus tenetur error ea maxime id cum architecto amet? Eligendi, dicta illum!</p>
+                                <strong class="mt-6 mb-2 text-md">Tên khách hàng</strong>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </swiper-slide>
+                </swiper>
         </div>
-        <div class="w-full lg:pl-5 mt-2">
-        <div class="flex flex-wrap">
-            <div class="w-1/2 lg:w-1/4 p-2">
-                <div class="mb-12 md:mb-0 rounded-md shadow-md p-2 ">
-                    <div class="mb-6 flex justify-center">
-                        <img src="https://thanhtoanhoadon365.com/wp-content/uploads/2022/04/qua-khu-cua-anya-forger-trong-spy-x-family-2.jpg"
-                            class="w-32 rounded-full shadow-lg dark:shadow-black/30" />
-                    </div>
-                    <h5 class="mb-4 text-xl font-semibold text-center">Đặng Thành Đạt</h5>
-                    <h6 class="mb-4 font-semibold text-primary dark:text-primary-500 text-center">
-                        Giới tính: Nam
-                    </h6>
-                    <p class="mb-4 text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-block h-7 w-7 pr-2"
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z" />
-                        </svg>
-                        Từ dịch vụ tận tâm của nhân viên, không gian phòng ốc thoải mái và sạch sẽ cho đến tiện nghi hiện đại và vị trí thuận lợi, mọi thứ đều khiến tôi cảm thấy hài lòng. .
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+    </section>
 </template>
-<style></style>
+
+<script>
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
+// Import Swiper styles
+import 'swiper/css';
+
+import 'swiper/css/pagination';
+
+
+// import required modules
+import { Pagination } from 'swiper/modules';
+
+export default {
+    data() {
+        return {
+
+        };
+    },
+    mounted() {
+
+    },
+    components: {
+        Swiper,
+        SwiperSlide,
+    },
+    setup() {
+        return {
+            modules: [Pagination],
+        };
+    },
+    methods: {
+
+    },
+};
+</script>

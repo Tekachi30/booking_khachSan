@@ -47,6 +47,16 @@ const deleteFile = (filePath) => {
 
 // start 
 
+const getHotelId = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const hotel = await Hotel.findByPk(id);
+        res.status(200).json(hotel);
+    } catch (error) {
+        console.log*(error);
+    }
+}
+
 const getHotel = async (req, res) => {
     try {
         const hotel = await Hotel.findAll({
@@ -329,6 +339,7 @@ const deleteImgHotel = async (req, res) => {
 
 module.exports = {
     getHotel,
+    getHotelId,
     getHotelNon,
     getHotelByOwner,
     addHotel,

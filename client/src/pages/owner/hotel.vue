@@ -117,7 +117,7 @@
               <input v-model="name_hotel" type="text" name="name_hotel" id="name_hotel"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập tên khách sạn" required="">
-              <p v-if="!name_hotel && name_hotel_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tên khách sạn!</p>
+              <p v-if="!name_hotel && name_hotel_forcus" class="text-red-500 text-sm ml-1">Chưa nhập tên khách sạn!</p>
             </div>
 
             <div class="address">
@@ -125,7 +125,7 @@
               <input v-model="address" type="text" name="address" id="address"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập Địa chỉ" required="">
-              <p v-if="!address && address_forcus" style="color: darkred; font-weight: bold;">Chưa nhập địa chỉ!</p>
+              <p v-if="!address && address_forcus" class="text-red-500 text-sm ml-1">Chưa nhập địa chỉ!</p>
             </div>
 
 
@@ -139,7 +139,7 @@
                   {{ city.name }}
                 </option>
               </select>
-              <p v-if="!city_id && city_id_forcus" style="color: darkred; font-weight: bold;">Chưa chọn thành phố!</p>
+              <p v-if="!city_id && city_id_forcus" class="text-red-500 text-sm ml-1">Chưa chọn thành phố!</p>
 
             </div>
 
@@ -153,7 +153,7 @@
                   {{ district.name }}
                 </option>
               </select>
-              <p v-if="!districts_code && districts_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn quận/huyện!</p>
+              <p v-if="!districts_code && districts_code_forcus" class="text-red-500 text-sm ml-1">Chưa chọn quận/huyện!</p>
             </div>
 
 
@@ -166,7 +166,7 @@
                   {{ ward.name }}
                 </option>
               </select>
-              <p v-if="!ward_code && ward_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn xã/phường!</p>
+              <p v-if="!ward_code && ward_code_forcus" class="text-red-500 text-sm ml-1">Chưa chọn xã/phường!</p>
             </div>
           </div>
 
@@ -176,7 +176,7 @@
             <textarea v-model="information" type="text" name="information" id="information"
               class="bg-gray-50 border mt-2 mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Nhập thông tin khách sạn" required=""></textarea>
-            <p v-if="!information && information_forcus" style="color: darkred; font-weight: bold;">Nội dung mô tả chưa được nhập!</p>
+            <p v-if="!information && information_forcus" class="text-red-500 text-sm ml-1">Nội dung mô tả chưa được nhập!</p>
           </div>
 
           <!--hiển thị ảnh đã chọn tại đây đi ???-->
@@ -261,7 +261,7 @@
               <input v-model="name_hotel" type="text" name="name_hotel" id="name_hotel"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập tên khách sạn" required="">
-              <p v-if="!name_hotel && name_hotel_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tên khách sạn!</p>
+              <p v-if="!name_hotel && name_hotel_forcus" class="text-red-500 text-sm ml-1">Chưa nhập tên khách sạn!</p>
             </div>
 
             <div class="address">
@@ -269,7 +269,7 @@
               <input v-model="address" type="text" name="address" id="address"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Nhập Địa chỉ" required="">
-              <p v-if="!address && address_forcus" style="color: darkred; font-weight: bold;">Chưa nhập địa chỉ!</p>
+              <p v-if="!address && address_forcus" class="text-red-500 text-sm ml-1">Chưa nhập địa chỉ!</p>
             </div>
 
             <div class="city">
@@ -282,7 +282,7 @@
                   {{ city.name }}
                 </option>
               </select>
-              <p v-if="!city_id && city_id_forcus" style="color: darkred; font-weight: bold;">Chưa chọn thành phố!</p>
+              <p v-if="!city_id && city_id_forcus" class="text-red-500 text-sm ml-1">Chưa chọn thành phố!</p>
             </div>
 
             <div class="district">
@@ -294,7 +294,7 @@
                   {{ district.name }}
                 </option>
               </select>
-              <p v-if="!districts_code && districts_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn quận/huyện!</p>
+              <p v-if="!districts_code && districts_code_forcus" class="text-red-500 text-sm ml-1">Chưa chọn quận/huyện!</p>
             </div>
 
             <div class="ward">
@@ -306,7 +306,7 @@
                   {{ ward.name }}
                 </option>
               </select>
-              <p v-if="!ward_code && ward_code_forcus" style="color: darkred; font-weight: bold;">Chưa chọn xã/phường!</p>
+              <p v-if="!ward_code && ward_code_forcus" class="text-red-500 text-sm ml-1">Chưa chọn xã/phường!</p>
             </div>
 
           </div>
@@ -317,7 +317,7 @@
             <textarea v-model="information" type="text" name="information" id="information"
               class="bg-gray-50 border mt-2 mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Nhập thông tin khách sạn" required=""></textarea>
-            <p v-if="!information && information_forcus" style="color: darkred; font-weight: bold;">Nội dung mô tả chưa được nhập!</p>
+            <p v-if="!information && information_forcus" class="text-red-500 text-sm ml-1">Nội dung mô tả chưa được nhập!</p>
           </div>
 
           <!--view ảnh mới-->

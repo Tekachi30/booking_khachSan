@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, DOUBLE
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class hotel extends Model {
@@ -31,6 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     id_owner: DataTypes.INTEGER,
     information: DataTypes.STRING,
     isactive: DataTypes.BOOLEAN,
+    longitude: DataTypes.DOUBLE,
+    latitube: DataTypes.DOUBLE,
     point: DataTypes.INTEGER,
     level: DataTypes.INTEGER,
   }, {

@@ -13,42 +13,30 @@ const router = createRouter({
           component: () => import("../pages/client/home.vue"),
         },
         {
-          path: "/checkout",
-          name: "checkout",
-          component: () => import("../pages/client/checkout.vue"),
+          path: "/hoteldetail",
+          name: "hoteldetail",
+          component: () => import("../pages/client/hoteldetail.vue"),
         },
         {
-          path: "/favourite",
-          name: "favourite",
-          component: () => import("../pages/client/favourite.vue"),
+          path: "/hotels",
+          name: "hotels",
+          component: () => import("../pages/client/hotel.vue"),
+        },
+        {
+          path: "/contact",
+          name: "contact",
+          component: () => import("../pages/client/contact.vue"),
         },
         {
           path: "/blog",
           name: "blog",
-          component: () => import("../pages/client/blog.vue"),
+          component: () => import("../pages/client/blogs.vue"),
         },
         {
-          path: "/users",
-          name: "users",
-          component: () => import("../pages/client/user.vue"),
-          children: [
-            {
-              path: "",
-              name: "usersPage",  // Thay đổi tên thành "usersPage"
-              component: () => import("../pages/client/user/user.vue"),
-            },
-            {
-              path: "cart",
-              name: "carts",
-              component: () => import("../pages/client/user/cart.vue"),
-            },
-            {
-              path: "favorite",
-              name: "favorites",
-              component: () => import("../pages/client/user/favorite.vue")
-            },
-          ]
-        },
+          path: "/information",
+          name: "information",
+          component: () => import("../pages/client/information.vue"),
+        },   
       ]
     },
     {
@@ -60,6 +48,21 @@ const router = createRouter({
       path: "/demo",
       name: "demo",
       component: () => import("../views/demo.vue"),
+    },
+    {
+      path: "/demo2",
+      name: "demo2",
+      component: () => import("../views/demo2.vue"),
+    },
+    {
+      path: "/demovnpay",
+      name: "demovnpay",
+      component: () => import("../views/demovnpay.vue"),
+    },
+    {
+      path: "/thankyou",
+      name: "thankyou",
+      component: () => import("../views/thankyou.vue"),
     },
     {
       path: "/register",

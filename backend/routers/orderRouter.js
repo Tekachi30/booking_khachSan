@@ -3,13 +3,8 @@ const { getOrder, updateOrder, searchOrder } = require("../controllers/orderCont
 const routerOrder = express.Router();
 
 routerOrder.get("/api/order/get", getOrder)
-
 routerOrder.post("/api/order/search", searchOrder);
-
 routerOrder.put("/api/order/update/:id", updateOrder)
-
-
-
 
 
 module.exports = {

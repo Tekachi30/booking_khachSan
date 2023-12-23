@@ -1,19 +1,18 @@
 <template>
-  <navbarVue />
-  <router-view/>
-  <footerVue/>
+<navbar/>
+<router-view/>
+<footerv/>
 </template>
 
 <script>
-import navbarVue from "../components/client/navbar.vue";
-import footerVue from "../components/client/footer.vue";
+import navbar from '../components/client/navbar.vue';
+import footerv from '../components/client/footer.vue';
 export default {
   components: {
-    navbarVue,
-    footerVue,
-  
+    navbar,
+   
+    footerv
   },
 };
 </script>
 
-<style></style>

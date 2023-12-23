@@ -40,11 +40,13 @@
                             </tr>
                         </thead>
                         <tbody v-for="(rating, index) in ratings" :key="index">
-                            <tr class="border-b dark:border-gray-700">
+                            <!-- <div v-for="(hotel) in hotels"> -->
+                                <tr class="border-b dark:border-gray-700">
                                 <th scope="row"
                                     class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                         1 }}</th>
                                 <td class="px-4 py-3">
+                                    <!-- {{ hotel.name_hotel }} -->
                                     {{ rating.id_hotel }}
                                 </td>
                                 <td class="px-4 py-3"> {{ rating.id_user }}</td>
@@ -54,6 +56,7 @@
                                 
                                 <!--action ?-->
                             </tr>
+                            <!-- </div> -->
                         </tbody>
                     </table>
                 </div>
@@ -70,7 +73,7 @@ export default
 {
   data(){
     return {
-        ratings: [], owner: ''
+        ratings: [], hotels: [], owner: ''
     }
   },
   mounted(){
@@ -90,11 +93,20 @@ export default
       let owner = JSON.parse(localStorage.getItem("owner"));
       return owner;
     },
-    
+
+    async getHotel() {
+      try {
+        const result = await this.$axios.get(`hotel/getid/${this.ratings.id_hotel}`)
+        this.hotels = result.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async getRating() {
        try {
-           const result = await this.$axios.get('rating/get');
-           this.ratings = result.data.filter((item) => item.hotel.id_owner == this.owner.id);
+           const result = await this.$axios.get(`rating/get/${this.owner.id}`);
+           this.ratings = result.data;
+           //this.ratings = result.data.filter((item) => item.hotel.id_owner == this.owner.id);
            console.log(result.data);
        } catch (error) {
            console.log(error)
