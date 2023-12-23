@@ -19,7 +19,7 @@
                                 </div>
                                 <input type="text" id="simple-search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Tìm theo tiêu đề" required="">
+                                    placeholder="Tìm theo tên.." required="">
                             </div>
                         </form>
                     </div>
@@ -44,10 +44,8 @@
                                 <th scope="row"
                                     class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                         1 }}</th>
-                                <td class="px-4 py-3">
-                                    {{ order.id_hotel }}
-                                </td>
-                                <td class="px-4 py-3"> {{ order.id_user }}</td>
+                                <td class="px-4 py-3"> {{ order.hotel.name_hotel }}</td>
+                                <td class="px-4 py-3"> {{ order.User.fullname }}</td>
                                 <td class="px-4 py-3"> {{ order.status }}</td>
                                 <td class="px-4 py-3"> {{ order.provider }}</td>
                                 <td class="px-4 py-3"> {{ formatTime(order.createdAt) }}</td>
@@ -174,8 +172,7 @@ export default
     //lấy dữ liệu
     async getOrder() {
        try {
-           const result = await this.$axios.get('order/get');
-           this.orders = result.data.filter((item) => item.hotel.id_owner == this.owner.id); //lọc ra những order của chính owner đó theo id
+           const result = await this.$axios.get(`order/get/${this.owner.id}`);
            console.log(result.data);
        } catch (error) {
            console.log(error)

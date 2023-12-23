@@ -8,12 +8,10 @@ const Op  = sequelize.Op
 
 const getReport = async (req, res) => {
     try {
-      const id = req.params.id;
       const report = await Report.findAll({
-          where:{id_hotel:id},
-          include:[
-            {model: Hotel, attributes: []},
-            {model: User, attributes: []}
+            include:[
+              {model: Hotel, attributes: ['name_hotel'],},
+              {model: User, attributes: ['fullname']}
           ]
         });
         res.json(report);
@@ -48,11 +46,26 @@ const searchReport = async(req,res)=>
     const {search}= req.body
     const result = await Report.findAll(
     {
+      include:[
+        {
+          model: Hotel, attributes: ['name_hotel'],
+        },
+        {model: User, attributes: ['fullname']}
+      ],
       where: {
-        id_hotel: {
-          [Op.like]: `%${search}%`
-        }
-      }
+        [Op.or]: [
+          {
+            '$Hotel.name_hotel$': {
+              [Op.like]: `%${search}%`,
+            },
+          },
+          {
+            '$User.fullname$': {
+              [Op.like]: `%${search}%`,
+            },
+          },
+        ],
+      },
     }
     )
     res.json(result)

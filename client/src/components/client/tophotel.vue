@@ -32,23 +32,41 @@
         <div class=" w-full px-4 sm:px-8 xl:px-0">
             <div class="grid content-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-11 gap-x-7.5">
                 <!-- ks 1 -->
-                <a class="block rounded-lg p-4 shadow-sm shadow-indigo-100">
-                    <img alt="Home"
+                <a class="block rounded-lg p-4 shadow-sm shadow-indigo-100" v-for="hotel in hotels">
+                    <!-- <img alt="Home"
                         src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                        class="h-56 w-full rounded-md object-cover" />
+                        class="h-56 w-full rounded-md object-cover" /> -->
+                        <swiper :pagination="{
+                          dynamicBullets: true,
+                        }" :modules="modules" class="mySwiper ">
+                          <swiper-slide v-for="img in hotel.img_hotels">
+                            <img class="rounded-t-lg p-1 " :src="img.url" alt="" />
+                          </swiper-slide>
+                        </swiper>
 
                     <div class="mt-2">
                         <dl>
                             <div>
                                 <dt class="sr-only">Giá chỉ từ</dt>
 
-                                <dd class="text-sm text-gray-500">Chỉ từ 2 400,000 đ</dd>
+                                <dd class="text-sm text-gray-500 font-normal">Chỉ từ 2 400,000 đ</dd>
+                            </div>
+                            <div>
+                                <dt class="sr-only">khách sạn</dt>
+
+                                <dd class="font-bold text-xl">{{ hotel.name_hotel }}</dd>
                             </div>
 
                             <div>
                                 <dt class="sr-only">Địa chỉ</dt>
 
-                                <dd class="font-medium">123 Wallaby Avenue, Park Road</dd>
+                                <dd class="font-medium text-lg">{{ getCityName(hotel.city_code) }}</dd>
+                            </div>
+
+                            <div>
+                                <dt class="sr-only">Địa chỉ</dt>
+
+                                <dd class="font-normal text-base">{{ hotel.information }}</dd>
                             </div>
                         </dl>
 
@@ -102,18 +120,52 @@
 </template>
 
 <script>
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
+// Import Swiper styles
+import 'swiper/css';
+
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
+import AddressService from '../../plugins/addressService'
 export default {
-    data() {
-        return {
+  data() {
+    return {
+        hotels: [], citys: [],
+    };
+  },
+  mounted() {
+    this.getHotel()
 
-        };
-    },
-    mounted() {
+    AddressService.getCountry().then((data) => {
+      this.citys = data;
+    });
+  },
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  setup() {
+    return {
+      modules: [Pagination],
+    };
+  },
+  methods: {
 
-    },
-    components: {},
-    methods: {
 
+    async getHotel() {
+      try {
+        const result = await this.$axios.get(`hotel/get/`)
+        this.hotels = result.data
+      } catch (error) {
+        console.log(error)
+      }
     },
-};
+    getCityName(cityCode) {
+      const city = this.citys.find((c) => c.code === cityCode);
+      return city ? city.name : '';
+    },
+  }
+}
 </script>

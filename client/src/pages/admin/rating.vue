@@ -19,7 +19,7 @@
                                 </div>
                                 <input type="text" id="simple-search" v-on:keyup.enter="search()" v-model="value_search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Tìm theo tên khách sạn..." required="">
+                                    placeholder="Tìm theo tên.." required="">
                             </div>
                         </div>
                     </div>
@@ -44,9 +44,9 @@
                                     class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                         1 }}</th>
                                 <td class="px-4 py-3">
-                                    {{ rating.id_hotel }}
+                                    {{ rating.hotel.name_hotel }}
                                 </td>
-                                <td class="px-4 py-3"> {{ rating.id_user }}</td>
+                                <td class="px-4 py-3"> {{ rating.User.fullname }}</td>
                                 <td class="px-4 py-3"> {{ rating.score_rating }}</td>
                                 <td class="px-4 py-3"> {{ rating.comment_rating }}</td>
                                 
@@ -77,23 +77,15 @@ export default
   components: {},
   methods: {
     
-async getRating() {
-   try {
-       const result = await this.$axios.get('rating/get');
-       this.ratings = result.data;
-   } catch (error) {
-       console.log(error)
-   }
-},
-
-// async getUser() {
-//    try {
-//        const result = await this.$axios.get('user/get');
-//        this.users = result.data;
-//    } catch (error) {
-//        console.log(error)
-//    }
-// },
+    async getRating() {
+       try {
+           const result = await this.$axios.get('rating/get');
+           this.ratings = result.data;
+           console.log(result.data);
+       } catch (error) {
+           console.log(error)
+       }
+    },
 
     async search()
     {

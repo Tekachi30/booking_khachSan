@@ -6,6 +6,20 @@ const Owner = db.owner
 const sequelize = require('sequelize');
 const Op  = sequelize.Op
 
+const getRatingAll = async (req, res) => {
+  try {
+      const rating = await Rating.findAll({
+          include:[
+              {model: Hotel, attributes: ['name_hotel'],},
+              {model: User, attributes: ['fullname']}
+          ]
+      });
+      res.json(rating);
+  } catch (error) {
+      console.log(error);
+  }
+}
+
 const getRating = async (req, res) => {
     try {
       const ownerId = req.params.id;
@@ -71,11 +85,26 @@ const searchRating = async(req,res)=>
     const {search}= req.body
     const result = await Rating.findAll(
     {
+      include:[
+        {
+          model: Hotel, attributes: ['name_hotel'],
+        },
+        {model: User, attributes: ['fullname']}
+      ],
       where: {
-        id_hotel: {
-          [Op.like]: `%${search}%`
-        }
-      }
+        [Op.or]: [
+          {
+            '$Hotel.name_hotel$': {
+              [Op.like]: `%${search}%`,
+            },
+          },
+          {
+            '$User.fullname$': {
+              [Op.like]: `%${search}%`,
+            },
+          },
+        ],
+      },
     }
     )
     res.json(result)
@@ -85,6 +114,7 @@ const searchRating = async(req,res)=>
 }
 
 module.exports = {
+    getRatingAll,
     getRating,
     addRating,
     deleteRating,

@@ -23,7 +23,7 @@ export default {
     props: ['title', 'description', 'date','img','id'],
     data() {
         return {
-
+            
         };
     },
     mounted() {

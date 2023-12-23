@@ -17,9 +17,9 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input type="text" id="simple-search"
+                                <input type="text" id="simple-search" v-on:keyup.enter="search()" v-model="value_search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Tìm theo tiêu đề" required="">
+                                    placeholder="Tìm theo tên.." required="">
                             </div>
                         </form>
                     </div>
@@ -91,22 +91,26 @@ export default
       return owner;
     },
 
-    // async getHotel() {
-    //   try {
-    //     const result = await this.$axios.get(`hotel/getid/${this.ratings.id_hotel}`)
-    //     this.hotels = result.data
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // },
     async getRating() {
        try {
            const result = await this.$axios.get(`rating/get/${this.owner.id}`);
            this.ratings = result.data;
-           //this.ratings = result.data.filter((item) => item.hotel.id_owner == this.owner.id);
            console.log(result.data);
        } catch (error) {
            console.log(error)
+       }
+    },
+
+    async search()
+    {
+       try {
+            const result = await this.$axios.post('rating/search',
+            {
+                "search":this.value_search
+            });
+            this.ratings = result.data
+       } catch (error) {
+        console.log(error)
        }
     },
   }

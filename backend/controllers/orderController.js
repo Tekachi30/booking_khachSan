@@ -12,19 +12,39 @@ dotenv.config();
 
 const getOrder = async (req, res) => {
     try {
-        const order = await Order.findAll({
-            include:[
-                {model: User, attributes: ['Fullname']},
-                {model: OD, attributes: ['id_order', "id_room",'quanlity','sigle_price','checkin','checkout','createdAt'],
-                include: [{
-                    model: Room, attributes: ['id_hotel','type_room','real_quantity','quantity','price'],
-                    include: [{
-                        model: Hotel, attributes: ['id','name_hotel'],
-                    }]
-                }]}
-            ]
-        });
-        res.json(order);
+      const idOwner = req.params.id;
+      const orders = await Order.findAll({
+          attributes: ["id","id_user","status","provider","createdAt"],
+          include: [
+            {
+              model: User, attributes: ["fullname"]
+            },
+            {
+              model: OD,
+              attributes: ["id_order", "id_room"],
+              include: [
+                  {
+                      model: Room,
+                      attributes: ["id", "id_hotel"],
+                      include: [
+                          {
+                              model: Hotel,
+                              attributes: ["id", "id_owner"],
+                              include: [
+                                  {
+                                      model: Owner,
+                                      attributes: ["id", "fullname"],
+                                      where: { id: idOwner }
+                                  }
+                              ]
+                          }
+                      ]
+                  }
+              ]
+          },
+        ],
+      });
+      res.json(orders);
     } catch (error) {
         console.log(error);
     }
