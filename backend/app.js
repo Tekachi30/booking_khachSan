@@ -71,7 +71,7 @@ app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport,
    routerOwner, routerMessage, routerRating, routerOrder, routerCoupon, routerRoom, routerMail, routerPay);
 
 // Server các tệp tĩnh trong thư mục "uploads"
-app.use(express.static("uploads"));
+app.use(express.static("uploads"))
 
 const port = 3000;
 app.listen(port, () => {
