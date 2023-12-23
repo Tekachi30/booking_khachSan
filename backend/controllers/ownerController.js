@@ -19,7 +19,9 @@ const sequelize = require("sequelize");
 const Op = sequelize.Op;
 const dayjs = require("dayjs");
 dotenv.config();
-
+const fs = require("fs"); // package thao tác vs file 
+const multer = require("multer"); // package sử dụng để thao tác upload file
+// Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
@@ -127,146 +129,70 @@ const updateOwner = async (req, res) => {
 
 const deleteOwner = async (req, res) => {
   try {
-    let delete_flag = false;
     const id_owner = req.params.id;
     const exits_owner = await Owner.findByPk(id_owner);
-    if (exits_owner) {
-      /*
-         list liên quan
-         => xóa hotel -> img_hotel -> room -> img_room -> rating -> report -> favorate -> coupon
-         => xóa hóa đơn -> chi tiet hoa đơn
-         => xóa messenger
-      */
-
-      // xóa hóa đơn trước tiên
-      /*
-        owner (id) hotel(id_owner) room (id_hotel) order(id) order_detail(id_order,id_room)
-      */
-      const get_order = await Owner.findAll({
-        attributes: [],
-        include: [
-          {
-            model: Hotel,
-            attributes: ["id"],
-            include: [
-              {
-                model: Room,
-                attributes: ["id", "id_hotel"],
-                include: [
-                  {
-                    model: OD,
-                    attributes: ["id_order", "id", "id_room"],
-
-                    include: [{ model: Order, attributes: ["id", "status"] }],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      });
-      // Sử dụng hàm kiểm tra
-      const canDelete = !hasUnprocessableOrders(get_order);
-
-      // Nếu không có đơn hàng nào có thể xóa, thực hiện xóa
-      if (canDelete) {
-        // Thực hiện quá trình xóa ở đây
-        for (const owner of get_order) {
-          for (const hotel of owner.hotels) {
-            for (const room of hotel.room_hotels) {
-              for (const OD of room.order_details) {
-                const orderId = OD.id_order;
-                const ODId = OD.id;
-
-                await OD.destroy({ where: { id: ODId } }); // Xóa chi tiết đơn hàng
-                await Order.destroy({ where: { id: orderId } }); // Xóa đơn hàng
-                hasdelete(hotel.id, room.id, id_owner);
-              }
-            }
-          }
-        }
-
-        delete_flag = true;
-      } else {
-        for (const owner of get_order) {
-          for (const hotel of owner.hotels) {
-            for (const room of hotel.room_hotels) {
-              hasdelete(hotel.id, room.id, id_owner);
-            }
-          }
-        }
-        console.log(
-          "Không thể xóa đơn hàng với trạng thái đã đặt hoặc đã thanh toán."
-        );
-        return res.status(201).json({
-          message: "Xóa thất bại vì đơn hàng đã được đặt hoặc đã thanh toán.",
-        });
-      }
+    if(exits_owner)
+    {
       
-      if (delete_flag) {
-        await exits_owner.destroy();
-        console.log("Có thể xóa tất cả các đơn hàng.");
-        return res.status(200).json({ message: "Xóa thành công." });
-      }
     }
   } catch (error) {
     console.log(error);
   }
 };
-// Hàm kiểm tra xem có đơn hàng nào có trạng thái là "Đã Đặt" hoặc "Đã Thanh Toán" không
-function hasUnprocessableOrders(owners) {
-  for (const owner of owners) {
-    for (const hotel of owner.hotels) {
-      for (const room of hotel.room_hotels) {
-        for (const orderDetail of room.order_details) {
-          const orderStatus = orderDetail.order.status;
-          if (orderStatus === "Đã Đặt" || orderStatus === "Đã Thanh Toán") {
-            return true; // Có ít nhất một đơn hàng không thể xóa
-          }
-        }
+
+
+ const hasdelete = async(idHotel, idRoom, idOwner) => {
+
+  const existCoupon = await Coupon.findOne({ where: { id_hotel: idHotel } })
+  const existFavorate = await Favorate.findOne({ where: { id_hotel: idHotel } })
+  const existReport = await Report.findOne({ where: { id_hotel: idHotel } })
+  const existRating = await Rating.findOne({ where: { id_hotel: idHotel } })
+  const existRoom = await Room.findOne({ where: { id: idRoom } })
+  const existHotel = await Hotel.findOne({ where: { id: idHotel } })
+  const exitOwner = await Hotel.findOne({ where: { id: idOwner } })
+
+  if (existCoupon) { await Coupon.destroy({ where: { id_hotel: idHotel } }); }
+  if (existFavorate) { await Favorate.destroy({ where: { id_hotel: idHotel } }); }
+  if (existReport) { await Report.destroy({ where: { id_hotel: idHotel } }); }
+  if (existRating) { await Rating.destroy({ where: { id_hotel: idHotel } }); }
+
+  if (existRoom) {
+    const room = await Room.findAll({ where: { id_hotel: idHotel } })
+    const roomIds = room.map((r) => r.id);
+    const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
+    if (img_room.length > 0) {
+      for (const img of img_room) {
+        const imagePath = `./uploads/${img.name_img}`;
+        deleteFile(imagePath);
+        await img.destroy();
       }
+      await Room.destroy({ where: { id: idRoom } });
     }
   }
-  return false; // Tất cả đơn hàng đều có thể xóa
-}
 
-async function hasdelete(idHotel, idRoom, idOwner){
+  if (existHotel) {
+    const img_hotel = await ImgHotel.findAll({ where: { id_hotel: idHotel } });
+    if (img_hotel.length > 0) {
+      for (const img of img_hotel) {
+        const imagePath = `./uploads/${img.name_img}`;
+        deleteFile(imagePath);
+        await img.destroy();
+      }
+      await Hotel.destroy({ where: { id_owner: idOwner } });
+    }
+  }
 
-  const existCoupon = await Coupon.findOne({ where: {id_hotel: idHotel}})
-  const existFavorate = await Favorate.findOne({ where: {id_hotel: idHotel}})
-  const existReport = await Report.findOne({ where: {id_hotel: idHotel}})
-  const existRating = await Rating.findOne({ where: {id_hotel: idHotel}})
-  const existImgRoom = await ImgRoom.findOne({ where: {id_room: idRoom}})
-  const existRoom = await Room.findOne({ where: {id: idRoom}})
-  const existImgHotel = await ImgHotel.findOne({ where: {id_hotel: idHotel}})
-  const existHotel = await Hotel.findOne({ where: {id: idHotel}})
-  const exitOwner = await Hotel.findOne({ where: {id: idOwner}})
-  
-  if(existCoupon){await Coupon.destroy({ where: { id_hotel: idHotel } });}
-  if(existFavorate){await Favorate.destroy({ where: { id_hotel: idHotel } });}
-  if(existReport){await Report.destroy({ where: { id_hotel: idHotel } });}
-  if(existRating){await Rating.destroy({ where: { id_hotel: idHotel } });}
-  if(existImgRoom){
-    const imagePath = `./uploads/${existImgRoom.name_img}`;
-    deleteFile(imagePath);
-  }
-  if(existRoom){await Room.destroy({ where: { id: idRoom } });}
-  if(existImgHotel){
-    const imagePath = `./uploads/${existImgHotel.name_img}`;
-    deleteFile(imagePath);
-  }
-  if(existHotel){await Hotel.destroy({where: { id_owner: idOwner},});}
-  if(exitOwner){await Mess.destroy({where: { id_owner: idOwner},});}
+  if (exitOwner) { await Mess.destroy({ where: { id_owner: idOwner },}); }
 }
 
 // Sử dụng hàm để xóa file khỏi thư mục upload
 const deleteFile = (filePath) => {
   fs.unlink(filePath, (err) => {
-      if (err) {
-          console.error(err);
-          return;
-      }
-      console.log(`File ${filePath} has been deleted`);
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(`File ${filePath} has been deleted`);
   });
 }
 
@@ -285,7 +211,7 @@ const searchOwner = async (req, res) => {
     console.log(error);
   }
 };
-  
+
 module.exports = {
   getOwner,
   loginOwner,
@@ -294,4 +220,4 @@ module.exports = {
   deleteOwner,
   searchOwner,
 };
-  
+
