@@ -163,6 +163,7 @@ export default {
   },
   mounted() {
 
+
     this.user = JSON.parse(localStorage.getItem("User"));
     this.id_hotel = this.$route.params.id
     this.getHotel()
@@ -171,6 +172,7 @@ export default {
     });
     AddressService.getAllDistricts().then(data => { this.districts = data; });
     AddressService.getAllWard().then(data => { this.wards = data; });
+
   },
   components: {
     Swiper,
@@ -192,6 +194,7 @@ export default {
       this.isShowCart = !this.isShowCart
     },
 
+<<<<<<< HEAD
     formatCurrency(value) {
       let val = (value / 1).toFixed(0).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đồng'
@@ -237,6 +240,17 @@ export default {
     selectRoom(room)
     {
       this.room = room
+=======
+    //start code
+    async getHotel() {
+       try {
+           const result = await this.$axios.get(`hotel/getid/1`);
+           this.hotels = result.data;
+           console.log(result.data);
+       } catch (error) {
+           console.log(error)
+       }
+>>>>>>> c60cd810f3419365c83227de0f53324165471375
     },
 
   },

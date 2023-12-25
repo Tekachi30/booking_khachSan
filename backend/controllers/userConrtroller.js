@@ -32,7 +32,12 @@ const getUser = async (req, res) => {
 const getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findOne({
+      include: [{model: Order}],
+      where: {
+        id: userId,
+      }
+    });
     if (!user) {
       return res.status(404).json({ message: `Không tìm thấy user id ${userId}.` });
     } else {
@@ -100,8 +105,11 @@ const login = async (req, res) => {
           expiresIn: JWT_EXPIRES_IN,
         });
         return res.status(200).json({
+          id: exsitUser.id,
+          account: exsitUser.account,
           fullname: exsitUser.fullname,
           address: exsitUser.address,
+          sex: exsitUser.sex,
           phone: exsitUser.phone,
           email: exsitUser.email,
           token
@@ -121,12 +129,13 @@ const updateUser = async (req, res) => {
     fullname,
     address,
     phone,
+    sex,
     email,
-    password
+    // password
   } = req.body;
   // Mã hóa mật khẩu
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  // const salt = await bcrypt.genSalt(10);
+  // const hashedPassword = await bcrypt.hash(password, salt);
   try {
     const user = await User.findByPk(userId);
     if (!user) {
@@ -138,8 +147,9 @@ const updateUser = async (req, res) => {
         fullname: fullname,
         address: address,
         phone: phone,
+        sex: sex,
         email: email,
-        password: hashedPassword,
+        // password: hashedPassword,
       });
 
       return res.status(200).json({
