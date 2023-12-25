@@ -20,7 +20,7 @@
             : /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             -->
             <div class="mt-5">
-              <input type="text" placeholder="account"
+              <input type="text" placeholder="Tài khoản"
                 class="px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none w-full"
                 v-model="account"  />
               <p class="text-red-500 text-sm ml-1" v-if="!account && accountFocused">Tài khoản bị trống.</p>
@@ -67,29 +67,25 @@
     </div>
   
     <!--component toast thông báo !!!-->
- 
+  <toast ref="toast"></toast>
   </template>
   
   <script>
   // import service xử lý đăng nhập đăng nhập
-  
+  // import authService from '../plugins/autService';
   // import toast component
- 
-  
+  import toast from '../components/toast.vue'
   export default {
     data() {
       return {
-        /* dữ liệu tạo ra để lưu trữ thông tin người dùng nhập vào*/
         account: '', password: '',
-        /* biến tạo ra lưu dữ liệu sau đăng nhập user*/
         user: '',
-        /* các biển kiểm tra bật tắt focus để validate form*/
         accountFocused: false, passwordFocused: false,
       };
     },
     components:
     {
-      
+      toast,
     },
   
     methods: {
@@ -118,7 +114,7 @@
               // Chuyển hướng đến trang dashboard.
               this.$router.push('/');
             }else {
-            alert(result.data.message)
+              this.$refs.toast.show(result.data.message, 'error');
             }
             
           }

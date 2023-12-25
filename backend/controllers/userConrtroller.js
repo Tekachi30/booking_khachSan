@@ -91,23 +91,24 @@ const login = async (req, res) => {
     if (exsitUser) {
       const ismatch = await bcrypt.compare(password, exsitUser.password);
       if (!ismatch) {
-        return res.status(400).json({ message: 'Mật khẩu không chính xác.' });
+        return res.status(201).json({ message: 'Mật khẩu không chính xác.' });
+      }else{
+        // Tạo JWT
+        const token = jwt.sign({
+          userId: exsitUser.id
+        }, JWT_SECRET, {
+          expiresIn: JWT_EXPIRES_IN,
+        });
+        return res.status(200).json({
+          fullname: exsitUser.fullname,
+          address: exsitUser.address,
+          phone: exsitUser.phone,
+          email: exsitUser.email,
+          token
+        });
       }
-      // Tạo JWT
-      const token = jwt.sign({
-        userId: exsitUser.id
-      }, JWT_SECRET, {
-        expiresIn: JWT_EXPIRES_IN,
-      });
-      return res.status(200).json({
-        fullname: exsitUser.fullname,
-        address: exsitUser.address,
-        phone: exsitUser.phone,
-        email: exsitUser.email,
-        token
-      });
     } else {
-      return res.status(400).json({ message: 'Tài khoản sai hoặc không tồn tại' });
+      return res.status(201).json({ message: 'Tài khoản sai hoặc không tồn tại' });
     }
   } catch (error) {
     console.log(error);

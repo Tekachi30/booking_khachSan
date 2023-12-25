@@ -1,11 +1,20 @@
 <template>
-    <div class=" max-w-screen-2xl mx-auto px-4 py-8 sm:px-6 lg:px-8 mt-[100px] h-full ">
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 items-center grid-cols-1">
-            <div class="" v-for="item in items">
-                <blog class="p-2 m-1" :id="item.id" :title="item.title" :description="item.description" :date="item.date" :img="item.img" />
-            </div>
-        </div>
+  <div
+    class="max-w-screen-2xl mx-auto px-4 py-8 sm:px-6 lg:px-8 mt-[100px] h-full"
+  >
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 items-center grid-cols-1">
+      <div class="" v-for="item in items">
+        <blog
+          class="p-2 m-1"
+          :id="item.id"
+          :title="item.title"
+          :description="item.description"
+          :date="item.date"
+          :img="item.img"
+        />
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -14,12 +23,15 @@ export default {
     data() {
         return {
             items: [
-                { id: 1, title: 'Title 1', description: 'Description 1', date: '2023-12-15', img:'https://d1hjkbq40fs2x4.cloudfront.net/2017-08-21/files/landscape-photography_1645.jpg'},
-                { id: 2, title: 'Title 2', description: 'Description 2', date: '2023-12-16', img:'https://d1hjkbq40fs2x4.cloudfront.net/2017-08-21/files/landscape-photography_1645.jpg'},
-                { id: 3, title: 'Title 3', description: 'Description 2', date: '2023-12-16', img:'https://d1hjkbq40fs2x4.cloudfront.net/2017-08-21/files/landscape-photography_1645.jpg'},
-                { id: 1, title: 'Title 1', description: 'Description 1', date: '2023-12-15', img:'https://d1hjkbq40fs2x4.cloudfront.net/2017-08-21/files/landscape-photography_1645.jpg'},
-                { id: 2, title: 'Title 2', description: 'Description 2', date: '2023-12-16', img:'https://d1hjkbq40fs2x4.cloudfront.net/2017-08-21/files/landscape-photography_1645.jpg'},
-                { id: 3, title: 'Title 3', description: 'Description 2', date: '2023-12-16', img:'https://d1hjkbq40fs2x4.cloudfront.net/2017-08-21/files/landscape-photography_1645.jpg'},
+                { id: 1, title: 'Phép Màu Giáng Sinh', description: 'Hãy cùng chúng tôi trải qua một hành trình qua xứ sở phép màu đông tuyết, nơi tuyết rơi như những điệu nhảy và tiếng cười vang lên, tạo nên một câu chuyện vui vẻ và hạnh phúc cho mọi người.', date: '2023-12-15', img: 'https://cdn.vn.alongwalk.info/wp-content/uploads/2023/01/12172322/image-99-hinh-nen-giang-sinh-dep-nhat-the-gioi-chat-luong-4k-cuc-dep-7d55f77e7f56a6f98018e5e757b2d0f8.jpg' },
+                { id: 2, title: 'Niềm Vui Lễ Hội: Đại Tiệc Giáng Sinh', description: 'Trải nghiệm sức mạnh phép màu của mùa lễ, khi không khí Giáng Sinh tràn ngập niềm vui và ấm áp đọng lòng mọi người', date: '2023-12-16', img: 'https://images.careerbuilder.vn/content/images/anh-noel-careerbuilder-35.jpg' },
+                { id: 3, title: 'Tuyết Rơi và Nụ Cười: Một Chuyện Giáng Sinh Hạnh Phúc', description: 'Đắm chìm trong tinh thần lễ hội với sự kiện Giáng Sinh đầy ấm cúng, với những truyền thống vui tươi, những bản nhạc noel phấn khích và niềm vui của việc tặng quà.', date: '2023-12-20', img: 'https://img.pikbest.com/origin/10/01/07/23EpIkbEsTiKA.jpg!w700wp' },
+                { id: 4, title: 'Điệu Nhạc Chuông: Một Đại Tiệc Giáng Sinh', description: 'Hãy sẵn sàng "điệu nhạc chuông" vào mùa lễ với một sự kiện Giáng Sinh phong cách, đầy tiếng cười, tình yêu và tinh thần tặng quà.', date: '2023-12-22', img: 'https://i.pinimg.com/originals/bf/36/e7/bf36e787909f6030cb1c0ece02ffcf3e.jpg' },
+                { id: 5, title: 'Giáng Sinh Ấm Áp: Những Chuyện Bên Lửa và Lời Chúc Tốt Đẹp', description: 'Thuận lợi bên lửa với chúng tôi để chia sẻ những câu chuyện Giáng Sinh ấm áp và gửi đi những lời chúc ấm lòng cho một mùa lễ đầy tình yêu, tiếng cười và những khoảnh khắc quý báu.', date: '2023-12-30', img: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2022/01/hinh-nen-giang-sinh-2k.jpg?ssl=1' },
+                { id: 6, title: 'Tính Cách Mùa Đông: Một Cuộc Phiêu Lưu Giáng Sinh Hạnh Phúc', description: 'Bắt đầu một cuộc phiêu lưu Giáng Sinh tinh tế, nơi không khí tràn đầy phép màu của mùa lễ, và mỗi khoảnh khắc là cơ hội để tạo ra những kí ức vĩnh cửu.', date: '2024-1-2', img: 'https://img.lovepik.com/photo/45003/7005.jpg_wh860.jpg' },
+                { id: 7, title: 'Ánh Sáng Noel: Bước Nhảy Tự Do Trong Mùa Lễ', description: 'Bạn sẽ bắt gặp ánh sáng Noel đang len lỏi khắp nơi khi tham gia vào một cuộc sống tự do và phấn khích trong mùa lễ hội này.', date: '2023-1-11', img:'https://o.rada.vn/data/image/2015/12/23/Anh-bia-Giang-sinh-2.jpg'},
+                { id: 8, title: 'Ngày Lễ Trắng: Nơi Hòa Quyện Gió Tuyết và Niềm Hạnh Phúc', description: 'Dấu ấn trắng tinh khôi của mùa đông, nơi gió tuyết và niềm vui hòa quyện, tạo nên một ngày lễ trắng tuyệt vời đầy kỷ niệm.', date: '2023-1-13', img:'https://o.rada.vn/data/image/2015/12/23/Anh-bia-Giang-sinh-17.jpg'},
+                { id: 9, title: 'Bình Yên Giáng Sinh: Hành Trình Về Nhà Trái Tim', description: 'Hãy cùng chúng tôi bước vào một hành trình về nhà trái tim, nơi bình yên giáng sinh trở thành điểm đến, và tình thân là nguồn động viên cho mọi người.', date: '2023-1-23', img:'https://i.pinimg.com/originals/3a/51/7d/3a517dbca8e1cf73fe2360073c41fca1.jpg'},
             ]
         };
     },
