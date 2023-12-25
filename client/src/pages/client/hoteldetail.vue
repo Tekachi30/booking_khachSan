@@ -194,7 +194,6 @@ export default {
       this.isShowCart = !this.isShowCart
     },
 
-<<<<<<< HEAD
     formatCurrency(value) {
       let val = (value / 1).toFixed(0).replace('.', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đồng'
@@ -240,19 +239,7 @@ export default {
     selectRoom(room)
     {
       this.room = room
-=======
-    //start code
-    async getHotel() {
-       try {
-           const result = await this.$axios.get(`hotel/getid/1`);
-           this.hotels = result.data;
-           console.log(result.data);
-       } catch (error) {
-           console.log(error)
-       }
->>>>>>> c60cd810f3419365c83227de0f53324165471375
-    },
-
+    }, 
   },
 };
 </script>
