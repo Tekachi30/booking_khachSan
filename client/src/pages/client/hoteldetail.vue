@@ -1,14 +1,13 @@
 <template>
-  <div class=" max-w-[1400px] mt-[100px] container mx-auto">
+  <div class=" max-w-[1400px] mt-[100px] container mx-auto" v-for="(hotel) in hotels">
     <!--tieu de -->
     <div class=" md:flex justify-around items-center px-5">
       <div class="">
-        <p class="mb-4 text-2xl font-extrabaseld  text-gray-900 md:text-3xl font-bold ">Khách sạn Thiên nga của đất</p>
+        <p class="mb-4 text-2xl font-extrabaseld  text-gray-900 md:text-3xl font-bold ">{{ hotel.name_hotel }}</p>
         <div class="md:flex pt-2 pb-2">
           <span class="inline-block py-1 px-3 text-xs font-semibold bg-yellow-100 text-yellow-600 rounded-xl mr-2 mb-2">5
             (10 đánh giá)</span>
-          <span class="inline-block py-1 px-3 text-xs font-semibold bg-blue-100 text-blue-600 rounded-xl">119/54 Đặng
-            Chất, Phường 4, Quận 8, Hồ Chí Minh</span>
+          <span class="inline-block py-1 px-3 text-xs font-semibold bg-blue-100 text-blue-600 rounded-xl">{{ hotel.address }}</span>
         </div>
       </div>
       <p class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-blue-900 md:text-3xl ">Chỉ từ 2 900 000 đ
@@ -147,12 +146,12 @@ import mapVue from '../../components/client/map.vue';
 export default {
   data() {
     return {
-      isDetailRoom: false,
-      isShowCart: false
+      isDetailRoom: false,isShowCart: false,
+      hotels: [], hotel: '',user: '',
     };
   },
   mounted() {
-
+    getHotel()
   },
   components: {
     Swiper,
@@ -171,7 +170,25 @@ export default {
     },
     openCart() {
       this.isShowCart = !this.isShowCart
-    }
+    },
+
+    // lấy thông tin của chính user đã đăng nhập trên local storage
+    getToken() {
+      let user = JSON.parse(localStorage.getItem("User"));
+      return user;
+    },
+
+    //start code
+    async getHotel() {
+       try {
+           const result = await this.$axios.get(`hotel/getid/${this.user.id}`);
+           this.hotels = result.data;
+           console.log(result.data);
+       } catch (error) {
+           console.log(error)
+       }
+    },
+
   },
 };
 </script>

@@ -50,6 +50,24 @@ const getOrder = async (req, res) => {
     }
 }
 
+const getOrderbyUser = async (req, res) => {
+  try {
+    const idUser = req.params.id;
+    const orderUser = await Order.findAll({
+      attributes: [],
+      include: [
+        {
+          model: User, attributes: ['id','fullname']
+        }
+      ],
+      where: {id_user: idUser}
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
 const addOrder = async (req, res) => {
     try {
       const id = req.params.id;
@@ -166,6 +184,7 @@ const searchOrder = async(req,res) => {
 
 module.exports = {
     getOrder,
+    getOrderbyUser,
     addOrder,
     addOrder_detail,
     updateOrder,

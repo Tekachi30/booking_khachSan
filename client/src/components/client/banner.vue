@@ -1,43 +1,18 @@
 <template>
     <div class="container mx-auto">
-        <swiper :pagination="true" :modules="modules" class="mySwiper relative">  
-            <swiper-slide style="background-image: url('https://azway.vn/wp-content/uploads/2023/05/khach-san-co-be-boi-o-Ha-Long-0.jpg');" class="bg-cover bg-no-repeat">
+        <swiper :pagination="true" :modules="modules" class="mySwiper relative"  >  
+            <swiper-slide :style="{ backgroundImage: `url(${banner.url_banner})` }" class="bg-cover bg-no-repeat" v-for="(banner) in banners">
                 <div
                     class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
                     <div class="max-w-xl  ltr:sm:text-left rtl:sm:text-right">
                         <h1 class="text-3xl font-extrabold sm:text-5xl">
                            
-                            <strong class="block font-extrabold text-blue-700">Tiêu đề </strong>
+                            <strong class="block font-extrabold text-blue-700"> {{ banner.title_banner }} </strong>
                         </h1>
-                        <p class="mt-4 max-w-lg sm:text-xl/relaxed">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui dolores ratione, obcaecati voluptatum maiores necessitatibus asperiores aperiam incidunt soluta iure at. Amet natus numquam asperiores nisi placeat unde architecto. Nam.
+                        <p class="mt-4 max-w-lg sm:text-xl/relaxed text-green-400">
+                            {{ banner.content_banner }}
                         </p>
                         <div class="mt-8 flex flex-wrap gap-4 text-center">
-                            <a href="#"
-                                class="block w-full rounded bg-blue-700 px-12 py-3 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
-                                Xem chi tiết
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </swiper-slide>
-
-            <swiper-slide style="background-image: url('https://azway.vn/wp-content/uploads/2023/05/khach-san-co-be-boi-o-Ha-Long-0.jpg');" class="bg-cover bg-no-repeat">
-                <div
-                    class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
-                    <div class="max-w-xl  ltr:sm:text-left rtl:sm:text-right">
-                        <h1 class="text-3xl font-extrabold sm:text-5xl">
-                           
-                            <strong class="block font-extrabold text-blue-700">Tiêu đề </strong>
-                        </h1>
-                        <p class="mt-4 max-w-lg sm:text-xl/relaxed">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui dolores ratione, obcaecati voluptatum maiores necessitatibus asperiores aperiam incidunt soluta iure at. Amet natus numquam asperiores nisi placeat unde architecto. Nam.
-                        </p>
-                        <div class="mt-8 flex flex-wrap gap-4 text-center">
-                            <a href="#"
-                                class="block w-full rounded bg-blue-700 px-12 py-3 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
-                                Xem chi tiết
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -128,11 +103,11 @@ import { Pagination } from 'swiper/modules';
 export default {
     data() {
         return {
-
+            banners: [],
         };
     },
     mounted() {
-
+        this.getBanner();
     },
     components: {
         Swiper,
@@ -144,7 +119,15 @@ export default {
         };
     },
     methods: {
-
+        async getBanner() {
+           try {
+               const result = await this.$axios.get(`banner/get/`);
+               this.banners = result.data;
+               console.log(result.data);
+           } catch (error) {
+               console.log(error)
+           }
+        },
     },
 };
 </script>

@@ -69,6 +69,34 @@
                 <span class="tracking-wide">Đơn hàng</span>
               </div>
               <!--table đơn hàng-->
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-4">STT</th>
+                            <th scope="col" class="px-4 py-3">Khách hàng</th>
+                            <th scope="col" class="px-4 py-3">Trạng thái</th>
+                            <th scope="col" class="px-4 py-3">Phương thức thanh toán</th>
+                            <th scope="col" class="px-4 py-3">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="(order, index) in orders" :key="index">
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row"
+                                class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
+                                    1 }}</th>
+                            <td class="px-4 py-3">
+                                {{ order.user.fullname }}
+                            </td>
+                            <td class="px-4 py-3"> {{ order.status }}</td>
+                            <td class="px-4 py-3"> {{ order.provider }}</td>
+                            
+                            <!--action ?-->
+                        </tr>
+                    </tbody>
+                </table>
+              </div>
             </div>
 
             <div class="bg-white p-3 shadow-sm rounded-sm" v-if="isHotel">
@@ -79,6 +107,34 @@
                 <span class="tracking-wide">Khách sạn yêu thích</span>
               </div>
               <!--table đơn hàng-->
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-4">STT</th>
+                            <th scope="col" class="px-4 py-3">Khách sạn</th>
+                            <th scope="col" class="px-4 py-3">địa chỉ</th>
+                            <th scope="col" class="px-4 py-3">Thông tin</th>
+                            <th scope="col" class="px-4 py-3">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="(hotel, index) in hotels" :key="index">
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row"
+                                class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
+                                    1 }}</th>
+                            <td class="px-4 py-3">
+                                {{ hotel.name_hotel }}
+                            </td>
+                            <td class="px-4 py-3"> {{ hotel.address }}</td>
+                            <td class="px-4 py-3"> {{ hotel.information }}</td>
+                            
+                            <!--action ?-->
+                        </tr>
+                    </tbody>
+                </table>
+              </div>
             </div>
             <!-- End of about section -->
           </div>
@@ -94,9 +150,9 @@
 export default {
   data() {
     return {
-      activeTab: 'cart',
-      isCart:true,
-      isHotel:false
+      activeTab: 'cart',isCart:true,isHotel:false,
+      hotels: [], orders: [],
+      user: '',
     };
   },
   mounted() {},
@@ -113,7 +169,23 @@ export default {
       this.isHotel = true
       this.isCart = false
       this.activeTab = 'hotel'
-    }
+    },
+
+    // lấy thông tin của chính user đã đăng nhập trên local storage
+    getToken() {
+      let user = JSON.parse(localStorage.getItem("User"));
+      return user;
+    },
+
+    async getOrder() {
+       try {
+           const result = await this.$axios.get(`order/getOrderUser/${this.user.id}`);
+           this.orders = result.data;
+           console.log(result.data);
+       } catch (error) {
+           console.log(error)
+       }
+    },
   },
 };
 </script>

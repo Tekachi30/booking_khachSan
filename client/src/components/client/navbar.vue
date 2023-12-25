@@ -35,9 +35,9 @@
               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Liên
               hệ</button></router-link>
 
-              <router-link to="/information" class="w-10 h-10 overflow-hidden bg-gray-100 rounded-full relative cursor-pointer">
+              <a @click="checkLogin()" class="w-10 h-10 overflow-hidden bg-gray-100 rounded-full relative cursor-pointer">
                 <svg class=" absolute w-12 h-12 text-gray-400 -left-1 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-              </router-link> 
+              </a>
         </ul>
       </div>
 
@@ -84,12 +84,29 @@
 export default {
   data() {
     return {
-      isMobileMenuOpen: false,
+      isMobileMenuOpen: false, user: '',
     };
+  },
+  mounted() {
+    this.user = JSON.parse(localStorage.getItem("User"));
   },
   methods: {
     toggleMobileMenu() {
       this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    },
+
+    // // lấy thông tin của chính user đã đăng nhập trên local storage
+    // getToken() {
+    //   let user = JSON.parse(localStorage.getItem("User"));
+    //   return user;
+    // },
+
+    checkLogin() {
+      if(this.user){
+        this.$router.push('/information');
+      }else{
+        this.$router.push('/login');
+      }
     },
   },
 };
