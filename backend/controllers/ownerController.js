@@ -11,7 +11,6 @@ const Favorate = db.favorate_hotel;
 const ImgHotel = db.img_hotel;
 const ImgRoom = db.img_room;
 const Coupon = db.coupon_owner;
-
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
@@ -131,9 +130,14 @@ const deleteOwner = async (req, res) => {
   try {
     const id_owner = req.params.id;
     const exits_owner = await Owner.findByPk(id_owner);
-    if(exits_owner)
-    {
-      
+    if (exits_owner) {
+      const get_order = await Hotel.findAll(
+        {
+          attributes: ['id', 'id_owner'],
+          where: { id_owner: id_owner },
+          include: [{ model: Room, attributes:['id','id_hotel'] }]
+        }
+      )
     }
   } catch (error) {
     console.log(error);
@@ -141,7 +145,7 @@ const deleteOwner = async (req, res) => {
 };
 
 
- const hasdelete = async(idHotel, idRoom, idOwner) => {
+const hasdelete = async (idHotel, idRoom, idOwner) => {
 
   const existCoupon = await Coupon.findOne({ where: { id_hotel: idHotel } })
   const existFavorate = await Favorate.findOne({ where: { id_hotel: idHotel } })
@@ -182,7 +186,7 @@ const deleteOwner = async (req, res) => {
     }
   }
 
-  if (exitOwner) { await Mess.destroy({ where: { id_owner: idOwner },}); }
+  if (exitOwner) { await Mess.destroy({ where: { id_owner: idOwner }, }); }
 }
 
 // Sử dụng hàm để xóa file khỏi thư mục upload

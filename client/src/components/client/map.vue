@@ -36,10 +36,7 @@ export default {
         
 
     },
-    unmounted() {
-        this.map.remove();
-        this.map = null;
-    },
+   
 
     methods: {
 
