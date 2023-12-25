@@ -50,16 +50,38 @@ const deleteFile = (filePath) => {
 const getHotelId = async (req, res) => {
     try {
         const id = req.params.id;
-        const hotel = await Hotel.findByPk(id);
+        const hotel = await Hotel.findOne({
+            where:{id:id},
+            include: [
+                {
+                    model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'], raw: true,
+                    nest: true,
+                    required: true
+                },
+                {
+                    model: Room,
+                    include:[
+                        {model:ImgRoom}
+                    ],
+                    raw: true,
+                    nest: true,
+                    required: true
+                },
+                {
+                    model:Rating
+                }
+
+            ]
+        });
         res.status(200).json(hotel);
     } catch (error) {
-        console.log*(error);
+        console.log(error);
     }
 }
 
 const getHotel = async (req, res) => {
     try {
-        const hotel = await Hotel.findAll({
+        const hotels = await Hotel.findAll({
             include: [
                 {
                     model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'], raw: true,
@@ -72,9 +94,14 @@ const getHotel = async (req, res) => {
                     nest: true,
                     required: true
                 },
+                {
+                    model:Rating
+                }
+
             ]
         });
-        res.status(200).json(hotel);
+
+        res.status(200).json(hotels);
     } catch (error) {
         console.log(error);
     }

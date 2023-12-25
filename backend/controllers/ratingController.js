@@ -42,6 +42,55 @@ const getRating = async (req, res) => {
     }
 }
 
+const getByHotel = async(req,res)=>
+{
+try {
+  const id = req.params.id
+  const stars = [1, 2, 3, 4, 5];
+const ratingStatistics = [];
+
+for (const star of stars) {
+  const countResult = await Rating.count({
+    where: {
+      score_rating: {
+        [sequelize.Op.and]: [
+          { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
+          { [sequelize.Op.lt]: star + 1 } // Điểm đánh giá nhỏ hơn mức sao tiếp theo
+        ]
+      }
+    }
+  });
+
+  const averageResult = await Rating.findAll({
+    attributes: [[sequelize.fn('SUM', sequelize.col('score_rating')), 'total_score']],
+    where: {
+      score_rating: {
+        [sequelize.Op.and]: [
+          { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
+          { [sequelize.Op.lt]: star + 1 } // Điểm đánh giá nhỏ hơn mức sao tiếp theo
+        ]
+      }
+    },
+    raw: true
+  });
+
+  const totalScore = averageResult[0].total_score;
+  const averageScore = totalScore / countResult;
+ 
+  ratingStatistics.push({
+    star,
+    count: countResult,
+    average_score: averageScore
+  });
+}
+const overallAverage = ratingStatistics.reduce((acc, rating) => acc + rating.average_score, 0) / ratingStatistics.length;
+res.json({ratingStatistics,
+  overallAverage});
+} catch (error) {
+  console.log(error)
+}
+}
+
 const addRating = async (req, res) => {
   try {
     const id = req.params.id;
@@ -118,5 +167,6 @@ module.exports = {
     getRating,
     addRating,
     deleteRating,
-    searchRating
+    searchRating,
+    getByHotel
 }

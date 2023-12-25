@@ -136,7 +136,7 @@
                                 class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
                                 <option disabled>Loại phòng</option>
                                 <option value="SGL">Phòng 1 giường đơn</option>
-                                <option value="TWN">Phòng 2 giường đơn</option>
+                                <option value="TWL">Phòng 2 giường đơn</option>
                                 <option value="DBL">Phòng 1 giường đôi</option>
                                 <option value="TRPL_1">Phòng 1 giường đơn và 1 giường đôi</option>
                                 <option value="TRPL_2">Phòng 3 giường đơn</option>
@@ -251,7 +251,7 @@
                                 class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
                                 <option disabled>Loại phòng</option>
                                 <option value="SGL">Phòng 1 giường đơn</option>
-                                <option value="TWN">Phòng 2 giường đơn</option>
+                                <option value="TWL">Phòng 2 giường đơn</option>
                                 <option value="DBL">Phòng 1 giường đôi</option>
                                 <option value="TRPL_1">Phòng 1 giường đơn và 1 giường đôi</option>
                                 <option value="TRPL_2">Phòng 3 giường đơn</option>
