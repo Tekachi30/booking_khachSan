@@ -151,7 +151,8 @@ export default {
     };
   },
   mounted() {
-    getHotel()
+    this.getHotel();
+    this.user = JSON.parse(localStorage.getItem("User"));
   },
   components: {
     Swiper,
@@ -172,16 +173,10 @@ export default {
       this.isShowCart = !this.isShowCart
     },
 
-    // lấy thông tin của chính user đã đăng nhập trên local storage
-    getToken() {
-      let user = JSON.parse(localStorage.getItem("User"));
-      return user;
-    },
-
     //start code
     async getHotel() {
        try {
-           const result = await this.$axios.get(`hotel/getid/${this.user.id}`);
+           const result = await this.$axios.get(`hotel/getid/1`);
            this.hotels = result.data;
            console.log(result.data);
        } catch (error) {

@@ -103,7 +103,7 @@ export default {
 
     checkLogin() {
       if(this.user){
-        this.$router.push('/information');
+        this.$router.push(`/information/${this.user.id}`);
       }else{
         this.$router.push('/login');
       }

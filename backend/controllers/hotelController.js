@@ -50,7 +50,11 @@ const deleteFile = (filePath) => {
 const getHotelId = async (req, res) => {
     try {
         const id = req.params.id;
-        const hotel = await Hotel.findByPk(id);
+        const hotel = await Hotel.findOne({include: [
+            {model: ImgHotel}
+        ] ,where: {
+            id: id
+        }});
         res.status(200).json(hotel);
     } catch (error) {
         console.log*(error);

@@ -6,7 +6,7 @@ routerUser.post("/api/user/login", login);
 routerUser.post("/api/user/register", register);
 
 routerUser.get("/api/user/get", getUser);
-routerUser.get("/api/user/getById/:id", getUserById);
+routerUser.get("/api/user/get/:id", getUserById);
 
 routerUser.put("/api/user/update/:id", updateUser);
 routerUser.delete("/api/user/delete/:id", deleteUser);

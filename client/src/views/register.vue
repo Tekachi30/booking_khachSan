@@ -27,10 +27,21 @@
                 v-model="fullname" />
             </div>
             <p class="text-red-500 text-sm ml-1" v-if="!fullname && fullnameFocused">Tên người dùng bị trống.</p>
-            <p class="text-red-500 text-sm ml-1"
-              v-else-if="!validFullName(fullname) && fullnameFocused">Tên người dùng phải từ 3 tới 50 ký tự</p>
+            <p class="text-red-500 text-sm ml-1" 
+            v-else-if="!validFullName(fullname) && fullnameFocused">Tên người dùng phải từ 3 tới 50 ký tự</p>
   
             <!--kết thúc fullname-->
+
+            <div class="mt-5">
+               <select v-model="sex" 
+                  class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none ">
+                  <option value="" disabled selected>Chọn giới tính</option>
+                  <option value="male">Nam</option>
+                  <option value="female">Nữ</option>
+               </select>
+            </div>
+            <p class="text-red-500 text-sm ml-1" v-if="!sex && sexFocused">Vui lòng chọn giới tính.</p>
+
   
             <!--bắt đầu phone
             + v-model : phone đại diện cho số điện thoại người dùng
@@ -43,8 +54,7 @@
                 v-model="phone" />
             </div>
             <p class="text-red-500 text-sm ml-1" v-if="!phone && phoneFocused">Số điện thoại bị trống.</p>
-            <p class="text-red-500 text-sm ml-1" v-else-if="!validPhone(phone) && phoneFocused">Số điện thoại sai định dạng.
-            </p>
+            <p class="text-red-500 text-sm ml-1" v-else-if="!validPhone(phone) && phoneFocused">Số điện thoại sai định dạng.</p>
   
             <!--kết thúc phone-->
   
@@ -142,7 +152,7 @@
   
         /* các biển kiểm tra bật tắt focus để validate form*/
         fullnameFocused: false, emailFocused: false, passwordFocused: false, 
-        addressFocusted: false, phoneFocused: false, 
+        addressFocusted: false, phoneFocused: false, sexFocused: false, accountFocused: false
 
       };
     },
@@ -160,12 +170,13 @@
       async register() {
         // bật hết các focus validate
         this.fullnameFocused = true, this.emailFocused = true,
-          this.passwordFocused = true, 
-          this.addressFocusted = true, this.phoneFocused = true
+          this.passwordFocused = true, this.sexFocused = true,
+          this.addressFocusted = true, this.phoneFocused = true,
+          this.accountFocused = true
   
         //gọi lại hàm đăng kí từ authService
         if (this.account && !this.validAccount(this.account) && this.validEmail(this.email) && this.validPassword(this.password) && this.validPhone(this.phone) &&  this.validPassword2(this.password) 
-        && this.address && this.fullname && this.validFullName(this.fullname) && this.validAddress(this.address)) {
+        && this.address && this.fullname && this.validFullName(this.fullname) && this.validAddress(this.address) && this.sex) {
           const result = await this.$axios.post('user/register',{
                 account: this.account,
                 fullname: this.fullname,
@@ -175,20 +186,18 @@
                 password: this.password,
                 email: this.email
           });
-            
-            if (result.status == 200) {
-              this.fullnameFocused = false, this.emailFocused = false,
-              this.passwordFocused = false, this.cityFocused = false,  this.addressFocusted = false, this.phoneFocused = false
-              alert(result.data.message);
-              // Chuyển hướng đến trang đăng nhập.
-              this.$router.push('/login')
+          if (result.status == 200) {
+            this.fullnameFocused = false, this.emailFocused = false, this.sexFocused = false, this.accountFocused = false,
+            this.passwordFocused = false,  this.addressFocusted = false, this.phoneFocused = false
+            alert(result.data.message);
+            // Chuyển hướng đến trang đăng nhập.
+            this.$router.push('/login')
           }
-        }else
-          {
+        }else{
             // bật hết các focus validate
             this.fullnameFocused = true, this.emailFocused = true,
-              this.passwordFocused = true, 
-             this.addressFocusted = true, this.phoneFocused = true
+              this.passwordFocused = true, this.sexFocused = true,
+             this.addressFocusted = true, this.phoneFocused = true, this.accountFocused = true
           }},
 
       // các re ràng buộc
