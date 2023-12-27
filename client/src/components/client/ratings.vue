@@ -105,7 +105,7 @@
 <script>
 import StarRating from 'vue-star-rating'
 export default {
-    props: ['id'],
+    props: ['id'], // this.id
     data() {
         return {
             rating: 0,

@@ -79,11 +79,11 @@ export default {
       const response = await this.$axios.post('/create_payment_url', formData);
       
       // Nhận URL thanh toán từ response
-      const paymentUrl = response.data.paymentUrl;
-
+      const paymentUrl = response.data.redirectUrl;
+      console.log(paymentUrl)
       // Chuyển hướng đến trang thanh toán của VNPAY
-      // window.location.href = paymentUrl;
-      this.$router.push(paymentUrl);
+       //window.location.href = paymentUrl;
+      
     } catch (error) {
       console.error('Error creating payment:', error);
       // Xử lý lỗi nếu cần

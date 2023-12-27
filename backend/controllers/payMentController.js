@@ -4,6 +4,7 @@ dotenv.config();
 
 //payMent vnpay
 const payPost = async (req, res, next) => {
+   try {
     var ipAddr = req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
@@ -60,7 +61,10 @@ const payPost = async (req, res, next) => {
     vnp_Params['vnp_SecureHash'] = signed;
     vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
   
-    res.redirect(vnpUrl);
+    res.json({redirectUrl:vnpUrl})
+   } catch (error) {
+    console.log(error)
+   }
   };
   
   const payIpnGet = async (req, res, next) => {
