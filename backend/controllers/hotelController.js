@@ -12,11 +12,12 @@ const coupon = db.coupon_owner;
 const sequelize = require('sequelize');
 const Op = sequelize.Op
 const dayjs = require('dayjs');
-
+const axios = require('axios')
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
 // Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
-
+const dotenv = require('dotenv');
+const KEY_MAP = process.env.KEY_MAP;
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "./uploads/");
@@ -45,6 +46,24 @@ const deleteFile = (filePath) => {
     });
 }
 
+const resultPost = async (citycode, districtcode, ward_code, address_hotel) => {
+    try {
+      // Lấy thông tin về city, district, commune từ API provinces
+      const cityAPI = await axios.get(`https://provinces.open-api.vn/api/p/${citycode}`);
+      const apicityData = cityAPI.data.name;
+      const districtAPI = await axios.get(`https://provinces.open-api.vn/api/d/${districtcode}`);
+      const apidistrictData = districtAPI.data.name;
+      const communeAPI = await axios.get(`https://provinces.open-api.vn/api/w/${ward_code}`);
+      const apicommuneData = communeAPI.data.name;
+      let  address = `${address_hotel},${apicommuneData},${apidistrictData},${apicityData}`;
+      const response = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${KEY_MAP}`, {
+      });
+      const data = response.data.features[0].geometry
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 // start 
 
 const getHotelId = async (req, res) => {
@@ -171,10 +190,12 @@ const getHotelNon = async (req, res) => {
     }
 }
 
+
 const addHotel = async (req, res) => {
     try {
         const id = req.params.id
         const { name_hotel, address, city_code, district_code, ward_code, information } = req.body;
+        const locationData = await resultPost(city_code, district_code, ward_code, address);
         const exsitName_hotel = await Hotel.findOne({ where: { name_hotel: name_hotel } });
         // ! là không tồn tại hoặc đơn giản là phủ định của cái biến đó. 
         if (exsitName_hotel) {
@@ -190,9 +211,11 @@ const addHotel = async (req, res) => {
                 isactive: true,
                 point: 0,
                 level: 1,
-                id_owner: id
+                id_owner: id,
+                longitude: locationData.coordinates[0],
+                latitube: locationData.coordinates[1]
             })
-            return res.status(200).json({ message: 'Thêm khách sạn thành công.', hotel });
+            return res.status(200).json({ message: 'Thêm khách sạn thành công.',hotel });
         }
     } catch (error) {
         console.log(error);

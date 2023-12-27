@@ -148,7 +148,7 @@ const updateUser = async (req, res) => {
         message: `Không tìm thấy user id ${userId}.`,
       });
     } else {
-      await user.update({
+     const Updateuser =  await user.update({
         fullname: fullname,
         address: address,
         phone: phone,
@@ -158,7 +158,7 @@ const updateUser = async (req, res) => {
       });
 
       return res.status(200).json({
-        message: `Cập nhật thông tin với user id ${userId} thành công.`,
+        message: `Cập nhật thông ti thành công.`, Updateuser
       });
     }
   } catch (error) {

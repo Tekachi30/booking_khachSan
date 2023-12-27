@@ -2,10 +2,10 @@
 
   <div class="max-w-screen-2xl mx-auto mt-[100px] h-full mb-[100px]">
     <div class="bg-gray-100">
-      <div class="container mx-auto my-5 p-5">
+      <div class="container mx-auto my-5 p-5 ">
         <div class="md:flex no-wrap md:-mx-2">
           <!-- Left Side -->
-          <div class="w-full md:w-3/12 md:mx-2">
+          <div class="w-full md:w-4/12 md:mx-2">
             <!-- Profile Card -->
             <div class="bg-white p-3 border-t-4 border-blue-400">
               <div class="image overflow-hidden">
@@ -22,13 +22,13 @@
                 Thông tin cá nhân
               </h3>
               <!--thong tin ca nhan nam day-->
-              <div class="text-gray-700">
+              <div class="text-gray-700 ">
                 <div class="grid md:grid-cols-1 text-sm">
                 
                 <!-- Họ và tên -->
                 <div class="grid grid-cols-2 mt-10">
-                   <div class="px-4 py-2 font-semibold">Họ và tên:</div>
-                   <div class="px-4 py-2">{{ user.fullname }}</div>
+                   <div class=" py-2 font-semibold">Họ và tên:</div>
+                   <div class=" py-2">{{ user.fullname }}</div>
                   </div>
                 <!-- Họ và tên -->
                 <!-- <div class="grid grid-cols-2">
@@ -37,23 +37,23 @@
                 </div> -->
                 <!-- Giới tính -->
                 <div class="grid grid-cols-2">
-                   <div class="px-4 py-2 font-semibold">Giới tính:</div>
-                   <div class="px-4 py-2">{{user.sex}}</div>
+                   <div class=" py-2 font-semibold">Giới tính:</div>
+                   <div class=" py-2">{{user.sex}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
-                   <div class="px-4 py-2 font-semibold">Địa chỉ:</div>
-                   <div class="px-4 py-2">{{user.address}}</div>
+                   <div class=" py-2 font-semibold">Địa chỉ:</div>
+                   <div class=" py-2">{{user.address}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
-                   <div class="px-4 py-2 font-semibold">Số điện thoại:</div>
-                   <div class="px-4 py-2">{{user.phone}}</div>
+                   <div class=" py-2 font-semibold">Số điện thoại:</div>
+                   <div class=" py-2">{{user.phone}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
-                   <div class="px-4 py-2 font-semibold">Email:</div>
-                   <div class="px-4 py-2">{{user.email}}</div>
+                   <div class=" py-2 font-semibold">Email:</div>
+                   <div class=" py-2">{{user.email}}</div>
                 </div>
 
                   <!--button-->
@@ -67,7 +67,7 @@
             <!-- End of profile card -->
           </div>
           <!-- Right Side -->
-          <div class="w-full md:w-9/12 mx-2 h-64">
+          <div class="w-full md:w-8/12 mx-2 h-64">
             <!-- Profile tab -->
               <!--views chính-->
               <div
@@ -269,7 +269,7 @@ export default {
     };
   },
   mounted() {
-    this.getUser();
+   
     this.user = JSON.parse(localStorage.getItem("User"));
   },
   components: {},
@@ -313,17 +313,7 @@ export default {
     //    }
     // },
 
-    async getUser() {
-       try {
-           const result = await this.$axios.get(`user/get/${this.user.id}`);
-           this.users = result.data;
-           console.log(result.data);
-       } catch (error) {
-           console.log(error);
-           console.log(this.user.id);
-       }
-    },
-
+    
     async updateProfile(){
       try {
         // bật hết các focus validate
@@ -343,12 +333,11 @@ export default {
           if (result.status == 200) {
             this.fullnameFocused = false; this.emailFocused = false; this.sexFocused = false; 
             this.addressFocused = false; this.phoneFocused = false;
-
+            localStorage.setItem('User', JSON.stringify(result.data.Updateuser))
             setTimeout(() => {
                location.reload()
             }, 1000);
             this.openUpdate()
-            this.getUser()
             alert(result.data.message);
           }
         }else{

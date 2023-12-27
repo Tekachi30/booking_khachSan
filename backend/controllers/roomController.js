@@ -57,8 +57,8 @@ const addRoom = async (req, res) => {
         const id = req.params.id 
         const { type_room,quantity,price } = req.body;
         // check id_hotel real 
-        const existRoom = await Room.findOne({where:{type_room}})
         const exitsHotel = await Hotel.findByPk(id);
+        const existRoom = await Room.findOne({where:{type_room, id_hotel:exitsHotel.id}})
         if(exitsHotel)
         {
            if(!existRoom)
