@@ -152,6 +152,7 @@ export default
 
     async deleteUser() {
         try {
+            alert(this.user.id)
             const result = await this.$axios.delete(`user/delete/${this.user.id}`);
             if (result.status === 200) {
                 this.getUser();

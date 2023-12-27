@@ -169,6 +169,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(id)
     const exsitUser = await User.findByPk(id);
     if (!exsitUser) {
       return res.status(404).json({ error: `Không tìm thấy user` });

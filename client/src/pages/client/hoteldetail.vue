@@ -19,7 +19,7 @@
           </span>
         </div>
       </div>
-      <p class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-blue-900 md:text-3xl ">Chỉ từ 2 900 000 đ
+      <p class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-blue-900 md:text-3xl ">
       </p>
 
     </div>

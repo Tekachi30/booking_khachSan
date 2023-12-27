@@ -91,6 +91,7 @@ res.json({ratingStatistics,
 }
 }
 
+// Xử lý đánh giá 1 lần  
 const addRating = async (req, res) => {
   try {
     const id = req.params.id;

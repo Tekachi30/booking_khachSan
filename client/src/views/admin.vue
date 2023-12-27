@@ -4,7 +4,7 @@
     <div class="flex">
       <!-- Backdrop -->
       <div :class="isOpen ? 'block' : 'hidden'"
-        class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden" @click="isOpen = false" />
+        class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden" @click="isOpen = false"/>
       <!-- End Backdrop -->
 
       <div :class="isOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
@@ -92,12 +92,12 @@
         <!-- buttom responsive thanh search-->
         <div class="flex items-center">
           <!--button responsive-->
-          <!-- <button class="text-gray-500 focus:outline-none lg:hidden" @click="isOpen = true">
+          <button class="text-gray-500 focus:outline-none lg:hidden" @click="isOpen = true">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" />
             </svg>
-          </button> -->
+          </button> 
 
           <!--thanh search-->
           <!-- <div class="relative mx-4 lg:mx-0">
