@@ -51,7 +51,7 @@ const getHotelId = async (req, res) => {
     try {
         const id = req.params.id;
         const hotel = await Hotel.findOne({
-            where:{id:id},
+            where: { id: id },
             include: [
                 {
                     model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'], raw: true,
@@ -60,15 +60,15 @@ const getHotelId = async (req, res) => {
                 },
                 {
                     model: Room,
-                    include:[
-                        {model:ImgRoom}
+                    include: [
+                        { model: ImgRoom }
                     ],
                     raw: true,
                     nest: true,
                     required: true
                 },
                 {
-                    model:Rating
+                    model: Rating
                 }
 
             ]
@@ -95,7 +95,7 @@ const getHotel = async (req, res) => {
                     required: true
                 },
                 {
-                    model:Rating
+                    model: Rating
                 }
 
             ]
@@ -130,7 +130,7 @@ const getHotelByOwner = async (req, res) => {
                 },
             ]
         });
-      
+
         res.status(200).json(hotel);
     } catch (error) {
         console.log(error);
@@ -151,7 +151,7 @@ const getHotelNon = async (req, res) => {
                 {
                     model: Room,
                     raw: true,
-                    nest: true,      
+                    nest: true,
                 },
                 {
                     model: Owner, attributes: ['id', 'fullname'],
@@ -189,7 +189,7 @@ const addHotel = async (req, res) => {
                 information: information,
                 isactive: true,
                 point: 0,
-                level: 1, 
+                level: 1,
                 id_owner: id
             })
             return res.status(200).json({ message: 'Thêm khách sạn thành công.', hotel });
@@ -243,9 +243,9 @@ const updateHotel = async (req, res) => {
         if (exsitHotel) {
             if (!exsitName_hotel) {
                 exsitHotel.name_hotel = name_hotel,
-                exsitHotel.address = address,
-                exsitHotel.city_code = city_code,
-                exsitHotel.district_code = district_code
+                    exsitHotel.address = address,
+                    exsitHotel.city_code = city_code,
+                    exsitHotel.district_code = district_code
                 exsitHotel.ward_code = ward_code
                 exsitHotel.information = information
 
@@ -302,42 +302,42 @@ const deleteHotel = async (req, res) => {
         if (!existHotel) {
             return res.status(200).json({ message: 'Không tìm thấy khách sạn.' });
         } else {
-               const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
-               if (img_hotel.length > 0) {
-                   for (const img of img_hotel) {
-                       const imagePath = `./uploads/${img.name_img}`;
-                       deleteFile(imagePath);
-                       await img.destroy();
-                   }
-               }
-               /*
-                   tìm X
-                   lấy list img_X từ X tìm được (id_X)
-               */
-               const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
-               const roomIds = room.map((r) => r.id);
-               const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
-               if (img_room.length > 0) {
-                   for (const img of img_room) {
-                       const imagePath = `./uploads/${img.name_img}`;
-                       deleteFile(imagePath);
-                       await img.destroy();
-                   }
-               }
-               await Room.destroy({ where: { id_hotel: existHotel.id } });
+            const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
+            if (img_hotel.length > 0) {
+                for (const img of img_hotel) {
+                    const imagePath = `./uploads/${img.name_img}`;
+                    deleteFile(imagePath);
+                    await img.destroy();
+                }
+            }
+            /*
+                tìm X
+                lấy list img_X từ X tìm được (id_X)
+            */
+            const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
+            const roomIds = room.map((r) => r.id);
+            const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
+            if (img_room.length > 0) {
+                for (const img of img_room) {
+                    const imagePath = `./uploads/${img.name_img}`;
+                    deleteFile(imagePath);
+                    await img.destroy();
+                }
+            }
+            await Room.destroy({ where: { id_hotel: existHotel.id } });
 
-               await Rating.destroy({ where: { id_hotel: existHotel.id } }); // xóa hết luôn hả
-                   
-               await Report.destroy({ where: { id_hotel: existHotel.id } });
+            await Rating.destroy({ where: { id_hotel: existHotel.id } }); // xóa hết luôn hả
 
-               await Favorate.destroy({ where: { id_hotel: existHotel.id } }); // xóa hotel =>  => xóa OD 
+            await Report.destroy({ where: { id_hotel: existHotel.id } });
 
-               await coupon.destroy({ where: { id_hotel: existHotel.id } }); 
+            await Favorate.destroy({ where: { id_hotel: existHotel.id } }); // xóa hotel =>  => xóa OD 
 
-               await existHotel.destroy();
+            await coupon.destroy({ where: { id_hotel: existHotel.id } });
 
-               return res.status(200).json({ message: 'Xóa thành công.' });
-            
+            await existHotel.destroy();
+
+            return res.status(200).json({ message: 'Xóa thành công.' });
+
         }
     } catch (error) {
         console.log(error);
@@ -362,7 +362,53 @@ const deleteImgHotel = async (req, res) => {
     }
 }
 
+const searchHotel = async (req, res) => {
+    try {
+        const { option_price,name_hotel,city_code } = req.body
+        let where_price;
 
+        switch (option_price) {
+            case 'under1':
+                where_price = { price: { [Op.lt]: 1000 } };;
+                break;
+            case '1to3':
+                where_price = { price: { [Op.between]: [1000, 3000] } };
+                break;
+            case '3to6':
+                where_price = { price: { [Op.between]: [3000, 6000] } };
+                break;
+            case 'above6':
+                where_price = { price: { [Op.gte]: 6000 } };
+                break;
+            case 'full':
+                where_price = {};
+                break;
+            default:
+                console.log('Lỗi không truyền mức giá vào');
+                break;
+        }
+
+        const get_hotel = await Hotel.findAll(
+            {
+                where:{ name_hotel: { [Op.like]: `%${name_hotel}%` } , city_code:city_code },
+                include:[
+                    {model:Room,where:where_price},
+                    {
+                        model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'], raw: true,
+                        nest: true,
+                        required: true
+                    },
+                    {
+                        model: Rating
+                    }
+                ]
+            }
+        )
+        res.json(get_hotel)
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     getHotel,
@@ -375,5 +421,6 @@ module.exports = {
     updateImgHotel,
     deleteHotel,
     deleteImgHotel,
+    searchHotel
 
 }
