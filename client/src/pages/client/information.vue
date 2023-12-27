@@ -16,7 +16,7 @@
                 />
               </div>
               <h1 class="text-gray-900 font-bold text-xl leading-8 my-1">
-                {{users.fullname}}
+                {{user.fullname}}
               </h1>
               <h3 class="text-gray-600 font-lg text-semibold leading-6">
                 Thông tin cá nhân
@@ -26,14 +26,15 @@
                 <div class="grid md:grid-cols-1 text-sm">
                 
                 <!-- Họ và tên -->
-                <div class="grid grid-cols-2 mt-10">
+              <div class="grid grid-cols-2 mt-10">
                    <div class="px-4 py-2 font-semibold">Họ và tên:</div>
                    <div class="px-4 py-2">{{ user.fullname }}</div>
-                </div>
+
+                
                 <!-- Họ và tên -->
                 <!-- <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Họ và tên:</div>
-                   <div class="px-4 py-2">{{users.fullname}}</div>
+                   <div class="px-4 py-2">{{user.fullname}}</div>
                 </div> -->
                 <!-- Giới tính -->
                 <div class="grid grid-cols-2">
