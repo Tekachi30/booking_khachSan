@@ -1,6 +1,6 @@
 <template>
 
-  <div class="max-w-screen-2xl mx-auto mt-[100px] h-full">
+  <div class="max-w-screen-2xl mx-auto mt-[100px] h-full mb-[100px]">
     <div class="bg-gray-100">
       <div class="container mx-auto my-5 p-5">
         <div class="md:flex no-wrap md:-mx-2">
@@ -24,15 +24,11 @@
               <!--thong tin ca nhan nam day-->
               <div class="text-gray-700">
                 <div class="grid md:grid-cols-1 text-sm">
-                <!--noi dung chinh-->
-                <div class="grid grid-cols-2">
-                  <div class="px-4 py-2 font-semibold">Thông tin</div>
-                  <div class="px-4 py-2">Nội dung</div>
-                </div>
+                
                 <!-- Họ và tên -->
-                <div class="grid grid-cols-2">
-                   <div class="px-4 py-2 font-semibold">Tài khoản:</div>
-                   <div class="px-4 py-2">{{ users.account }}</div>
+                <div class="grid grid-cols-2 mt-10">
+                   <div class="px-4 py-2 font-semibold">Họ và tên:</div>
+                   <div class="px-4 py-2">{{ user.fullname }}</div>
                 </div>
                 <!-- Họ và tên -->
                 <!-- <div class="grid grid-cols-2">
@@ -42,22 +38,22 @@
                 <!-- Giới tính -->
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Giới tính:</div>
-                   <div class="px-4 py-2">{{users.sex}}</div>
+                   <div class="px-4 py-2">{{user.sex}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Địa chỉ:</div>
-                   <div class="px-4 py-2">{{users.address}}</div>
+                   <div class="px-4 py-2">{{user.address}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Số điện thoại:</div>
-                   <div class="px-4 py-2">{{users.phone}}</div>
+                   <div class="px-4 py-2">{{user.phone}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Email:</div>
-                   <div class="px-4 py-2">{{users.email}}</div>
+                   <div class="px-4 py-2">{{user.email}}</div>
                 </div>
 
                   <!--button-->
@@ -281,13 +277,12 @@ export default {
     openUpdate() {
       this.isUpdate = !this.isUpdate
     },
-    selectUser(select){
-      this.users = select,
-      this.fullname = select.fullname,
-      this.sex = select.sex,
-      this.address = select.address,
-      this.phone = select.phone,
-      this.email = select.email
+    selectUser(){
+      this.fullname = this.user.fullname,
+      this.sex = this.user.sex,
+      this.address = this.user.address,
+      this.phone = this.user.phone,
+      this.email = this.user.email
     },
     activeCart()
     {

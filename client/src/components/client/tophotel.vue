@@ -100,9 +100,9 @@
 
               <!--xem chi tiet-->
               <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 ml-auto">
-                <button type="button"
+                <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` }}"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đặt
-                  phòng</button>
+                  phòng</router-link>
                   <button type="button"
                   class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Yêu thích</button> 
               </div>

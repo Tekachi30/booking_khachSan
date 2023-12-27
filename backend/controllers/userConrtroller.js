@@ -164,6 +164,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(id)
     const exsitUser = await User.findByPk(id);
     if (!exsitUser) {
       return res.status(404).json({ error: `Không tìm thấy user`  });
@@ -208,7 +209,6 @@ const deleteUser = async (req, res) => {
       }
       else {
           const needOrder = await Order.findOne({ where: { id_user: id}});
-
           await OD.destroy({where: { id_order: needOrder.id }});
           await Order.destroy({ where: { id_user: id } });
           await Rating.destroy({ where: { id_user: id } });
@@ -217,8 +217,7 @@ const deleteUser = async (req, res) => {
           await Favorate.destroy({ where: { id_user: id } });
           await Noti.destroy({ where: { id_user: id } });
           await User.destroy({ where: { id: id } });
-          return res.status(200).json({ message: 'Xóa thành công.' });
-
+          return res.status(200).json({ message: 'Xóa thành công.'});
       }
     }
   } catch (error) {

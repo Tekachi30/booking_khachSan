@@ -50,7 +50,6 @@ const deleteFile = (filePath) => {
 const getHotelId = async (req, res) => {
     try {
         const id = req.params.id;
-<<<<<<< HEAD
         const hotel = await Hotel.findOne({
             where:{id:id},
             include: [
@@ -74,13 +73,6 @@ const getHotelId = async (req, res) => {
 
             ]
         });
-=======
-        const hotel = await Hotel.findOne({include: [
-            {model: ImgHotel}
-        ] ,where: {
-            id: id
-        }});
->>>>>>> c60cd810f3419365c83227de0f53324165471375
         res.status(200).json(hotel);
     } catch (error) {
         console.log(error);

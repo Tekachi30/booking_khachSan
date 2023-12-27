@@ -81,7 +81,7 @@ export default
        try {
            const result = await this.$axios.get('rating/get');
            this.ratings = result.data;
-           console.log(result.data);
+          
        } catch (error) {
            console.log(error)
        }
