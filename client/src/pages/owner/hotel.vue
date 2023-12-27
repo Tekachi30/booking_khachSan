@@ -39,7 +39,7 @@
           dynamicBullets: true,
         }" :modules="modules" class="mySwiper ">
           <swiper-slide v-for="img in hotel.img_hotels">
-            <img class="rounded-t-lg p-1 " :src="img.url" alt="" />
+            <img class="rounded-t-lg p-1 " :src="img.url" alt="" style="width: 1360px; height: 360px;"/>
           </swiper-slide>
         </swiper>
 
@@ -636,6 +636,11 @@ export default {
                 this.information_forcus = false;
                 // this.avatar_forcus = false;
                 console.log(result.data.message)
+
+                setTimeout(() => {
+                   location.reload()
+                }, 1000);
+
                 this.getHotel()
                 this.openAdd()
                  
@@ -719,6 +724,11 @@ export default {
               const result = await this.$axios.delete(`hotel/deleteImg/${id}`)
             }
           }
+
+          setTimeout(() => {
+             location.reload()
+          }, 1000);
+          
           this.openUpdate()
           this.getHotel()
         }

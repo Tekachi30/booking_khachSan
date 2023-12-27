@@ -60,7 +60,7 @@
                     dynamicBullets: true,
                 }" :modules="modules" class="mySwiper ">
                     <swiper-slide v-for="img in room.img_rooms">
-                        <img class="rounded-t-lg p-1 " :src="img.url" alt="" />
+                        <img class="rounded-t-lg p-1 " :src="img.url" alt="" style="width: 1360px; height: 360px;" />
                     </swiper-slide>
                 </swiper>
 
@@ -530,6 +530,10 @@ export default {
                                     this.price_forcus = false;
 
                                     console.log(result.data.message)
+                                    setTimeout(() => {
+                                       location.reload()
+                                    }, 1000);
+
                                     this.getRoom()
                                     this.openAdd()
                                 }
@@ -607,6 +611,9 @@ export default {
                             const result = await this.$axios.delete(`room/deleteImg/${id}`)
                         }
                     }
+                    setTimeout(() => {
+                       location.reload()
+                    }, 1000);
                     this.openUpdate()
                     this.getRoom()
                 }

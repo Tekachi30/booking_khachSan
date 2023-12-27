@@ -324,8 +324,11 @@ export default {
                         this.avatar_forcus = false;
                         this.title_banner_forcus = false;
                         this.content_banner_forcus = false;
-                        this.openAdd()
-                        this.getBanner()
+                        setTimeout(() => {
+                           location.reload()
+                        }, 1000);
+                        this.openAdd();
+                        this.getBanner();
                     }
                     else {
                         alert(result.data.message)
@@ -359,6 +362,9 @@ export default {
                         this.content_banner_forcus = false;
                         
                         alert(result.data.message)
+                        setTimeout(() => {
+                           location.reload()
+                        }, 1000);
                         this.openUpdate();
                         this.getBanner();
                     } else {

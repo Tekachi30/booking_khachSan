@@ -346,8 +346,12 @@ export default {
                 email: this.email
           });
           if (result.status == 200) {
-            this.fullnameFocused = false, this.emailFocused = false, this.sexFocused = false, 
-            this.addressFocused = false, this.phoneFocused = false
+            this.fullnameFocused = false; this.emailFocused = false; this.sexFocused = false; 
+            this.addressFocused = false; this.phoneFocused = false;
+
+            setTimeout(() => {
+               location.reload()
+            }, 1000);
             this.openUpdate()
             this.getUser()
             alert(result.data.message);

@@ -349,6 +349,11 @@ export default
                             this.code_coupon_forcus = false;
                             this.discount_forcus = false;
                             this.date_coupon_forcus = false;
+
+                            setTimeout(() => {
+                            location.reload()
+                            }, 1000);
+
                             this.openAdd()
                             this.getCoupon()
                             alert(result.data.message)
@@ -365,7 +370,8 @@ export default
              if(this.discount >= 0)
              {
                  if (this.discount > this.max_discount) {
-                    alert(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`)
+                    alert(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`);
+                    // this.discount = this.max_discount;
                  }
              }else{
                 alert(`Giá giảm phải lớn hơn 0.`)
@@ -397,6 +403,11 @@ export default
                         if (result.status == 200) {
                             this.code_coupon_forcus = false;
                             this.discount_forcus = false;
+
+                            setTimeout(() => {
+                               location.reload()
+                            }, 1000);
+
                             this.openUpdate()
                             this.getCoupon()
                             alert(result.data.message)

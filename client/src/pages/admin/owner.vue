@@ -293,6 +293,10 @@ export default
                     this.password_forcus = false;
                     this.email_forcus = false;
 
+                    setTimeout(() => {
+                           location.reload()
+                        }, 1000);
+                        
                     this.openAdd()
                     this.getOwner()
                 }else {

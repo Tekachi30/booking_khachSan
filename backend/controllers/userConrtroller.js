@@ -8,17 +8,15 @@ const Report = db.report_hotel;
 const Favorate = db.favorate_hotel;
 const Noti = db.notification;
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
-const sequelize = require('sequelize');
-const Op  = sequelize.Op
-const dayjs = require('dayjs');
+const sequelize = require("sequelize");
+const Op = sequelize.Op;
+const dayjs = require("dayjs");
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN
-
-
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
 const getUser = async (req, res) => {
   try {
@@ -27,31 +25,35 @@ const getUser = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findOne({
-      include: [{model: Order}],
+      include: [{ model: Order }],
       where: {
         id: userId,
-      }
+      },
     });
     if (!user) {
-      return res.status(404).json({ message: `Không tìm thấy user id ${userId}.` });
+      return res
+        .status(404)
+        .json({ message: `Không tìm thấy user id ${userId}.` });
     } else {
       res.status(200).json(user);
     }
   } catch (error) {
-    return res.status(500).json({ message: "Xảy ra lỗi khi tìm user id " + userId });
+    return res
+      .status(500)
+      .json({ message: "Xảy ra lỗi khi tìm user id " + userId });
   }
 };
 
-
 const register = async (req, res) => {
   try {
-    const { account, fullname, address, phone, sex, password, email } = req.body;
+    const { account, fullname, address, phone, sex, password, email } =
+      req.body;
     const exsitEmail = await User.findOne({ where: { email: email } });
     const exsitAccount = await User.findOne({ where: { account: account } });
     if (!exsitAccount) {
@@ -66,19 +68,19 @@ const register = async (req, res) => {
           sex: sex,
           password: hash,
           email: email,
-          isactive: true
-        })
-        return res.status(200).json({ message: 'Đăng ký thành công' });
+          isactive: true,
+        });
+        return res.status(200).json({ message: "Đăng ký thành công" });
       } else {
-        return res.status(400).json({ message: 'Email đã tồn tại' });
+        return res.status(400).json({ message: "Email đã tồn tại" });
       }
     } else {
-      return res.status(400).json({ message: 'Tên tài khoản đã được sử dụng' });
+      return res.status(400).json({ message: "Tên tài khoản đã được sử dụng" });
     }
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const login = async (req, res) => {
   try {
@@ -86,24 +88,25 @@ const login = async (req, res) => {
     // Tìm kiếm user bằng account hoặc email
     const exsitUser = await User.findOne({
       where: {
-        [Op.or]: [
-          { account: account },
-          { email: account }
-        ]
-      }
+        [Op.or]: [{ account: account }, { email: account }],
+      },
     });
 
     if (exsitUser) {
       const ismatch = await bcrypt.compare(password, exsitUser.password);
       if (!ismatch) {
-        return res.status(201).json({ message: 'Mật khẩu không chính xác.' });
-      }else{
+        return res.status(201).json({ message: "Mật khẩu không chính xác." });
+      } else {
         // Tạo JWT
-        const token = jwt.sign({
-          userId: exsitUser.id
-        }, JWT_SECRET, {
-          expiresIn: JWT_EXPIRES_IN,
-        });
+        const token = jwt.sign(
+          {
+            userId: exsitUser.id,
+          },
+          JWT_SECRET,
+          {
+            expiresIn: JWT_EXPIRES_IN,
+          }
+        );
         return res.status(200).json({
           id: exsitUser.id,
           account: exsitUser.account,
@@ -112,16 +115,18 @@ const login = async (req, res) => {
           sex: exsitUser.sex,
           phone: exsitUser.phone,
           email: exsitUser.email,
-          token
+          token,
         });
       }
     } else {
-      return res.status(201).json({ message: 'Tài khoản sai hoặc không tồn tại' });
+      return res
+        .status(201)
+        .json({ message: "Tài khoản sai hoặc không tồn tại" });
     }
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const updateUser = async (req, res) => {
   const userId = req.params.id;
@@ -140,7 +145,7 @@ const updateUser = async (req, res) => {
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({
-        message: `Không tìm thấy user id ${userId}.`
+        message: `Không tìm thấy user id ${userId}.`,
       });
     } else {
       await user.update({
@@ -153,7 +158,7 @@ const updateUser = async (req, res) => {
       });
 
       return res.status(200).json({
-        message: `Cập nhật thông tin với user id ${userId} thành công.`
+        message: `Cập nhật thông tin với user id ${userId} thành công.`,
       });
     }
   } catch (error) {
@@ -166,14 +171,14 @@ const deleteUser = async (req, res) => {
     const id = req.params.id;
     const exsitUser = await User.findByPk(id);
     if (!exsitUser) {
-      return res.status(404).json({ error: `Không tìm thấy user`  });
+      return res.status(404).json({ error: `Không tìm thấy user` });
     } else {
       // xử lý hóa đơn
       const exitsOrder = await Order.findOne({
         where: {
           id_user: id,
-          [Op.or]: [{ status: 'Đã Thanh Toán' }, { status: 'Đã Đặt' }]
-        }
+          [Op.or]: [{ status: "Đã Thanh Toán" }, { status: "Đã Đặt" }],
+        },
       });
       if (exitsOrder) {
         /*
@@ -183,67 +188,95 @@ const deleteUser = async (req, res) => {
          Thực hiện bằng cách cú pháp find kết hợp ...
         */
         const last_checkout = await OD.findOne({
-          attributes: ['id_order', [sequelize.fn('MAX', sequelize.col('check_out')), 'latest_checkout']],
+          attributes: [
+            "id_order",
+            [
+              sequelize.fn("MAX", sequelize.col("check_out")),
+              "latest_checkout",
+            ],
+          ],
           where: {
-            '$order.status$': 'Đã Thanh Toán',
-            '$order.id_user$': id,
+            "$order.status$": "Đã Thanh Toán",
+            "$order.id_user$": id,
           },
           include: [
             {
               model: Order,
-              as: 'order',
+              as: "order",
               attributes: [],
               where: {
-                status: 'Đã Thanh Toán',
+                status: "Đã Thanh Toán",
                 id_user: id,
               },
             },
           ],
-          group: ['id_order'],
-          order: [[sequelize.fn('MAX', sequelize.col('check_out')), 'DESC']],
-        })
-        const time = new Date(last_checkout.getDataValue('latest_checkout'))
-        var result_last = dayjs(time).format('DD/MM/YYYY h:MM:ss')
-        return res.status(201).json({ message: `Không thể xóa khách hàng - Xóa sau thời gian: ${result_last}` });
-      }
-      else {
-          const needOrder = await Order.findOne({ where: { id_user: id}});
+          group: ["id_order"],
+          order: [[sequelize.fn("MAX", sequelize.col("check_out")), "DESC"]],
+        });
+        const time = new Date(last_checkout.getDataValue("latest_checkout"));
+        var result_last = dayjs(time).format("DD/MM/YYYY h:MM:ss");
+        return res
+          .status(201)
+          .json({
+            message: `Không thể xóa khách hàng - Xóa sau thời gian: ${result_last}`,
+          });
+      } else {
+        const needOrder = await Order.findOne({ where: { id_user: id } });
 
-          await OD.destroy({where: { id_order: needOrder.id }});
-          await Order.destroy({ where: { id_user: id } });
-          await Rating.destroy({ where: { id_user: id } });
-          await Mess.destroy({ where: { id_user: id } });
-          await Report.destroy({ where: { id_user: id } });
-          await Favorate.destroy({ where: { id_user: id } });
-          await Noti.destroy({ where: { id_user: id } });
-          await User.destroy({ where: { id: id } });
-          return res.status(200).json({ message: 'Xóa thành công.' });
-
+        const hasOD = await OD.findOne({ where: { id_order: needOrder.id } });
+        if (hasOD) {
+          await hasOD.destroy();
+        }
+        const hasRating = await Rating.findOne({ where: { id_user: id } });
+        if (hasRating) {
+          await hasRating.destroy();
+        }
+        const hasMess = await Mess.findOne({ where: { id_user: id } });
+        if (hasMess) {
+          await hasMess.destroy();
+        }
+        const hasReport = await Report.findOne({ where: { id_user: id } });
+        if (hasReport) {
+          await hasReport.destroy();
+        }
+        const hasFavorate = await Favorate.findOne({ where: { id_user: id } });
+        if (hasFavorate) {
+          await hasFavorate.destroy();
+        }
+        const hasNoti = await Noti.findOne({ where: { id_user: id } });
+        if (hasNoti) {
+          await hasNoti.destroy();
+        }
+        // await Order.destroy({ where: { id_user: id } });
+        // await Rating.destroy({ where: { id_user: id } });
+        // await Mess.destroy({ where: { id_user: id } });
+        // await Report.destroy({ where: { id_user: id } });
+        // await Favorate.destroy({ where: { id_user: id } });
+        // await Noti.destroy({ where: { id_user: id } });
+        await User.destroy({ where: { id: id } });
+        return res.status(200).json({ message: "Xóa thành công." });
       }
     }
   } catch (error) {
     console.log(error);
   }
-}
+};
 
-const searchUser = async(req,res)=>
-{
+const searchUser = async (req, res) => {
   try {
-    const {search}= req.body
-    const result = await User.findAll(
-    {
+    const { search } = req.body;
+    const result = await User.findAll({
       where: {
         fullname: {
-          [Op.like]: `%${search}%`
-        }
-      }
-    }
-    )
-    res.json(result)
+          [Op.like]: `%${search}%`,
+        },
+      },
+    });
+    res.json(result);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 module.exports = {
   getUser,
   getUserById,
@@ -251,5 +284,5 @@ module.exports = {
   updateUser,
   login,
   deleteUser,
-  searchUser 
+  searchUser,
 };
