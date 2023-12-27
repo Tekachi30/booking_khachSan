@@ -26,11 +26,10 @@
                 <div class="grid md:grid-cols-1 text-sm">
                 
                 <!-- Họ và tên -->
-              <div class="grid grid-cols-2 mt-10">
+                <div class="grid grid-cols-2 mt-10">
                    <div class="px-4 py-2 font-semibold">Họ và tên:</div>
                    <div class="px-4 py-2">{{ user.fullname }}</div>
-
-                
+                  </div>
                 <!-- Họ và tên -->
                 <!-- <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Họ và tên:</div>
