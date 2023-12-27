@@ -16,7 +16,7 @@
                 />
               </div>
               <h1 class="text-gray-900 font-bold text-xl leading-8 my-1">
-                {{users.fullname}}
+                {{user.fullname}}
               </h1>
               <h3 class="text-gray-600 font-lg text-semibold leading-6">
                 Thông tin cá nhân
@@ -32,32 +32,32 @@
                 <!-- Họ và tên -->
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Tài khoản:</div>
-                   <div class="px-4 py-2">{{ users.account }}</div>
+                   <div class="px-4 py-2">{{ user.account }}</div>
                 </div>
                 <!-- Họ và tên -->
                 <!-- <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Họ và tên:</div>
-                   <div class="px-4 py-2">{{users.fullname}}</div>
+                   <div class="px-4 py-2">{{user.fullname}}</div>
                 </div> -->
                 <!-- Giới tính -->
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Giới tính:</div>
-                   <div class="px-4 py-2">{{users.sex}}</div>
+                   <div class="px-4 py-2">{{user.sex}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Địa chỉ:</div>
-                   <div class="px-4 py-2">{{users.address}}</div>
+                   <div class="px-4 py-2">{{user.address}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Số điện thoại:</div>
-                   <div class="px-4 py-2">{{users.phone}}</div>
+                   <div class="px-4 py-2">{{user.phone}}</div>
                 </div>
 
                 <div class="grid grid-cols-2">
                    <div class="px-4 py-2 font-semibold">Email:</div>
-                   <div class="px-4 py-2">{{users.email}}</div>
+                   <div class="px-4 py-2">{{user.email}}</div>
                 </div>
 
                   <!--button-->
