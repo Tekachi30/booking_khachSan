@@ -14,7 +14,7 @@ npx sequelize-cli db:seed:all
 
 # Các loại phòng => cụ thể rõ ràng hơn cho KS QL
 + Single Bedroom (SGL): phòng 1 giường đơn cho 1 người.
-+ Twin Bedroom (TWN): phòng 2 giường đơn cho 2 người.
++ Twin Bedroom (TWL): phòng 2 giường đơn cho 2 người.
 + Double Bedroom (DBL): phòng 1 giường đôi cho 2 người.
 + Triple Bedroom_1 (TRPL_1): phòng 1 giường đơn và 1 giường đôi 
 + Triple Bedroom_2 (TRPL_2): phòng 3 giường đơn

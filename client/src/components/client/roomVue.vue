@@ -25,16 +25,10 @@
             <article class=" bg-white transition ">
 
               <swiper :pagination="true" :modules="modules" class="mySwiper">
-                <swiper-slide>
+                <swiper-slide v-for="img in room.img_rooms">
                   <div class="flex items-center justify-center px-2">
-                    <img src="https://icdn.dantri.com.vn/2019/02/16/10-1550333970807.jpg" alt="Mô tả ảnh"
+                    <img :src="img.url" alt="Mô tả ảnh"
                       class="  object-cover  rounded-lg">
-                  </div>
-                </swiper-slide>
-                <swiper-slide>
-                  <div class="flex items-center justify-center px-2">
-                    <img src="https://icdn.dantri.com.vn/2019/02/16/10-1550333970807.jpg" alt="Mô tả ảnh"
-                      class="  object-cover h-full w-full rounded-lg">
                   </div>
                 </swiper-slide>
               </swiper>
@@ -44,16 +38,9 @@
                 <div class="border-s border-gray-900/10 p-4 sm:border-l-transparent sm:p-6">
                   <a href="#">
                     <h3 class="font-bold uppercase text-gray-900">
-                      Loại phòng
+                      {{ formatTypeRoom(room.type_room) }}
                     </h3>
                   </a>
-
-                  <p class="mt-2  text-sm/relaxed text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae dolores, possimus
-                    pariatur animi temporibus nesciunt praesentium dolore sed nulla ipsum eveniet corporis
-                    quidem, mollitia itaque minus soluta, voluptates neque explicabo tempora nisi culpa eius
-                    atque dignissimos. Molestias explicabo corporis voluptatem?
-                  </p>
                 </div>
 
               </div>
@@ -80,7 +67,7 @@ import 'swiper/css/pagination';
 // import required modules
 import { Pagination } from 'swiper/modules';
 export default {
-  props:['id'],
+  props:['room'],
   data() {
     return {
         
@@ -103,7 +90,23 @@ export default {
     onclose()
    {
     this.$emit("cancel");
-   }
+   },
+   formatTypeRoom(type) {
+      switch (type) {
+        case 'SGL':
+          return 'Phòng 1 giường đơn cho 1 người.';
+        case 'TWL':
+          return 'Phòng 2 giường đơn cho 2 người.';
+        case 'DBL':
+          return 'Phòng 1 giường đôi cho 2 người.';
+        case 'TRPL_1':
+          return 'Phòng 1 giường đơn và 1 giường đôi.';
+        case 'TRPL_2':
+          return 'Phòng 3 giường đơn.';
+        default:
+          return 'Unknown room type';
+      }
+    },
   },
 };
 </script>
