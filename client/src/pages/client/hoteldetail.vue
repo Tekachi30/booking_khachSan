@@ -68,7 +68,8 @@
                         @click="decreaseQuantity(room)">
                         &minus;
                       </button>
-                      <input type="number" id="Quantity" @input="updateQuantity(room, index)" :value="quantity"
+                      
+                      <input type="number" id="Quantity" min="0" :max="room.real_quantity" 
                         class="h-10 w-16 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none" />
                       <button @click="increaseQuantity(room)" type="button"
                         class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
@@ -158,15 +159,13 @@ export default {
   data() {
     return {
       isDetailRoom: false, isShowCart: false,
-      hotels: [], hotel: '', user: '', id_hotel: '', quantity: 0,
+      hotels: [], hotel: '', user: '', id_hotel: '', quantity:'',
       citys: [], districts: [], wards: [], cart: [],
       countRating: '', longitube: null, latitube: null, img_hotel_1: null,
-      room: [],
+      room: [], selectedRooms: []
     };
   },
   mounted() {
-
-
     this.user = JSON.parse(localStorage.getItem("User"));
     this.id_hotel = this.$route.params.id
     this.getHotel()
@@ -245,12 +244,10 @@ export default {
 
     // handle cart
 
-    increaseQuantity(room) {
-      
+    increaseQuantity(room,index) { 
       const cartItem = this.cart.find(item => item.id === room.id);
-      
       if (cartItem) {
-          cartItem.quantity = room.real_quantity;
+          cartItem.quantity++;
       } else {
         this.cart.push({
           id: room.id,
@@ -258,6 +255,7 @@ export default {
           quantity: 1,
         });
       }
+      console.log(this.cart)
     },
 
     decreaseQuantity(room) {
@@ -278,10 +276,7 @@ export default {
       }
     },
 
-    updateQuantity(room, index)
-    {
-      this.quantity++
-    }
+
 
   },
 };
