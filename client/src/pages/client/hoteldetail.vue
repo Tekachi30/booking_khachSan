@@ -48,27 +48,30 @@
                 class="text-base">X</span> Xóa lựa chọn</button>
           </div>
           <!--list render phong-->
-          <div class="bg-white rounded-lg m-2" v-for="room in hotel.room_hotels">
+          <div class="bg-white rounded-lg m-2" v-for="(room,index) in hotel.room_hotels" :key="index">
             <!--render danh sách phòng ra-->
             <div class="group">
               <div class=" rounded-xl  p-2 md:p-5 md:flex items-center">
                 <!--ben trai-->
                 <img :src="room.img_rooms[0].url" class="hidden md:block object-cover rounded-lg w-[70px] h-[70px] mr-2"
                   alt="">
-                <p class=" text-base font-extrabold text-gray-700 underline cursor-pointer" @click="openDetailRoom();selectRoom(room)">{{
-                  formatTypeRoom(room.type_room) }}</p>
+                <p class=" text-base font-extrabold text-gray-700 underline cursor-pointer"
+                  @click="openDetailRoom(); selectRoom(room)">{{
+                    formatTypeRoom(room.type_room) }}</p>
                 <!-- ben phải-->
                 <div class="md:ml-auto md:flex items-center">
                   <div class="flex md:ml-2 items-center">
                     <p class=" text-base font-extrabold text-gray-900 mr-1 ">{{ formatCurrency(room.price) }}</p>
                     <label for="Quantity" class="sr-only"> Quantity </label>
                     <div class=" rounded border border-gray-200 max-w-content inline-block">
-                      <button type="button" class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
+                      <button type="button" class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75"
+                        @click="decreaseQuantity(room)">
                         &minus;
                       </button>
-                      <input type="number" id="Quantity" :value="room.quantity"
+                      <input type="number" id="Quantity" @input="updateQuantity(room, index)" :value="quantity"
                         class="h-10 w-16 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none" />
-                      <button type="button" class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
+                      <button @click="increaseQuantity(room)" type="button"
+                        class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
                         &plus;
                       </button>
                     </div>
@@ -85,7 +88,7 @@
               </p>
             </div>
             <div class="ml-auto">
-              <button type="button" @click="openCart"
+              <button type="button" @click="openCart(); addToCart()"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đặt
                 phòng</button>
             </div>
@@ -97,8 +100,7 @@
       <div class="mt-2 md:mt-0 col-span-2">
         <!--thông tin khách sạn-->
         <article class="relative overflow-hidden rounded-lg shadow transition hover:shadow-lg mt-5">
-          <img alt="Office" :src="img_hotel_1"
-            class="absolute inset-0 h-full w-full object-cover" />
+          <img alt="Office" :src="img_hotel_1" class="absolute inset-0 h-full w-full object-cover" />
 
           <div class="relative bg-gradient-to-t from-gray-900/50 to-gray-900/25 pt-32 sm:pt-48 lg:pt-64">
             <div class="p-4 sm:p-6">
@@ -126,10 +128,11 @@
       </div>
     </div>
 
-    <cart @cancel="openCart()" v-if="isShowCart" />
+    <cart @cancel="openCart()" v-if="isShowCart" :cart="cart" />
     <room @cancel="openDetailRoom()" v-if="isDetailRoom" :room="room" />
     <mapVue :lng="longitube" :lat="latitube" />
-    <rating :id="id_hotel" />
+    <!-- <rating :id="id_hotel" /> -->
+
   </div>
 </template>
 
@@ -155,10 +158,10 @@ export default {
   data() {
     return {
       isDetailRoom: false, isShowCart: false,
-      hotels: [], hotel: '', user: '', id_hotel: '',
-      citys: [], districts: [], wards: [],
-       countRating: '', longitube: null, latitube: null,img_hotel_1:null,
-       room:[],
+      hotels: [], hotel: '', user: '', id_hotel: '', quantity: 0,
+      citys: [], districts: [], wards: [], cart: [],
+      countRating: '', longitube: null, latitube: null, img_hotel_1: null,
+      room: [],
     };
   },
   mounted() {
@@ -236,10 +239,50 @@ export default {
       }
     },
 
-    selectRoom(room)
-    {
+    selectRoom(room) {
       this.room = room
-    }, 
+    },
+
+    // handle cart
+
+    increaseQuantity(room) {
+      
+      const cartItem = this.cart.find(item => item.id === room.id);
+      
+      if (cartItem) {
+          cartItem.quantity = room.real_quantity;
+      } else {
+        this.cart.push({
+          id: room.id,
+          price: room.price,
+          quantity: 1,
+        });
+      }
+    },
+
+    decreaseQuantity(room) {
+      const cartItemIndex = this.cart.findIndex(item => item.id === room.id);
+
+      if (cartItemIndex !== -1) {
+        // Tìm thấy phòng trong giỏ hàng
+        const cartItem = this.cart[cartItemIndex];
+
+        // Giảm số lượng
+        cartItem.quantity--;
+        room.quantity--
+        // Nếu số lượng giảm xuống 0, xóa phòng khỏi giỏ hàng
+        if (cartItem.quantity == 0) {
+          this.cart.splice(cartItemIndex, 1);
+          room.quantity = 1
+        }
+      }
+    },
+
+    updateQuantity(room, index)
+    {
+      this.quantity++
+    }
+
   },
 };
 </script>

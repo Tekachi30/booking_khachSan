@@ -123,7 +123,6 @@ export default {
            try {
                const result = await this.$axios.get(`banner/get/`);
                this.banners = result.data;
-               console.log(result.data);
            } catch (error) {
                console.log(error)
            }

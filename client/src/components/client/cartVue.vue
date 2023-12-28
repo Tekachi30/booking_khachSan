@@ -140,6 +140,7 @@
 <script>
 
 export default {
+  props:['cart'],
   data() {
     return {
         

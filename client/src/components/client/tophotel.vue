@@ -158,7 +158,6 @@ export default {
       try {
         const result = await this.$axios.get(`hotel/get/`)
         this.hotels = result.data
-        console.log(result.data)
       } catch (error) {
         console.log(error)
       }
