@@ -25,11 +25,21 @@ const addReport = async (req, res) => {
     try {
       const id = req.params.id;
       const {id_hotel , comment_report} = req.body;
+
+      const existingReport = await Report.findOne({
+        where: { id_hotel, id_user: id },
+      });
+  
+      if (existingReport) {
+        return res.status(201).json({ message: 'Bạn đã báo cáo khách sạn này rồi' });
+      }
+
+
       const existUser = User.findByPk(id);
       if(!existUser){
         return res.status(201).json({message: 'Không tìm thấy user'});
       }else{
-        await report_hotel.create({
+        await Report.create({
           comment_report: comment_report,
           id_hotel: id_hotel,
           id_user: id,

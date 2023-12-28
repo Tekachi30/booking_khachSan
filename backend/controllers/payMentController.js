@@ -48,6 +48,7 @@ const payPost = async (req, res, next) => {
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
     if (bankCode !== null && bankCode !== '') {
+      
       vnp_Params['vnp_BankCode'] = bankCode;
     }
   
@@ -96,7 +97,7 @@ const payPost = async (req, res, next) => {
   }
   
   const payReturnGet = async (req, res, next) => {
-    var vnp_Params = req.query;
+      var vnp_Params = req.query;
   
       var secureHash = vnp_Params['vnp_SecureHash'];
   
