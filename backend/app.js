@@ -75,5 +75,5 @@ app.use(express.static("uploads"))
 
 const port = 3000;
 app.listen(port, () => {
-  console.log(`API đang chạy : http://localhost:${port}/`);
+  console.log(`API đang chạy : http://localhost:${port}/`)
 });

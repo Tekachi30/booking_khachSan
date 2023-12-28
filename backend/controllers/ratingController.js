@@ -46,8 +46,16 @@ const getByHotel = async(req,res)=>
 {
 try {
   const id = req.params.id
+  const ratings = await Rating.findAll(
+    {
+      where:{id_hotel:id},
+      include:[
+        {model:User,attributes:['fullname']}
+      ]
+    }
+  )
   const stars = [1, 2, 3, 4, 5];
-const ratingStatistics = [];
+  const ratingStatistics = [];
 
 for (const star of stars) {
   const countResult = await Rating.count({
@@ -84,7 +92,7 @@ for (const star of stars) {
   });
 }
 const overallAverage = ratingStatistics.reduce((acc, rating) => acc + rating.average_score, 0) / ratingStatistics.length;
-res.json({ratingStatistics,
+res.json({ratingStatistics,ratings,
   overallAverage});
 } catch (error) {
   console.log(error)
@@ -95,23 +103,35 @@ res.json({ratingStatistics,
 const addRating = async (req, res) => {
   try {
     const id = req.params.id;
-    const {id_hotel ,score_rating, comment_rating} = req.body;
+    const { id_hotel, score_rating, comment_rating } = req.body;
+
+    
+    const existingRating = await Rating.findOne({
+      where: { id_hotel, id_user: id },
+    });
+
+    if (existingRating) {
+      return res.status(201).json({ message: 'Bạn đã đánh giá khách sạn này rồi' });
+    }
+
+
     const existUser = User.findByPk(id);
-    if(!existUser){
-      return res.status(201).json({message: 'Không tìm thấy user'});
-    }else{
-      await rating_hotel.create({
+    if (!existUser) {
+      return res.status(201).json({ message: 'Không tìm thấy user' });
+    } else {
+      await Rating.create({
         score_rating: score_rating,
         comment_rating: comment_rating,
         id_hotel: id_hotel,
         id_user: id,
       });
-      return res.status(200).json({message: 'Đánh giá thành công'});
+      return res.status(200).json({ message: 'Đánh giá thành công' });
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ message: 'Lỗi hệ thống' }); 
   }
-}
+};
 
 
 const deleteRating = async (req, res) => {

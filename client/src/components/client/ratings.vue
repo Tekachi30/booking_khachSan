@@ -19,24 +19,25 @@
                             <path
                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
-                        4.7
+                        {{ this.totalCount }}
                     </div>
                 </div>
 
-                <ul class="mb-6 mt-2 space-y-2 mr-5">
-                    <li v-for="review in reviews" :key="review.rating" class="flex items-center text-sm font-medium">
-                        <span class="w-3">{{ review.rating }}</span>
+                <ul class="mb-6 mt-2 space-y-2 mr-5 ">
+                    <li v-for="rs in rating_statics" class="flex items-center text-sm font-medium">
+                        <span class="text-blue-600">{{ rs.star + ' sao' }} </span>
                         <span class="mr-4 text-yellow-400">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <!-- Icon path here -->
                             </svg>
                         </span>
                         <div class="mr-4 h-2 w-96 overflow-hidden rounded-full bg-gray-300">
-                            <div :style="{ width: computeWidth(review.count) }" class="h-full bg-yellow-400"></div>
+                            <div :style="{ width: computeWidth(rs.average_score) }" class="h-full bg-yellow-400"></div>
                         </div>
-                        <span class="w-3">{{ review.count }}</span>
+                        <span class="text-blue-600">{{ rs.count }} đánh giá</span>
                     </li>
                 </ul>
+
             </div>
 
             <button @click="openRating" class="w-36 rounded-full bg-blue-900 py-3 text-white font-medium mt-2">Đánh
@@ -44,21 +45,21 @@
         </div>
 
         <!-- /list rating -->
-        <ul class="rounded-xl bg-white max-w-[1400px] shadow ">
-            <li class="py-8 text-left  px-4 m-2">
+            <div  v-for="rating in ratings">
+            <div class="py-8 text-left px-4 bg-gray-100 m-2 rounded-xl  ">
                 <div class="flex items-start">
                     <div class="ml-6">
                         <div class="flex items-center">
-                            <!--so sao-->
+                            <StarRating :star-size="30" :read-only="true" :rating=parseFloat(rating.score_rating)
+                                :increment="0.1" :star-color="'text-yellow-500'" :empty-star-color="'text-gray-300'" />
                         </div>
-                        <p class="mt-5 text-base text-gray-900">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                            Porro blanditiis sapiente ab dolores, ad dignissimos perspiciatis.</p>
-                        <p class="mt-5 text-sm font-bold text-gray-900">John Lester</p>
-                        <p class="mt-1 text-sm text-gray-600">March 01, 2022</p>
+                        <p class="mt-5 text-base text-gray-900">{{ rating.comment_rating }}</p>
+                        <p class="mt-5 text-sm font-bold text-gray-900">{{ rating.User.fullname }}</p>
+                        <p class="mt-1 text-sm text-gray-600">{{ formatCurrentTime(rating.createdAt) }}</p>
                     </div>
                 </div>
-            </li>
-        </ul>
+            </div>
+      </div>
 
     </div>
 
@@ -104,6 +105,7 @@
 </template>
 <script>
 import StarRating from 'vue-star-rating'
+import dayjs from 'dayjs';
 export default {
     props: ['id'], // this.id
     data() {
@@ -114,29 +116,66 @@ export default {
             ratingFocused: false,
             contentFocused: false,
             isShowRating: false,
-            reviews: [
-                { rating: 5, count: 56 },
-                { rating: 4, count: 12 },
-                { rating: 3, count: 4 },
-                { rating: 2, count: 0 },
-                { rating: 1, count: 5 }
-            ]
+            rating_statics: [],
+            ratings: [],
+            totalCount: '',
+            id_hotel: ''
         };
     },
     mounted() {
-        this.totalCount = this.reviews.reduce((sum, review) => sum + review.count, 0);
+        this.id_hotel = this.$route.params.id
+        this.user = JSON.parse(localStorage.getItem("User"));
+        this.getRating()
     },
     components: { StarRating },
     methods: {
-        
         openRating() {
             this.isShowRating = !this.isShowRating
         },
-
+        async getRating() {
+            try {
+                const result = await this.$axios(`rating/get/${this.id_hotel}`);
+                this.rating_statics = result.data.ratingStatistics
+                this.totalCount = result.data.overallAverage
+                this.ratings = result.data.ratings
+                console.log(result.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
         computeWidth(count) {
             const a = ((count / this.totalCount) * 100).toFixed(2)
             return `${a}px`;
+        },
+        formatCurrentTime(timeString) {
+            return dayjs(timeString).format('MM-DD-YYYY');
+        },
+        async ratingUser() {
+            this.ratingFocused = true;
+            this.contentFocused = true;
+            if (this.rating && this.content) {
+                try {
+                    const result = await this.$axios.post(`rating/add/${this.user.id}`,
+                        {
+                            id_hotel: this.$route.params.id,
+                            score_rating: this.rating,
+                            comment_rating: this.content
+                        })
+
+                    alert(result.data.message);
+                    if (result.status === 200) {
+                        this.ratingFocused = false;
+                        this.contentFocused = false;
+                        this.openRating()
+                        this.getRating()
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+
         }
     },
+
 };
 </script>

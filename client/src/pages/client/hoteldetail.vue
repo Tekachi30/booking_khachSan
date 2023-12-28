@@ -132,7 +132,7 @@
     <cart @cancel="openCart()" v-if="isShowCart" :cart="cart" />
     <room @cancel="openDetailRoom()" v-if="isDetailRoom" :room="room" />
     <mapVue :lng="longitube" :lat="latitube" />
-    <!-- <rating :id="id_hotel" /> -->
+    <rating :id="id_hotel" />
 
   </div>
 </template>
