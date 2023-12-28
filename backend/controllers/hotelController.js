@@ -392,16 +392,16 @@ const searchHotel = async (req, res) => {
 
         switch (option_price) {
             case 'under1':
-                where_price = { price: { [Op.lt]: 1000 } };;
+                where_price = { price: { [Op.lt]: 1000000 } };;
                 break;
             case '1to3':
-                where_price = { price: { [Op.between]: [1000, 3000] } };
+                where_price = { price: { [Op.between]: [1000000, 3000000] } };
                 break;
             case '3to6':
-                where_price = { price: { [Op.between]: [3000, 6000] } };
+                where_price = { price: { [Op.between]: [3000000, 6000000] } };
                 break;
             case 'above6':
-                where_price = { price: { [Op.gte]: 6000 } };
+                where_price = { price: { [Op.gte]: 6000000 } };
                 break;
             case 'full':
                 where_price = {};
