@@ -48,7 +48,7 @@
                 class="text-base">X</span> Xóa lựa chọn</button>
           </div>
           <!--list render phong-->
-          <div class="bg-white rounded-lg m-2" v-for="(room,index) in hotel.room_hotels" :key="index">
+          <div class="bg-white rounded-lg m-2" v-for="(room, index) in hotel.room_hotels" :key="index">
             <!--render danh sách phòng ra-->
             <div class="group">
               <div class=" rounded-xl  p-2 md:p-5 md:flex items-center">
@@ -68,8 +68,8 @@
                         @click="decreaseQuantity(room)">
                         &minus;
                       </button>
-                      
-                      <input type="number" id="Quantity" min="0" :max="room.real_quantity" 
+
+                      <input type="number" id="Quantity" min="0" :max="room.real_quantity" v-model="roomQuantity[room.id]"
                         class="h-10 w-16 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none" />
                       <button @click="increaseQuantity(room)" type="button"
                         class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
@@ -85,11 +85,11 @@
           <div class="sum flex items-center">
             <div class="sum_price">
               <p class="mt-2 text-xl font-extrabold text-gray-900 ">Tổng</p>
-              <p class=" text-xl font-extrabold leading-none tracking-tight text-blue-900">0 đ
+              <p class=" text-xl font-extrabold leading-none tracking-tight text-blue-900">{{ calculateTotal() }} đ
               </p>
             </div>
             <div class="ml-auto">
-              <button type="button" @click="openCart(); addToCart()"
+              <button type="button" @click="openCart();"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đặt
                 phòng</button>
             </div>
@@ -149,20 +149,19 @@ import 'swiper/css/pagination';
 
 // import required modules
 import { Pagination } from 'swiper/modules';
-
-import cart from '../../components/client/cartVue.vue';
 import room from '../../components/client/roomVue.vue';
 import rating from '../../components/client/ratings.vue'
 import mapVue from '../../components/client/map.vue';
 import AddressService from '../../plugins/addressService';
+import cart from '../../components/client/cartVue.vue';
 export default {
   data() {
     return {
       isDetailRoom: false, isShowCart: false,
-      hotels: [], hotel: '', user: '', id_hotel: '', quantity:'',
+      hotels: [], hotel: '', user: '', id_hotel: '', quantity: '',
       citys: [], districts: [], wards: [], cart: [],
       countRating: '', longitube: null, latitube: null, img_hotel_1: null,
-      room: [], selectedRooms: []
+      room: [], selectedRooms: [], roomQuantity: {},
     };
   },
   mounted() {
@@ -216,6 +215,10 @@ export default {
         this.latitube = this.hotel.latitube
         this.img_hotel_1 = this.hotel.img_hotels[0].url
 
+        for (let i = 0; i < this.hotel.room_hotels.length; i++) {
+          this.roomQuantity[this.hotel.room_hotels[i].id] = 0;
+        }
+
       } catch (error) {
         console.log(error)
       }
@@ -244,37 +247,68 @@ export default {
 
     // handle cart
 
-    increaseQuantity(room,index) { 
+    increaseQuantity(room, index) {
+      // Check for existing cart item with the same room ID
       const cartItem = this.cart.find(item => item.id === room.id);
+
+      if (this.roomQuantity[room.id] >= room.quantity) {
+        alert('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
+        this.roomQuantity[room.id] = room.quantity;
+        return;
+      }
+
+      // Update room quantity in cart or create a new item
       if (cartItem) {
-          cartItem.quantity++;
+        cartItem.quantity++;
       } else {
         this.cart.push({
           id: room.id,
+          type_room: room.type_room,
           price: room.price,
           quantity: 1,
+          real_quantity: room.real_quantity,
+          image:room.img_rooms[0].url
         });
+
       }
-      console.log(this.cart)
+      // Increment room quantity tracking
+      this.roomQuantity[room.id]++;
     },
 
     decreaseQuantity(room) {
-      const cartItemIndex = this.cart.findIndex(item => item.id === room.id);
+      // Check for existing cart item with the same room ID
+      const cartItem = this.cart.find(item => item.id === room.id);
 
-      if (cartItemIndex !== -1) {
-        // Tìm thấy phòng trong giỏ hàng
-        const cartItem = this.cart[cartItemIndex];
-
-        // Giảm số lượng
-        cartItem.quantity--;
-        room.quantity--
-        // Nếu số lượng giảm xuống 0, xóa phòng khỏi giỏ hàng
-        if (cartItem.quantity == 0) {
-          this.cart.splice(cartItemIndex, 1);
-          room.quantity = 1
-        }
+      // If no cart item is found, return
+      if (!cartItem) {
+        return;
       }
+
+      // Decrement room quantity in cart
+      cartItem.quantity--;
+
+      // If quantity reaches 0, remove the item from the cart
+      if (cartItem.quantity === 0) {
+        this.cart.splice(this.cart.indexOf(cartItem), 1);
+      }
+
+      // Decrement room quantity tracking
+      this.roomQuantity[room.id]--;
     },
+
+    calculateTotal() {
+      // Initialize total
+      let total = 0;
+
+      // Loop through cart items
+      for (const cartItem of this.cart) {
+        // Calculate total for each item
+        total += cartItem.price * cartItem.quantity;
+      }
+
+      // Return total
+      return this.formatCurrency(total);
+    }
 
 
 

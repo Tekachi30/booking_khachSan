@@ -22,106 +22,45 @@
           <!-- Modal body -->
           <div class="p-4 md:p-5 space-y-4">
             <!--list phong da dat-->
-            <div class="bg-white rounded-lg m-2">
-              <!--render danh sách phòng ra-->
-              <div class="group mb-2 ">
-                <div class=" rounded-xl  p-2 md:p-5 md:flex items-center">
-                  <!--ben trai-->
-                  <img src="https://icdn.dantri.com.vn/2019/02/16/10-1550333970807.jpg"
-                    class="hidden md:block object-cover rounded-lg w-[70px] h-[70px] mr-2" alt="">
-                  <p class=" text-base font-extrabold text-gray-700 underline cursor-pointer" @click="openDetailRoom()">
-                    Khách sạn Thiên nga của
-                    đất</p>
-                  <!-- ben phải-->
-                  <div class="md:ml-auto md:flex items-center mt-2">
-                    <div class="flex md:ml-2 items-center">
-                      <p class=" text-base font-extrabold text-gray-900 mr-1 ">2 900 000 đ</p>
-                      <label for="Quantity" class="sr-only"> Quantity </label>
-                      <div class=" rounded border border-gray-200 max-w-content inline-block">
-                        <button type="button" class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
-                          &minus;
-                        </button>
-                        <input type="number" id="Quantity" value="1"
-                          class="h-10 w-16 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none" />
-                        <button type="button" class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
-                          &plus;
-                        </button>
-                      </div>
+            <div class="bg-white rounded-lg m-2" v-for="(room, index) in this.cart" :key="index">
+            <!--render danh sách phòng ra-->
+            <div class="group">
+              <div class=" rounded-xl  p-2 md:p-5 md:flex items-center">
+                <!--ben trai-->
+                <img :src="room.image" class="hidden md:block object-cover rounded-lg w-[70px] h-[70px] mr-2"
+                  alt="">
+                <p class=" text-base font-extrabold text-gray-700 underline cursor-pointer"
+                  @click="openDetailRoom(); selectRoom(room)">{{
+                    formatTypeRoom(room.type_room) }}</p>
+                <!-- ben phải-->
+                <div class="md:ml-auto md:flex items-center">
+                  <div class="flex md:ml-2 items-center">
+                    <p class=" text-base font-extrabold text-gray-900 mr-1 ">{{ formatCurrency(room.price) }}</p>
+                    <label for="Quantity" class="sr-only"> Quantity </label>
+                    <div class=" rounded border border-gray-200 max-w-content inline-block">
+                      <button type="button" class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75"
+                        @click="decreaseQuantity(room)">
+                        &minus;
+                      </button>
+
+                      <input type="number" id="Quantity" min="0" :max="room.real_quantity" v-model="roomQuantity[room.id]"
+                        class="h-10 w-16 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none" />
+                      <button @click="increaseQuantity(room)" type="button"
+                        class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
+                        &plus;
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!--checkin checkout-->
-              <div class="md:grid grid-cols-2 gap-2">
-
-                <label for="checkin"
-                  class="relative block px-10 py-3 mb-4 rounded-2xl border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
-                  <input type="date" id="checkin"
-                    class="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
-                    placeholder="Họ và tên" />
-                  <span
-                    class="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
-                    Ngày nhận phòng <span class="text-rose-400">*</span>
-                  </span>
-                </label>
-
-                <label for="checkout"
-                  class="relative block px-10 py-3 mb-4 rounded-2xl border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
-                  <input type="date" id="checkout"
-                    class="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
-                    placeholder="Họ và tên" />
-                  <span
-                    class="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
-                    Ngày trả phòng<span class="text-rose-400">*</span>
-                  </span>
-                </label>
-
-              </div>
-              <!--thông tin khách hàng email - sdt - email -->
-              <label for="Username"
-                class="relative block  px-10 py-3 mb-2 rounded-2xl border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
-                <input type="text" id="Username"
-                  class="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
-                  placeholder="Họ và tên" />
-
-                <span
-                  class="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
-                  Họ và tên <span class="text-rose-400">*</span>
-                </span>
-              </label>
-
-              <label for="phone"
-                class="relative block  px-10 py-3 mb-2 rounded-2xl border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
-                <input type="text" id="phone"
-                  class="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
-                  placeholder="Số điện thoại" />
-
-                <span
-                  class="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
-                  Số điện thoại <span class="text-rose-400">*</span>
-                </span>
-              </label>
-
-              <label for="email"
-                class="relative block  px-10 py-3 mb-2 rounded-2xl border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
-                <input type="text" id="email"
-                  class="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
-                  placeholder="Địa chỉ email" />
-
-                <span
-                  class="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
-                  Địa chỉ email <span class="text-rose-400">*</span>
-                </span>
-              </label>
-
             </div>
+          </div>
           </div>
           <!-- Modal footer -->
           <div class="  md:flex items-center p-4 md:p-5">
             <div class="sum_price md:mb-0 mb-2">
               <p class="mt-2 text-xl font-extrabold text-gray-900 ">Tổng</p>
-              <p class="text-xl font-extrabold leading-none tracking-tight text-blue-900">1 000 000 000 đ
+              <p class="text-xl font-extrabold leading-none tracking-tight text-blue-900">{{ calculateTotal() }} 
               </p>
             </div>
             <div class="ml-auto">
@@ -143,11 +82,15 @@ export default {
   props:['cart'],
   data() {
     return {
-        
+        carts:[],
+        roomQuantity: {},
     };
   },
   mounted() {
-   
+  
+   for (let i = 0; i < this.cart.length; i++) {
+          this.roomQuantity[this.cart[i].id] =this.cart[i].quantity ;
+        }
   },
   components: {
 
@@ -158,7 +101,97 @@ export default {
    onclose()
    {
     this.$emit("cancel");
-   }
+   },
+   formatCurrency(value) {
+      let val = (value / 1).toFixed(0).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đồng'
+    },
+   formatTypeRoom(type) {
+      switch (type) {
+        case 'SGL':
+          return 'Phòng 1 giường đơn cho 1 người.';
+        case 'TWL':
+          return 'Phòng 2 giường đơn cho 2 người.';
+        case 'DBL':
+          return 'Phòng 1 giường đôi cho 2 người.';
+        case 'TRPL_1':
+          return 'Phòng 1 giường đơn và 1 giường đôi.';
+        case 'TRPL_2':
+          return 'Phòng 3 giường đơn.';
+        default:
+          return 'Unknown room type';
+      }
+    },
+
+    selectRoom(room) {
+      this.room = room
+    },
+
+    // handle cart
+
+    increaseQuantity(room, index) {
+      // Check for existing cart item with the same room ID
+      const cartItem = this.cart.find(item => item.id === room.id);
+
+      if (this.roomQuantity[room.id] >= room.quantity) {
+        alert('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
+        this.roomQuantity[room.id] = room.quantity;
+        return;
+      }
+
+      // Update room quantity in cart or create a new item
+      if (cartItem) {
+        cartItem.quantity++;
+      } else {
+        this.cart.push({
+          id: room.id,
+          type_room: room.type_room,
+          price: room.price,
+          quantity: 1,
+          real_quantity: room.real_quantity,
+          image:room.img_rooms[0].url
+        });
+
+      }
+      // Increment room quantity tracking
+      this.roomQuantity[room.id]++;
+    },
+
+    decreaseQuantity(room) {
+      // Check for existing cart item with the same room ID
+      const cartItem = this.cart.find(item => item.id === room.id);
+
+      // If no cart item is found, return
+      if (!cartItem) {
+        return;
+      }
+
+      // Decrement room quantity in cart
+      cartItem.quantity--;
+
+      // If quantity reaches 0, remove the item from the cart
+      if (cartItem.quantity === 0) {
+        this.cart.splice(this.cart.indexOf(cartItem), 1);
+      }
+
+      // Decrement room quantity tracking
+      this.roomQuantity[room.id]--;
+    },
+    
+    calculateTotal() {
+      // Initialize total
+      let total = 0;
+
+      // Loop through cart items
+      for (const cartItem of this.cart) {
+        // Calculate total for each item
+        total += cartItem.price * cartItem.quantity;
+      }
+
+      // Return total
+      return this.formatCurrency(total);
+    }
+
   },
 };
 </script>
