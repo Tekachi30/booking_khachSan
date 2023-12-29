@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       order_detail.belongsTo(models.order, { foreignKey: 'id_order' });
       order_detail.belongsTo(models.room_hotel, { foreignKey: 'id_room' });
-
     }
   }
   order_detail.init({

@@ -1,66 +1,93 @@
 const dotenv = require("dotenv");
 dotenv.config();
-
-
+const db = require('../models');
+const sequelize = require('sequelize');
+const Op  = sequelize.Op
+const Order = db.order;
+const User = db.User;
+const Owner = db.owner;
+const Hotel = db.hotel;
+const OD = db.order_detail;
+const Room = db.room_hotel;
+const moment = require('moment');
 //payMent vnpay
 const payPost = async (req, res, next) => {
    try {
-    var ipAddr = req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
-  
-    var dateFormat = (await import('dateformat')).default;
 
-    var tmnCode = process.env.vnp_TmnCode;
-    var secretKey = process.env.vnp_HashSecret;
-    var vnpUrl = process.env.vnp_Url;
-    var returnUrl = process.env.vnp_ReturnUrl;
+    // const {id_user,carts,checkin,checkout} = req.body
 
-  
-    var date = new Date();
-  
-    var createDate = dateFormat(date, 'yyyymmddHHmmss');
-    var orderId = dateFormat(date, 'HHmmss');
-    var amount = req.body.amount;
-    var bankCode = req.body.bankCode;
-  
-    var orderInfo = req.body.orderDescription;
-    var orderType = req.body.orderType;
+    // const order = await Order.create({
+    //   status: "Đã Đặt",
+    //   provider: "VNPAY",
+    //   id_user: id_user
+    // })
 
-    var locale = req.body.language;
-    if (locale === null || locale === '') {
-      locale = 'vn';
+    // for(const cart in carts)
+    // {
+     
+    //   await OD.create(
+    //     {
+    //       id_room:carts[cart].id,
+    //       quanlity:carts[cart].quantity,
+    //       single_price:carts[cart].price,
+    //       check_in:checkin,
+    //       check_out:checkout,
+    //       id_order:order.id 
+    //     }
+    //   )
+    // }
+    process.env.TZ = 'Asia/Ho_Chi_Minh';
+    
+    let date = new Date();
+    let createDate = moment(date).format('YYYYMMDDHHmmss');
+    
+    let ipAddr = req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress;
+
+    // GET env
+    let tmnCode = process.env.vnp_TmnCode;
+    let secretKey = process.env.vnp_HashSecret;
+    let vnpUrl = process.env.vnp_Url;
+    let returnUrl = process.env.vnp_ReturnUrl;
+
+    let orderId = moment(date).format('DDHHmmss');
+    let amount = req.body.amount;
+    let bankCode = req.body.bankCode;
+    
+    let locale = req.body.language;
+    if(locale === null || locale === ''){
+        locale = 'vn';
     }
-    var currCode = 'VND';
-    var vnp_Params = {};
+    let currCode = 'VND';
+    let vnp_Params = {};
     vnp_Params['vnp_Version'] = '2.1.0';
     vnp_Params['vnp_Command'] = 'pay';
     vnp_Params['vnp_TmnCode'] = tmnCode;
-    // vnp_Params['vnp_Merchant'] = ''
     vnp_Params['vnp_Locale'] = locale;
     vnp_Params['vnp_CurrCode'] = currCode;
     vnp_Params['vnp_TxnRef'] = orderId;
-    vnp_Params['vnp_OrderInfo'] = orderInfo;
-    vnp_Params['vnp_OrderType'] = orderType;
+    vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderId;
+    vnp_Params['vnp_OrderType'] = 'other';
     vnp_Params['vnp_Amount'] = amount * 100;
     vnp_Params['vnp_ReturnUrl'] = returnUrl;
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
-    if (bankCode !== null && bankCode !== '') {
-      vnp_Params['vnp_BankCode'] = bankCode;
+    if(bankCode !== null && bankCode !== ''){
+        vnp_Params['vnp_BankCode'] = bankCode;
     }
-  
+
     vnp_Params = sortObject(vnp_Params);
-  
-    var querystring = require('qs');
-    var signData = querystring.stringify(vnp_Params, { encode: false });
-    var crypto = require("crypto");
-    var hmac = crypto.createHmac("sha512", secretKey);
-    var signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
+
+    let querystring = require('qs');
+    let signData = querystring.stringify(vnp_Params, { encode: false });
+    let crypto = require("crypto");     
+    let hmac = crypto.createHmac("sha512", secretKey);
+    
+    let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex"); 
     vnp_Params['vnp_SecureHash'] = signed;
     vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
-  
     res.json({redirectUrl:vnpUrl})
    } catch (error) {
     console.log(error)

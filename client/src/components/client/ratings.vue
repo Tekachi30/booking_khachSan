@@ -46,7 +46,7 @@
 
         <!-- /list rating -->
             <div  v-for="rating in ratings">
-            <div class="py-8 text-left px-4 bg-gray-100 m-2 rounded-xl  ">
+            <div class="py-8 text-left px-4 bg-gray-100 m-2 rounded-xl max-w-[1400px] ">
                 <div class="flex items-start">
                     <div class="ml-6">
                         <div class="flex items-center">

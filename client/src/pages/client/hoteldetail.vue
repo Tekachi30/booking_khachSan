@@ -81,11 +81,12 @@
               </div>
             </div>
           </div>
+          
           <!--khu vực tính tiền -->
           <div class="sum flex items-center">
             <div class="sum_price">
               <p class="mt-2 text-xl font-extrabold text-gray-900 ">Tổng</p>
-              <p class=" text-xl font-extrabold leading-none tracking-tight text-blue-900">{{ calculateTotal() }} đ
+              <p class=" text-xl font-extrabold leading-none tracking-tight text-blue-900">{{ calculateTotal() }} 
               </p>
             </div>
             <div class="ml-auto">

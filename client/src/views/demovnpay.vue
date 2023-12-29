@@ -82,7 +82,7 @@ export default {
       const paymentUrl = response.data.redirectUrl;
       console.log(paymentUrl)
       // Chuyển hướng đến trang thanh toán của VNPAY
-       //window.location.href = paymentUrl;
+       window.location.href = paymentUrl;
       
     } catch (error) {
       console.error('Error creating payment:', error);

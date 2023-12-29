@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       room_hotel.hasMany(models.order_detail, { foreignKey: 'id_room' });
       room_hotel.hasMany(models.img_room, { foreignKey: 'id_room' });
-
       room_hotel.belongsTo(models.hotel, { foreignKey: 'id_hotel' });
     }
   }
