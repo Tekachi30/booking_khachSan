@@ -46,7 +46,7 @@
           style="background-image: url('https://img4.thuthuatphanmem.vn/uploads/2020/12/25/background-don-sac-dep-cho-powerpoint_101110800.jpg');">
           <!--button clear-->
           <div class="flex justify-end mb-4 ">
-            <button type="button"
+            <button type="button" @click="removeCart()"
               class="focus:ring-4 bg-blue-300 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span
                 class="text-base">X</span> Xóa lựa chọn</button>
           </div>
@@ -290,7 +290,14 @@ export default {
     },
 
     // handle cart
-
+    removeCart()
+    {
+      this.cart = []
+      for (let i = 0; i < this.hotel.room_hotels.length; i++) {
+          this.roomQuantity[this.hotel.room_hotels[i].id] = 0;
+        }
+    
+    },
     increaseQuantity(room, index) {
       // Check for existing cart item with the same room ID
       const cartItem = this.cart.find(item => item.id === room.id);
@@ -353,6 +360,7 @@ export default {
       // Return total
       return this.formatCurrency(total);
     },
+
     async reportHotel() {
       this.contentFocused = true;
       if (this.content) {

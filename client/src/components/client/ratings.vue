@@ -138,7 +138,6 @@ export default {
                 this.rating_statics = result.data.ratingStatistics
                 this.totalCount = result.data.overallAverage
                 this.ratings = result.data.ratings
-                console.log(result.data)
             } catch (error) {
                 console.log(error)
             }

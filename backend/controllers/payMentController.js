@@ -14,28 +14,28 @@ const moment = require('moment');
 const payPost = async (req, res, next) => {
    try {
 
-    // const {id_user,carts,checkin,checkout} = req.body
+    const {id_user,carts,checkin,checkout} = req.body
 
-    // const order = await Order.create({
-    //   status: "Đã Đặt",
-    //   provider: "VNPAY",
-    //   id_user: id_user
-    // })
+    const order = await Order.create({
+      status: "Đã Đặt",
+      provider: "VNPAY",
+      id_user: id_user
+    })
 
-    // for(const cart in carts)
-    // {
-     
-    //   await OD.create(
-    //     {
-    //       id_room:carts[cart].id,
-    //       quanlity:carts[cart].quantity,
-    //       single_price:carts[cart].price,
-    //       check_in:checkin,
-    //       check_out:checkout,
-    //       id_order:order.id 
-    //     }
-    //   )
-    // }
+    for(const cart in carts)
+    {
+      await OD.create(
+        {
+          id_room:carts[cart].id,
+          quanlity:carts[cart].quantity,
+          single_price:carts[cart].price,
+          check_in:checkin,
+          check_out:checkout,
+          id_order:order.id 
+        }
+      )
+    }
+    
     process.env.TZ = 'Asia/Ho_Chi_Minh';
     
     let date = new Date();
@@ -68,9 +68,9 @@ const payPost = async (req, res, next) => {
     vnp_Params['vnp_Locale'] = locale;
     vnp_Params['vnp_CurrCode'] = currCode;
     vnp_Params['vnp_TxnRef'] = orderId;
-    vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderId;
+    vnp_Params['vnp_OrderInfo'] = orderId;
     vnp_Params['vnp_OrderType'] = 'other';
-    vnp_Params['vnp_Amount'] = amount * 100;
+    vnp_Params['vnp_Amount'] = amount;
     vnp_Params['vnp_ReturnUrl'] = returnUrl;
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
@@ -78,7 +78,7 @@ const payPost = async (req, res, next) => {
     
     if (bankCode !== null && bankCode !== '') {
       
-      vnp_Params['vnp_BankCode'] = bankCode;
+      vnp_Params['vnp_BankCode'] = bankCode
     }
     vnp_Params = sortObject(vnp_Params);
 

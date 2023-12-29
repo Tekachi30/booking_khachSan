@@ -88,6 +88,7 @@
 
           <!--hinh thuc thanh toan-->
           <div class="relative p-2">
+            <label for="">Hình thức thanh toán: </label>
             <select name="price" id="price" v-model="bankcode"
               class="w-full rounded-md  py-5 px-1 pe-10 shadow-sm sm:text-sm focus:outline-none appearance-none">
               <option value="">Cổng thanh toán VNPAYQR</option>
