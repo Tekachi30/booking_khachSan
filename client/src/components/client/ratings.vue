@@ -69,7 +69,7 @@
 
         <div class=" bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
             <div class="flex flex-row py-3 px-4">
-                <h5 class="text-lg font-semibold flex-grow">Đánh giá người dùng</h5>
+                <h5 class="text-lg font-semibold flex-grow">Đánh giá khách sạn</h5>
                 <button @click="openRating" type="button"
                     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                     data-modal-hide="default-modal">
@@ -95,7 +95,7 @@
 
             </div>
             <div class="modal-footer py-3 px-4 ">
-                <button class="  py-2 px-4 bg-blue-700 text-white rounded-lg cursor-pointer mr-4" @click="ratingUser()">Đánh
+                <button class="  py-2 px-4 bg-blue-700 text-white rounded-lg cursor-pointer mr-4" @click="ratingHotel()">Đánh
                     giá</button>
                 <button class="  py-2 px-4 bg-blue-700 text-white rounded-lg cursor-pointer"
                     @click="openRating()">Đóng</button>
@@ -150,7 +150,7 @@ export default {
         formatCurrentTime(timeString) {
             return dayjs(timeString).format('MM-DD-YYYY');
         },
-        async ratingUser() {
+        async ratingHotel() {
             this.ratingFocused = true;
             this.contentFocused = true;
             if (this.rating && this.content) {
@@ -173,7 +173,6 @@ export default {
                     console.log(error)
                 }
             }
-
         }
     },
 

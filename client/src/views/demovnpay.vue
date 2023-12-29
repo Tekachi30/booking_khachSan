@@ -43,7 +43,7 @@
         </select>
       </div>
 
-      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded" @click="processPayment">Thanh toán Redirect</button>
+      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded" @click="processPayment()">Thanh toán Redirect</button>
     </div>
   </div>
 </template>
@@ -80,7 +80,7 @@ export default {
       
       // Nhận URL thanh toán từ response
       const paymentUrl = response.data.redirectUrl;
-      console.log(paymentUrl)
+      // console.log(paymentUrl)
       // Chuyển hướng đến trang thanh toán của VNPAY
        window.location.href = paymentUrl;
       

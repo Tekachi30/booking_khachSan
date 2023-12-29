@@ -74,10 +74,12 @@ const payPost = async (req, res, next) => {
     vnp_Params['vnp_ReturnUrl'] = returnUrl;
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
-    if(bankCode !== null && bankCode !== ''){
-        vnp_Params['vnp_BankCode'] = bankCode;
-    }
 
+    
+    if (bankCode !== null && bankCode !== '') {
+      
+      vnp_Params['vnp_BankCode'] = bankCode;
+    }
     vnp_Params = sortObject(vnp_Params);
 
     let querystring = require('qs');
@@ -123,7 +125,7 @@ const payPost = async (req, res, next) => {
   }
   
   const payReturnGet = async (req, res, next) => {
-    var vnp_Params = req.query;
+      var vnp_Params = req.query;
   
       var secureHash = vnp_Params['vnp_SecureHash'];
   

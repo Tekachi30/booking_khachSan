@@ -21,14 +21,17 @@
       </div>
       <p class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-blue-900 md:text-3xl ">
       </p>
-
+      <button type="button" @click="openReport()" class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
+          Báo cáo khách sạn
+      </button>
     </div>
+    
 
     <!--hình ảnh-->
     <swiper :pagination="true" :modules="modules" class="mySwiper">
       <swiper-slide v-for="img in hotel.img_hotels">
         <div class="flex items-center justify-center px-2">
-          <img :src="img.url" alt="Mô tả ảnh" class="  object-cover rounded-lg">
+          <img :src="img.url" alt="Mô tả ảnh" class="  object-cover rounded-lg"  style="width: 1200px; height: 480px;">
         </div>
       </swiper-slide>
     </swiper>
@@ -130,6 +133,40 @@
       </div>
     </div>
 
+     <!--popup report-->
+     <div class=" fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 overflow-auto " v-if="isShowReport">
+        <div class="absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+        <div class=" bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
+            <div class="flex flex-row py-3 px-4">
+                <h5 class="text-lg font-semibold flex-grow">Báo cáo khách sạn</h5>
+                <button @click="openReport()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-hide="default-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+
+            
+            <div class="py-4 px-4">
+                <textarea class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                    placeholder="Nhập nội dung ..." v-model="content"></textarea>
+                <p class="text-red-500 text-sm ml-1" v-if="!content && contentFocused">Không được để trống.</p>
+
+            </div>
+            <div class="modal-footer py-3 px-4 ">
+                <button class="  py-2 px-4 bg-blue-700 text-white rounded-lg cursor-pointer mr-4" @click="reportHotel()">Báo cáo</button>
+                <button class="  py-2 px-4 bg-blue-700 text-white rounded-lg cursor-pointer"
+                    @click="openReport()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
     <cart @cancel="openCart()" v-if="isShowCart" :cart="cart" />
     <room @cancel="openDetailRoom()" v-if="isDetailRoom" :room="room" />
     <mapVue :lng="longitube" :lat="latitube" />
@@ -159,16 +196,17 @@ export default {
   data() {
     return {
       isDetailRoom: false, isShowCart: false,
-      hotels: [], hotel: '', user: '', id_hotel: '', quantity: '',
+      hotels: [], hotel: '', user: '', id_hotel: '', quantity: '', content: '',
       citys: [], districts: [], wards: [], cart: [],
-      countRating: '', longitube: null, latitube: null, img_hotel_1: null,
+      countRating: '', longitube: null, latitube: null, img_hotel_1: null, 
+      isShowReport: false,
       room: [], selectedRooms: [], roomQuantity: {},
     };
   },
   mounted() {
     this.user = JSON.parse(localStorage.getItem("User"));
-    this.id_hotel = this.$route.params.id
-    this.getHotel()
+    this.id_hotel = this.$route.params.id;
+    this.getHotel();
     AddressService.getCountry().then((data) => {
       this.citys = data;
     });
@@ -188,6 +226,11 @@ export default {
     };
   },
   methods: {
+
+    openReport() {
+      this.isShowReport = !this.isShowReport
+      this.content = ""
+    },
     openDetailRoom() {
       this.isDetailRoom = !this.isDetailRoom
     },
@@ -309,10 +352,27 @@ export default {
 
       // Return total
       return this.formatCurrency(total);
+    },
+    async reportHotel() {
+      this.contentFocused = true;
+      if (this.content) {
+        try {
+            const result = await this.$axios.post(`report/add/${this.user.id}`,
+                {
+                    id_hotel: this.$route.params.id,
+                    comment_report: this.content
+                })
+            alert(result.data.message);
+            if (result.status === 200) {
+                this.contentFocused = false;
+                this.openReport();
+                alert(result.data.message);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+      }
     }
-
-
-
   },
 };
 </script>
