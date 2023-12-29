@@ -23,6 +23,15 @@ module.exports = {
       provider: {
         type: Sequelize.ENUM("MOMO","VNPAY")
       },
+      vnp_orderID: {
+        type: Sequelize.INTEGER
+      },
+      total_bank: {
+        type: Sequelize.DOUBLE
+      },
+      date_bank: {
+        type: Sequelize.DATE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -30,7 +39,8 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
+
     });
   },
   async down(queryInterface, Sequelize) {

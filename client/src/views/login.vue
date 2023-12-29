@@ -25,7 +25,7 @@
                 v-model="account"  />
               <p class="text-red-500 text-sm ml-1" v-if="!account && accountFocused">Tài khoản bị trống.</p>
               <p class="text-red-500 text-sm ml-1" v-else-if="validaccount2(account) && accountFocused">Tài khoản không được chứa khoảng trắng.</p>
-              <p class="text-red-500 text-sm ml-1" v-else-if="!validaccount(account) && accountFocused">Tài khoản không được chứa ký tự đặc hoặc dấu câu.</p>
+             
             </div>
             <!--kết thúc account-->
   
@@ -42,10 +42,7 @@
             <p class="text-red-500 text-sm ml-1" v-if="!password && passwordFocused">Mật khẩu bị trống.</p>
             <p class="text-red-500 text-sm ml-1" v-else-if="password.length <= 7 && passwordFocused">Mật khẩu có tối thiểu 8
               kí tự</p>
-            <p class="text-red-500 text-sm ml-1" v-else-if="!validPassword(password) && passwordFocused">Mật khẩu chứa kí tự
-              đặc biệt " ~ / ) [ * ^ $ .... "</p>
-            <p class="text-red-500 text-sm ml-1" v-else-if="!validPassword2(password) && passwordFocused">Mật khẩu có tối
-              thiểu 1 chữ cái hoa</p>
+
             <!--kết thúc password -->
   
             <div class="mt-5">
@@ -97,7 +94,7 @@
           this.accountFocused = true
           this.passwordFocused = true
           // kiểm tra thành công thực hiện đăng nhập
-          if(this.validaccount(this.account) && !this.validPassword2(this.account) && this.validPassword(this.password))
+          if(this.validaccount(this.account) && !this.validPassword2(this.account))
           {
             //api login
             const result = await this.$axios.post('user/login',
@@ -114,7 +111,7 @@
               // Chuyển hướng đến trang dashboard.
               this.$router.push('/');
             }else {
-              this.$refs.toast.show(result.data.message, 'error');
+              this.$refs.toast.showToast(result.data.message);
             }
             
           }
