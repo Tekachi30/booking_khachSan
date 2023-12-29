@@ -23,6 +23,15 @@ module.exports = {
       provider: {
         type: Sequelize.ENUM("MOMO","VNPAY")
       },
+      vnp_orderID: {
+        type: Sequelize.INTEGER
+      },
+      total_bank: {
+        type: Sequelize.INTEGER
+      },
+      date_bank: {
+        type: Sequelize.DATE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
