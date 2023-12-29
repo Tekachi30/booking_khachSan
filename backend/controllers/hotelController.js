@@ -260,17 +260,20 @@ const updateHotel = async (req, res) => {
     try {
         const id = req.params.id;
         const { name_hotel, address, city_code, district_code, ward_code, information } = req.body;
+        const locationData = await resultPost(city_code, district_code, ward_code, address);
         const exsitHotel = await Hotel.findByPk(id);
         // loại đi chính hotel ra khỏi trường hợp => fix tương đối vs các code còn lai nha
         const exsitName_hotel = await Hotel.findOne({ where: { name_hotel, id: { [Op.not]: id } } });
         if (exsitHotel) {
             if (!exsitName_hotel) {
                 exsitHotel.name_hotel = name_hotel,
-                    exsitHotel.address = address,
-                    exsitHotel.city_code = city_code,
-                    exsitHotel.district_code = district_code
+                exsitHotel.address = address,
+                exsitHotel.city_code = city_code,
+                exsitHotel.district_code = district_code
                 exsitHotel.ward_code = ward_code
-                exsitHotel.information = information
+                exsitHotel.information = information,
+                exsitHotel.longitude = locationData.coordinates[0],
+                exsitHotel.latitube = locationData.coordinates[1]
 
                 await exsitHotel.save();
                 return res.status(200).json({ message: 'Cập nhập thành công' });
