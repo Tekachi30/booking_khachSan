@@ -54,7 +54,6 @@ const getOrderbyUser = async (req, res) => {
   try {
     const idUser = req.params.id;
     const orderUser = await Order.findAll({
-      attributes: [],
       include: [
         {
           model: User, attributes: ['id','fullname']
@@ -62,6 +61,7 @@ const getOrderbyUser = async (req, res) => {
       ],
       where: {id_user: idUser}
     });
+    res.json(orderUser)
   } catch (error) {
     console.log(error);
   }

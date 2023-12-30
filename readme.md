@@ -26,3 +26,5 @@
 
 # pass: admin
 # pass: owner1234+
+
+https://postsrc.com/components/tailwind-css-error-pages/simple-500-error-component

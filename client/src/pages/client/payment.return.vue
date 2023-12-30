@@ -23,7 +23,7 @@
                             <li>Họ và tên: {{ user.fullname }}</li>
                             <li>Email: {{ user.email }}</li>
                             <li>Mã giao dịch: {{ this.$route.query.vnp_OrderInfo }}</li>
-                            <li>Số tiền: {{ this.$route.query.vnp_Amount }}</li>
+                            <li>Số tiền: {{ formatCurrency(this.$route.query.vnp_Amount/100) }}</li>
                             <li>Thời gian: {{ formatDate(this.$route.query.vnp_PayDate) }}</li>
                         </ol>
                     </div>
@@ -59,7 +59,7 @@ export default {
             const result = await this.$axios.put(`order/update/${this.order.id}`,
                 {
                     "vnp_orderID": this.$route.query.vnp_OrderInfo,
-                    "total_bank": this.$route.query.vnp_Amount,
+                    "total_bank": this.$route.query.vnp_Amount/100,
                     "date_bank": this.formatDate(this.$route.query.vnp_PayDate)
                 })
         }
@@ -69,6 +69,10 @@ export default {
     },
     components: {},
     methods: {
+        formatCurrency(value) {
+      let val = (value / 1).toFixed(0).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đồng'
+    },
         formatDate(d) {
             const formattedDate = dayjs(d).format("YYYY-MM-DD HH:mm:ss");
             return formattedDate

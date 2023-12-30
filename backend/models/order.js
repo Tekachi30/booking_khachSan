@@ -18,7 +18,10 @@ module.exports = (sequelize, DataTypes) => {
   order.init({
     id_user: DataTypes.INTEGER,
     status: DataTypes.ENUM("Đã Đặt","Đã Thanh Toán","Đã Hủy","Đã Trả Phòng"),
-    provider: DataTypes.ENUM("MOMO","VNPAY")
+    provider: DataTypes.ENUM("MOMO","VNPAY"),
+    vnp_orderID: DataTypes.INTEGER,
+    total_bank: DataTypes.DOUBLE,
+    date_bank: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'order',
