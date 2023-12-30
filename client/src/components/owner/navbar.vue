@@ -62,8 +62,7 @@
               enter-to-class="scale-100 opacity-100"
               leave-active-class="transition duration-150 ease-in transform"
               leave-from-class="scale-100 opacity-100"
-              leave-to-class="scale-95 opacity-0"
->           
+              leave-to-class="scale-95 opacity-0">           
               <button
                 v-if="showProfile"
                 @click="logout()"

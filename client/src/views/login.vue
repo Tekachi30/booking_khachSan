@@ -23,9 +23,7 @@
               <input type="text" placeholder="Tài khoản"
                 class="px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none w-full"
                 v-model="account"  />
-              <p class="text-red-500 text-sm ml-1" v-if="!account && accountFocused">Tài khoản bị trống.</p>
-              <p class="text-red-500 text-sm ml-1" v-else-if="validaccount2(account) && accountFocused">Tài khoản không được chứa khoảng trắng.</p>
-             
+              <p class="text-red-500 text-sm ml-1" v-if="!account && accountFocused">Tài khoản bị trống.</p>   
             </div>
             <!--kết thúc account-->
   
@@ -40,8 +38,6 @@
                 v-model="password"  />
             </div>
             <p class="text-red-500 text-sm ml-1" v-if="!password && passwordFocused">Mật khẩu bị trống.</p>
-            <p class="text-red-500 text-sm ml-1" v-else-if="password.length <= 7 && passwordFocused">Mật khẩu có tối thiểu 8
-              kí tự</p>
 
             <!--kết thúc password -->
   
@@ -94,7 +90,7 @@
           this.accountFocused = true
           this.passwordFocused = true
           // kiểm tra thành công thực hiện đăng nhập
-          if(this.validaccount(this.account) && !this.validPassword2(this.account))
+          if(this.account && this.password)
           {
             //api login
             const result = await this.$axios.post('user/login',
@@ -122,22 +118,14 @@
       //   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       //   return re.test(account);
       // },
-      validaccount(account) {
-        const re = /^[a-zA-Z0-9]+$/;
-        return re.test(account);
-      },
-      validaccount2(account) {
-        const re = /\s/;
-        return re.test(account);
-      },
-      validPassword(password) {
-        const re = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-        return re.test(password);
-      },
-      validPassword2(password) {
-        const re = /[A-Z]/;
-        return re.test(password);
-      },
+      // validaccount(account) {
+      //   const re = /^[a-zA-Z0-9]+$/;
+      //   return re.test(account);
+      // },
+      // validPassword2(password) {
+      //   const re = /[A-Z]/;
+      //   return re.test(password);
+      // },
   
     },
   };

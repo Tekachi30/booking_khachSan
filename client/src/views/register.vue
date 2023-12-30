@@ -35,9 +35,8 @@
             <div class="mt-5">
                <select v-model="sex" 
                   class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none ">
-                  <option value="" disabled selected>Chọn giới tính</option>
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
+                  <option value="Nam">Nam</option>
+                  <option value="Nữ">Nữ</option>
                </select>
             </div>
             <p class="text-red-500 text-sm ml-1" v-if="!sex && sexFocused">Vui lòng chọn giới tính.</p>
@@ -107,7 +106,7 @@
             </div>
   
             <p class="text-red-500 text-sm ml-1" v-if="!address && addressFocusted">Địa chỉ cụ thể bị trống.</p>
-            <p class="text-red-500 text-sm ml-1" v-else-if="!validAddress(address) && addressFocusted">Địa chỉ tối đa 10 kí tự.</p>
+            <!-- <p class="text-red-500 text-sm ml-1" v-else-if="!validAddress(address) && addressFocusted">Địa chỉ tối đa 10 kí tự.</p> -->
   
             <!--kết thúc địa chỉ-->
   
@@ -176,7 +175,7 @@
   
         //gọi lại hàm đăng kí từ authService
         if (this.account && !this.validAccount(this.account) && this.validEmail(this.email) && this.validPassword(this.password) && this.validPhone(this.phone) &&  this.validPassword2(this.password) 
-        && this.address && this.fullname && this.validFullName(this.fullname) && this.validAddress(this.address) && this.sex) {
+        && this.address && this.fullname && this.validFullName(this.fullname) && this.sex) {
           const result = await this.$axios.post('user/register',{
                 account: this.account,
                 fullname: this.fullname,
@@ -226,11 +225,11 @@
         const re = /[A-Z]/;
         return re.test(password);
       },
-      validAddress(address)
-      {
-        const re = /^.{1,10}$/; 
-        return re.test(address);
-      }
+      // validAddress(address)
+      // {
+      //   const re = /^.{1,10}$/; 
+      //   return re.test(address);
+      // }
   
     },
   };
