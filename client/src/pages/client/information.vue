@@ -103,6 +103,7 @@
                             <th scope="col" class="px-4 py-3">Khách hàng</th>
                             <th scope="col" class="px-4 py-3">Trạng thái</th>
                             <th scope="col" class="px-4 py-3">Phương thức thanh toán</th>
+                            <th scope="col" class="px-4 py-3">Tổng tiền</th>
                             <th scope="col" class="px-4 py-3">
                             </th>
                         </tr>
@@ -113,10 +114,11 @@
                                 class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                     1 }}</th>
                             <td class="px-4 py-3">
-                                {{ order.user.fullname }}
+                                {{ order.User.fullname }}
                             </td>
                             <td class="px-4 py-3"> {{ order.status }}</td>
                             <td class="px-4 py-3"> {{ order.provider }}</td>
+                            <td class="px-4 py-3"> {{ formatCurrency(order.total_bank) }}</td>
                             
                             <!--action ?-->
                         </tr>
@@ -139,8 +141,6 @@
                         <tr>
                             <th scope="col" class="px-4 py-4">STT</th>
                             <th scope="col" class="px-4 py-3">Khách sạn</th>
-                            <th scope="col" class="px-4 py-3">địa chỉ</th>
-                            <th scope="col" class="px-4 py-3">Thông tin</th>
                             <th scope="col" class="px-4 py-3">
                             </th>
                         </tr>
@@ -153,9 +153,6 @@
                             <td class="px-4 py-3">
                                 {{ hotel.name_hotel }}
                             </td>
-                            <td class="px-4 py-3"> {{ hotel.address }}</td>
-                            <td class="px-4 py-3"> {{ hotel.information }}</td>
-                            
                             <!--action ?-->
                         </tr>
                     </tbody>
@@ -271,9 +268,14 @@ export default {
   mounted() {
    
     this.user = JSON.parse(localStorage.getItem("User"));
+    this.getOrder()
   },
   components: {},
   methods: {
+    formatCurrency(value) {
+      let val = (value / 1).toFixed(0).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đồng'
+    },
     openUpdate() {
       this.isUpdate = !this.isUpdate
     },
@@ -297,21 +299,14 @@ export default {
       this.activeTab = 'hotel'
     },
 
-    // lấy thông tin của chính user đã đăng nhập trên local storage
-    // getToken() {
-    //   let user = JSON.parse(localStorage.getItem("User"));
-    //   return user;
-    // },
-
-    // async getOrder() {
-    //    try {
-    //        const result = await this.$axios.get(`order/getOrderUser/${this.user.id}`);
-    //        this.orders = result.data;
-    //        console.log(result.data);
-    //    } catch (error) {
-    //        console.log(error)
-    //    }
-    // },
+    async getOrder() {
+       try {
+           const result = await this.$axios.get(`order/getOrderUser/${this.user.id}`);
+           this.orders = result.data;
+       } catch (error) {
+           console.log(error)
+       }
+    },
 
     
     async updateProfile(){

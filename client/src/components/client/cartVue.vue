@@ -257,6 +257,7 @@ export default {
 
         const paymentUrl = result.data.redirectUrl;
         // Chuyển hướng đến trang thanh toán của VNPAY
+        localStorage.setItem("order", JSON.stringify(result.data.order));
         window.location.href = paymentUrl;
       } catch (error) {
         console.log(error)
