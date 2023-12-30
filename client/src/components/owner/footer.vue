@@ -1,6 +1,6 @@
 <template>
     <footer
-    class="bg-gradient-to-b from-transparent to-gray-100 py-12 dark:to-gray-900"
+    class="bg-gradient-to-b from-transparent to-gray-100 py-5 dark:to-gray-900"
   >
     <div class="mx-auto max-w-6xl px-6 md:px-12 lg:px-6 xl:px-0">
       <a

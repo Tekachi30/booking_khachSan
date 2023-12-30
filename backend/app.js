@@ -1,13 +1,47 @@
-const session  = require('express-session');
 const bodyParser = require('body-parser');
 const express = require('express');
-const cors  = require("cors");
+const app = express();
+const cors = require("cors");
 require('./config/connect');
 const http = require('http');
-const app = express();
-const server = http.createServer(app)
-const cron = require('node-cron');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server,
+  {
+    allowEIO3: true,
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+    },
+    transports: ["polling", "websocket"],
+  });
 
+  const users = {};
+
+  io.on('connection', (socket) => {
+    socket.on('userConnected', (userId) => {
+      users[userId] = socket.id;
+      io.emit('UpdateUserStatus',users)
+      console.log('User connected:', userId);
+      console.log('Online users:', users);
+    });
+  
+    socket.on('userDisconnect', (userId) => {
+        delete users[userId];
+        io.emit('Updatedisconnect',users)
+        console.log('User disconnected:', userId);
+        console.log('Online users:', users);
+      
+    });
+  });
+  
+  
+app.use((req, res, next) => {
+  res.io = io
+  next()
+});
+
+const cron = require('node-cron');
 // const {???} = require ('???')
 const { routerUser } = require ('./routers/userRouter');
 const { routerHotel } = require ('./routers/hotelRouter');
@@ -25,7 +59,6 @@ const { routerPay } = require ('./routers/payMentRouter');
 
 
 // node cron
-
 const mathlevelController = require('./controllers/mathlevelController')
 
 
@@ -49,20 +82,18 @@ const mathlevelController = require('./controllers/mathlevelController')
 // });
 
 // task.start()
+
+
 // Thiết lập body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
 
  
-//session 
-app.use(session({
-  secret: 'keysaveloginuser123456', 
-  resave: false,
-  saveUninitialized: false 
-}));
+
 // app.use(cookieParser()); //Parse cookie
 app.use(cors({
-  methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
+  methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
+  
 }));
 
 app.use(express.json());

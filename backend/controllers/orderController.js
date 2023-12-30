@@ -12,7 +12,7 @@ dotenv.config();
 
 const getOrder = async (req, res) => {
     try {
-      const idHotel = req.params.id;
+      const {idHotel,id_owner} = req.body;
       const orders = await Order.findAll({
           attributes: ["id","id_user","status","provider","createdAt"],
           include: [
@@ -30,7 +30,8 @@ const getOrder = async (req, res) => {
                           {
                               model: Hotel,
                               attributes: ["id", "name_hotel", "id_owner"],
-                              where: { id: idHotel }
+                              where: { id: idHotel,
+                                id_owner:id_owner }
                           }
                       ]
                   }
