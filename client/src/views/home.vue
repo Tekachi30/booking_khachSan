@@ -11,7 +11,6 @@ import socketService from '../plugins/socketService';
 export default {
   components: {
     navbar,
-   
     footerv
   },
 };

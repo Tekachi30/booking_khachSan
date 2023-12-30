@@ -14,6 +14,17 @@ class socketService
         this.socket.emit("userDisconnect", id);
 
     }
+
+    ownerConnect(id)
+    {
+        this.socket.emit("ownerConnected", id);
+    }
+    ownerDisconnect(id)
+    {
+        this.socket.emit("ownerDisconnect", id);
+
+    }
+
     getListOnline(callback)
     {    
         this.socket.on("UpdateUserStatus", (data) => {

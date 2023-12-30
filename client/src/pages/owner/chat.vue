@@ -99,7 +99,7 @@ export default {
     },
     mounted() {
         this.owner = JSON.parse(localStorage.getItem("owner"));
-        socketService.userConnect(this.owner.id)
+        socketService.ownerConnect(this.owner.id)
     },
     components: {},
     methods: {
