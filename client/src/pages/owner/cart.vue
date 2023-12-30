@@ -43,7 +43,6 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-4 py-4">STT</th>
-                                <th scope="col" class="px-4 py-3">Khách sạn</th>
                                 <th scope="col" class="px-4 py-3">Khách hàng</th>
                                 <th scope="col" class="px-4 py-3">Trạng thái</th>
                                 <th scope="col" class="px-4 py-3">Phương thức thanh toán</th>
@@ -57,7 +56,6 @@
                                 <th scope="row"
                                     class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                         1 }}</th>
-                                <td class="px-4 py-3"> {{ order.hotel.name_hotel }}</td>
                                 <td class="px-4 py-3"> {{ order.User.fullname }}</td>
                                 <td class="px-4 py-3"> {{ order.status }}</td>
                                 <td class="px-4 py-3"> {{ order.provider }}</td>
@@ -159,9 +157,10 @@ export default
     }
   },
   mounted(){
-    this.owner = this.getToken()
+    this.owner = JSON.parse(localStorage.getItem("owner"));
     // this.getOrder();
     this.getHotel();
+    
   },
   components: {
     toast,
@@ -181,17 +180,17 @@ export default
         return dayjs(time).format('DD-MM-YYYY');
     },
 
-    // lấy thông tin của chính owner đã đăng nhập trên local storage
-    getToken() {
-      let owner = JSON.parse(localStorage.getItem("owner")); 
-      return owner;
-    },
     
     //lấy dữ liệu
     async getOrder() {
         try {
-            const result = await this.$axios.get(`order/get/${this.hotel.id}`);
-            this.coupons = result.data
+            const result = await this.$axios.post(`order/get`,
+            {
+                "idHotel":this.hotel.id,
+                "id_owner":this.owner.id
+            });
+            this.orders = result.data
+            console.log(result.data)
         } catch (error) {
             console.log(error)
         }
@@ -200,6 +199,7 @@ export default
         try {
             const result = await this.$axios.get(`hotel/get/${this.owner.id}`)
             this.hotels = result.data
+            this.getOrder()
         } catch (error) {
             console.log(error)
         }
