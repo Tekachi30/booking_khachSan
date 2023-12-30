@@ -173,6 +173,8 @@
     <rating :id="id_hotel" />
 
   </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 <script>
@@ -192,6 +194,8 @@ import rating from '../../components/client/ratings.vue'
 import mapVue from '../../components/client/map.vue';
 import AddressService from '../../plugins/addressService';
 import cart from '../../components/client/cartVue.vue';
+import toast from '../../components/toast.vue';
+
 export default {
   data() {
     return {
@@ -217,8 +221,8 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
-    cart, room, rating, mapVue
-
+    cart, room, rating, mapVue,
+    toast,
   },
   setup() {
     return {
@@ -303,7 +307,8 @@ export default {
       const cartItem = this.cart.find(item => item.id === room.id);
 
       if (this.roomQuantity[room.id] >= room.quantity) {
-        alert('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
+        // alert('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
+        this.$refs.toast.showToast('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
         this.roomQuantity[room.id] = room.quantity;
         return;
       }
@@ -370,11 +375,11 @@ export default {
                     id_hotel: this.$route.params.id,
                     comment_report: this.content
                 })
-            alert(result.data.message);
+                this.$refs.toast.showToast(result.data.message);
             if (result.status === 200) {
-                this.contentFocused = false;
-                this.openReport();
-                alert(result.data.message);
+              this.contentFocused = false;
+              this.openReport();
+              this.$refs.toast.showToast(result.data.message);
             }
         } catch (error) {
             console.log(error)

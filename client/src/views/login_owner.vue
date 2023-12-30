@@ -89,12 +89,15 @@
       </div>
     </div>
   </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 
 
 
 <script>
+import toast from '../components/toast.vue';
 export default {
   data() {
     return {
@@ -103,13 +106,16 @@ export default {
       password: ''
     };
   },
-  components: {},
+  components: {
+    toast,
+  },
   methods: {
     async login() {
       try {
         // Kiểm tra xem các thông tin có được nhập đầy đủ không
         if (!this.account || !this.password) {
-                alert("Vui lòng nhập đầy đủ thông tin.")
+                // alert("Vui lòng nhập đầy đủ thông tin.")
+                this.$refs.toast.showToast("Vui lòng nhập đầy đủ thông tin.");
                 return;
         }else{
           const result = await this.$axios.post('owner/login',
@@ -125,7 +131,7 @@ export default {
             this.$router.push('/owner');
           }
           else {
-            alert(result.data.message)
+            this.$refs.toast.showToast(result.data.message);
           }
         }
       } catch (error) {

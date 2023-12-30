@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.ENUM("Đã Đặt","Đã Thanh Toán","Đã Hủy","Đã Trả Phòng")
       },
       provider: {
-        type: Sequelize.ENUM("MOMO","VNPAY")
+        type: Sequelize.ENUM("VNPAY")
       },
       vnp_orderID: {
         type: Sequelize.INTEGER

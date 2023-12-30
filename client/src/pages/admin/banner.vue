@@ -256,8 +256,11 @@
             </div>
         </div>
     </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 <script>
+import toast from '../../components/toast.vue';
 export default {
     data() {
         return {
@@ -271,7 +274,9 @@ export default {
     mounted() {
         this.getBanner()
     },
-    components: {},
+    components: {
+        toast,
+    },
     methods: {
         onFileSelected(event) {
             this.avatar = event.target.files[0]
@@ -331,7 +336,7 @@ export default {
                         this.getBanner();
                     }
                     else {
-                        alert(result.data.message)
+                        this.$refs.toast.showToast(result.data.message);
                     }
                 }
             } catch (error) {
@@ -361,14 +366,14 @@ export default {
                         this.title_banner_forcus = false;
                         this.content_banner_forcus = false;
                         
-                        alert(result.data.message)
+                        this.$refs.toast.showToast(result.data.message);
                         setTimeout(() => {
                            location.reload()
                         }, 1000);
                         this.openUpdate();
                         this.getBanner();
                     } else {
-                        alert(result.data.message);
+                        this.$refs.toast.showToast(result.data.message);
                         console.log(result);
                     }
                 }
@@ -384,9 +389,9 @@ export default {
                 if (result.status == 200) {
                     this.getBanner();
                     this.openDelete();
-                    alert(result.data.message);
+                    this.$refs.toast.showToast(result.data.message);
                 } else {
-                    alert(result.data.message);
+                    this.$refs.toast.showToast(result.data.message);
                 }
             } catch (error) {
                 console.log(error)

@@ -209,10 +209,12 @@
             </div>
         </div>
     </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 <script>
-
+import toast from '../../components/toast.vue';
 export default
 {
   data(){
@@ -226,7 +228,9 @@ export default
   mounted(){
     this.getOwner();
   },
-  components: {},
+  components: {
+    toast,
+  },
   methods: {
     
     // các hàm validate start
@@ -300,7 +304,7 @@ export default
                     this.openAdd()
                     this.getOwner()
                 }else {
-                    alert(result.data.message)
+                    this.$refs.toast.showToast(result.data.message);
                 }
             }
         } catch (error) {
@@ -314,9 +318,9 @@ export default
             if (result.status === 200) {
                 this.getOwner();
                 this.openDelete();
-                alert(result.data.message);
+                this.$refs.toast.showToast(result.data.message);
             } else {
-                alert(result.data.message);
+                this.$refs.toast.showToast(result.data.message);
             }
         } catch (error) {
             console.log(error)

@@ -22,6 +22,19 @@
                                     placeholder="Tìm theo tên.." required="">
                             </div>
                         </form>
+
+                        <!--view getHotel => option value lấy ra id_hotel-->
+                        <div class="hotel mb-2 mt-3">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn
+                                khách sạn</label>
+                            <select v-model="hotel" @change="getOrder()"
+                                class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
+                                <option disabled selected>Chọn khách sạn</option>
+                                <option v-for="hotel in hotels" :key="hotel" :value="hotel">
+                                    {{ hotel.name_hotel }}
+                                </option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <!--nội dung-->
@@ -111,7 +124,6 @@
                               <option value="Đã Trả Phòng">Đã trả phòng</option>
                               <option value="Đã Hủy">Đã hủy</option>
                             </select>
-
                         </div>
 
                     </div>
@@ -130,24 +142,30 @@
         </div>
     </div>
 
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 <script>
 import dayjs from 'dayjs';
+import toast from '../../components/toast.vue';
 export default
 {
   data(){
     return {
-        orders: [], owner: '', order: '',
+        orders: [], hotels: [], owner: '', order: '', hotel: '',
         isUpdate: false,
         status: ''
     }
   },
   mounted(){
     this.owner = this.getToken()
-    this.getOrder();
+    // this.getOrder();
+    this.getHotel();
   },
-  components: {},
+  components: {
+    toast,
+  },
   methods: {
     openUpdate(){
         this.isUpdate = !this.isUpdate
@@ -171,12 +189,20 @@ export default
     
     //lấy dữ liệu
     async getOrder() {
-       try {
-           const result = await this.$axios.get(`order/get/${this.owner.id}`);
-           console.log(result.data);
-       } catch (error) {
-           console.log(error)
-       }
+        try {
+            const result = await this.$axios.get(`order/get/${this.hotel.id}`);
+            this.coupons = result.data
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    async getHotel() {
+        try {
+            const result = await this.$axios.get(`hotel/get/${this.owner.id}`)
+            this.hotels = result.data
+        } catch (error) {
+            console.log(error)
+        }
     },
 
     // cập nhật hóa đơn
@@ -188,10 +214,10 @@ export default
             if (result.status == 200) {
                 this.openUpdate()
                 this.getOrder()
-                alert(result.data.message)
+                this.$refs.toast.showToast(result.data.message);
             }
             else {
-                alert(result.data.message)
+                this.$refs.toast.showToast(result.data.message);
             }
         } catch (error) {
             

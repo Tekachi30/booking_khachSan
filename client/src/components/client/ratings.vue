@@ -102,10 +102,14 @@
             </div>
         </div>
     </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 <script>
 import StarRating from 'vue-star-rating'
 import dayjs from 'dayjs';
+import toast from '../toast.vue';
+
 export default {
     props: ['id'], // this.id
     data() {
@@ -127,7 +131,7 @@ export default {
         this.user = JSON.parse(localStorage.getItem("User"));
         this.getRating()
     },
-    components: { StarRating },
+    components: { StarRating, toast, },
     methods: {
         openRating() {
             this.isShowRating = !this.isShowRating
@@ -161,7 +165,8 @@ export default {
                             comment_rating: this.content
                         })
 
-                    alert(result.data.message);
+                    this.$refs.toast.showToast(result.data.message);
+                    
                     if (result.status === 200) {
                         this.ratingFocused = false;
                         this.contentFocused = false;

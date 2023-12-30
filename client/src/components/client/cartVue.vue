@@ -61,28 +61,32 @@
             <div class="m-2">
               <label for="">Họ và tên:</label>
               <input type="text" placeholder="Họ và tên"
-                class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" v-model="fullname" />
+                class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" v-model="fullname" disabled />
             </div>
 
             <div class="m-2">
               <label for="">Địa chỉ email:</label>
               <input type="text" placeholder="Email"
-                class="px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none w-full" v-model="email" />
+                class="px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none w-full" v-model="email" disabled />
             </div>
           </div>
           <!--check in out-->
           <div class="md:flex">
             <div class="m-2">
               <label for="">Ngày nhận phòng:</label>
-              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none"
+              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" @change="handleDateChange()"
                 v-model="checkin" />
+              <p v-if="!checkin && date_forcus" class="text-red-500 text-sm ml-1">Vui lòng chọn ngày nhận phòng!</p>
+              <p v-if="checkin && date_forcus" class="text-red-500 text-sm ml-1">Ngày nhận phòng không thể lớn hơn ngày trả phòng!</p>
             </div>
 
             <div class="m-2">
               <label for="">Ngày trả phòng:</label>
 
-              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none"
+              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" @change="handleDateChange2()"
                 v-model="checkout" />
+                <p v-if="!checkout && date_forcus" class="text-red-500 text-sm ml-1">Vui lòng chọn ngày trả phòng!</p>
+                <p v-if="checkout && date_forcus" class="text-red-500 text-sm ml-1">Ngày trả phòng không thể nhỏ hơn ngày nhận phòng!</p>
             </div>
           </div>
 
@@ -117,8 +121,11 @@
     </div>
 
   </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 <script>
+import toast from '../toast.vue';
 
 export default {
   props: ['cart'],
@@ -126,7 +133,8 @@ export default {
     return {
       carts: [], bankcode: '',
       roomQuantity: {}, user: null,
-      fullname: null, email: null, phone: null, checkin: null, checkout: null
+      fullname: null, email: null, phone: null, checkin: null, checkout: null,
+      date_forcus: false,
     };
   },
   mounted() {
@@ -140,8 +148,7 @@ export default {
     this.fullname = this.user.fullname
   },
   components: {
-
-
+    toast,
   },
 
   methods: {
@@ -180,7 +187,8 @@ export default {
       const cartItem = this.cart.find(item => item.id === room.id);
 
       if (this.roomQuantity[room.id] >= room.quantity) {
-        alert('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
+        // alert('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
+        this.$refs.toast.showToast('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
         this.roomQuantity[room.id] = room.quantity;
         return;
       }
@@ -237,33 +245,78 @@ export default {
       // Return total
       return this.formatCurrency(total);
     },
+
+    // Phương thức này sẽ được gọi khi giá trị của ngày thay đổi
+    handleDateChange() {
+        const currentDate = new Date(); // Lấy ngày hiện tại
+        const selectedDate = new Date(this.checkin); // Lấy giá trị ngày từ input
+        if (selectedDate <= currentDate) {
+        currentDate.setDate(currentDate.getDate() + 1);// Nếu ngày đã chọn nhỏ hơn hoặc bằng ngày hiện tại, thì cộng thêm 1 ngày
+        const formattedDate = currentDate.toISOString().split('T')[0]; // Format lại ngày để có định dạng YYYY-MM-DD
+        this.checkin = formattedDate;
+      }
+    },
+    handleDateChange2() {
+        const currentDate = new Date(); // Lấy ngày hiện tại
+        const selectedDate = new Date(this.checkout); // Lấy giá trị ngày từ input
+        if (selectedDate <= currentDate) {
+        currentDate.setDate(currentDate.getDate() + 1);// Nếu ngày đã chọn nhỏ hơn hoặc bằng ngày hiện tại, thì cộng thêm 1 ngày
+        const formattedDate = currentDate.toISOString().split('T')[0]; // Format lại ngày để có định dạng YYYY-MM-DD
+        this.checkout = formattedDate;
+      }
+    },
+
     async addOrder() {
       try {
-        let total = 0;
-        for (const cartItem of this.cart) {
-          total += cartItem.price * cartItem.quantity;
+        if(this.checkin && this.checkout)
+        {
+          if (this.checkin > this.checkout) {
+            this.date_forcus = true;
+          } else if (this.checkout < this.checkin) {
+            this.date_forcus = true;
+          } else {
+            let total = 0;
+            for (const cartItem of this.cart) {
+              total += cartItem.price * cartItem.quantity;
+            }
+
+            const result = await this.$axios.post(`create_payment_url`,
+            {
+              "id_user": this.user.id,
+              "checkin": this.checkin,
+              "checkout": this.checkout,
+              "carts": this.cart,
+              "amount": total,
+              "bankCode":this.bankcode,
+              "language":"vn"
+            })
+            const paymentUrl = result.data.redirectUrl;
+
+            this.date_forcus = false;
+            // Chuyển hướng đến trang thanh toán của VNPAY
+            localStorage.setItem("order", JSON.stringify(result.data.order));
+            window.location.href = paymentUrl;
+          }
+        }else{
+          this.date_forcus = true;
         }
-
-        const result = await this.$axios.post(`create_payment_url`,
-          {
-            "id_user": this.user.id,
-            "checkin": this.checkin,
-            "checkout": this.checkout,
-            "carts": this.cart,
-            "amount": total,
-            "bankCode":this.bankcode,
-            "language":"vn"
-          })
-
-        const paymentUrl = result.data.redirectUrl;
-        // Chuyển hướng đến trang thanh toán của VNPAY
-        localStorage.setItem("order", JSON.stringify(result.data.order));
-        window.location.href = paymentUrl;
       } catch (error) {
         console.log(error)
       }
-    }
+    },
 
+    // validateDates() {
+    //   const checkinDate = new Date(this.checkin);
+    //   const checkoutDate = new Date(this.checkout);
+
+    //   if (checkinDate > checkoutDate) {
+    //     this.date_forcus = true;
+    //   } else if (checkoutDate < checkinDate) {
+    //     this.date_forcus = true;
+    //   } else {
+    //     this.date_forcus = false;
+    //   }
+    // }
   },
 };
 </script>

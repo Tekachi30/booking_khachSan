@@ -260,10 +260,13 @@
             </div>
         </div>
     </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 <script>
 import dayjs from 'dayjs';
+import toast from '../../components/toast.vue';
 export default
     {
         data() {
@@ -278,7 +281,9 @@ export default
             this.owner = this.getToken()
             this.getHotel();
         },
-        components: {},
+        components: {
+            toast,
+        },
         methods: {
             openAdd() {
                 this.isAdd = !this.isAdd
@@ -356,9 +361,9 @@ export default
 
                             this.openAdd()
                             this.getCoupon()
-                            alert(result.data.message)
+                            this.$refs.toast.showToast(result.data.message);
                         } else {
-                            alert(result.data.message)
+                            this.$refs.toast.showToast(result.data.message);
                         }
                     }
                 } catch (error) {
@@ -370,11 +375,13 @@ export default
              if(this.discount >= 0)
              {
                  if (this.discount > this.max_discount) {
-                    alert(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`);
+                    // alert(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`);
+                    this.$refs.toast.showToast(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`);
                     // this.discount = this.max_discount;
                  }
              }else{
-                alert(`Giá giảm phải lớn hơn 0.`)
+                // alert(`Giá giảm phải lớn hơn 0.`)
+                this.$refs.toast.showToast(`Giá giảm phải lớn hơn 0.`);
              }
             },
             math_counpon(level) {
@@ -410,10 +417,10 @@ export default
 
                             this.openUpdate()
                             this.getCoupon()
-                            alert(result.data.message)
+                            this.$refs.toast.showToast(result.data.message);
                         }
                         else {
-                            alert(result.data.message)
+                            this.$refs.toast.showToast(result.data.message);
                         }
                     }
                 } catch (error) {
@@ -427,10 +434,10 @@ export default
                     if (result.status == 200) {
                         this.openDelete()
                         this.getCoupon()
-                        alert(result.data.message)
+                        this.$refs.toast.showToast(result.data.message);
                     }
                     else {
-                        alert(result.data.message)
+                        this.$refs.toast.showToast(result.data.message);
                     }
                 } catch (error) {
                     console.log(error)

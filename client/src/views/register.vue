@@ -136,11 +136,11 @@
       </div>
     </div>
     <!--component toast thông báo !!!-->
-  
+    <toast ref="toast"></toast>
   </template>
   
   <script>
-
+  import toast from '../components/toast.vue';
   export default {
     data() {
       return {
@@ -161,7 +161,7 @@
       
     },
     components: {
-     
+      toast,
     },
     methods: {
       // xử lý các focus bật tắt validate
@@ -189,7 +189,8 @@
           if (result.status == 200) {
             this.fullnameFocused = false, this.emailFocused = false, this.sexFocused = false, this.accountFocused = false,
             this.passwordFocused = false,  this.addressFocusted = false, this.phoneFocused = false
-            alert(result.data.message);
+            // alert(result.data.message);
+            this.$refs.toast.showToast(result.data.message);
             // Chuyển hướng đến trang đăng nhập.
             this.$router.push('/login')
           }

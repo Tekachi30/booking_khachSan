@@ -251,10 +251,12 @@
           </div>
       </div>
   </div>
-
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 <script>
+import toast from '../../components/toast.vue';
 export default {
   data() {
     return {
@@ -270,7 +272,9 @@ export default {
     this.user = JSON.parse(localStorage.getItem("User"));
     this.getOrder()
   },
-  components: {},
+  components: {
+    toast,
+  },
   methods: {
     formatCurrency(value) {
       let val = (value / 1).toFixed(0).replace('.', ',')
@@ -333,7 +337,7 @@ export default {
                location.reload()
             }, 1000);
             this.openUpdate()
-            alert(result.data.message);
+            this.$refs.toast.showToast(result.data.message);
           }
         }else{
           // bật hết các focus validate

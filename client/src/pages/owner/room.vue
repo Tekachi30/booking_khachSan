@@ -371,6 +371,9 @@
             </div>
         </div>
     </div>
+
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 <script>
@@ -382,6 +385,8 @@ import 'swiper/css';
 
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
+import toast from '../../components/toast.vue';
+
 export default {
     data() {
         return {
@@ -401,6 +406,7 @@ export default {
     components: {
         Swiper,
         SwiperSlide,
+        toast,
     },
     setup() {
         return {
@@ -449,7 +455,8 @@ export default {
 
             for (const file of files) {
                 if (file.size > maxFileSizeInBytes) {
-                    alert(`Ảnh ${file.name}nhỏ hơn hoặc bằng 10mb`);
+                    // alert(`Ảnh ${file.name}nhỏ hơn hoặc bằng 10mb`);
+                    this.$refs.toast.showToast(`Ảnh ${file.name}nhỏ hơn hoặc bằng 10mb`);
                 } else {
                     // Tạo một URL cho ảnh để hiển thị trước
                     const imageUrl = URL.createObjectURL(file);
@@ -543,7 +550,8 @@ export default {
                         }
                     }
                     else {
-                        alert('Them ảnh vào')
+                        // alert('Them ảnh vào')
+                        this.$refs.toast.showToast('Vui lòng thêm ảnh vào.');
                     }
                 }
             } catch (error) {
@@ -628,9 +636,9 @@ export default {
                 if (result.status === 200) {
                     this.openDelete();
                     this.getRoom();
-                    alert(result.data.message);
+                    this.$refs.toast.showToast(result.data.message);
                 } else {
-                    alert(result.data.message);
+                    this.$refs.toast.showToast(result.data.message);
                 }
             } catch (error) {
                 console.log(error)

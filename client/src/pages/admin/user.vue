@@ -111,23 +111,27 @@
             </div>
         </div>
     </div>
+<!--component toast thông báo !!!-->
+<toast ref="toast"></toast>
 </template>
 
 <script>
-
+import toast from '../../components/toast.vue';
 export default
 {
   data(){
     return {
         users: [], user: '',value_search:'', 
-        isDelete: false,isAdd: false
+        isDelete: false, isAdd: false
         
     }
   },
   mounted(){
     this.getUser();
   },
-  components: {},
+  components: {
+    toast,
+  },
   methods: {
 
     selectUser(select) {
@@ -152,14 +156,14 @@ export default
 
     async deleteUser() {
         try {
-            alert(this.user.id)
+            // alert(this.user.id)
             const result = await this.$axios.delete(`user/delete/${this.user.id}`);
             if (result.status === 200) {
                 this.getUser();
                 this.openDelete();
-                alert(result.data.message);
+                this.$refs.toast.showToast(result.data.message);
             } else {
-                alert(result.data.message);
+                this.$refs.toast.showToast(result.data.message);
             }
         } catch (error) {
             console.log(error)
