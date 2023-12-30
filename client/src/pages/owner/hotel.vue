@@ -481,7 +481,6 @@ export default {
       this.activeTab = 'active'
       this.isActive = true
       this.isUnActive = false
-      
     },
     unActiveHotel() {
       this.activeTab = 'unactive'

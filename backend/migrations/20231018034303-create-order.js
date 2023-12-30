@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       total_bank: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
       },
       date_bank: {
         type: Sequelize.DATE
