@@ -171,7 +171,7 @@
     <room @cancel="openDetailRoom()" v-if="isDetailRoom" :room="room" />
     <mapVue :lng="longitube" :lat="latitube" />
     <rating :id="id_hotel" />
-
+    <chat/>
   </div>
 <!--component toast thông báo !!!-->
 <toast ref="toast"></toast>
@@ -195,8 +195,10 @@ import mapVue from '../../components/client/map.vue';
 import AddressService from '../../plugins/addressService';
 import cart from '../../components/client/cartVue.vue';
 import toast from '../../components/toast.vue';
+import chat from '../../components/client/chat.vue';
 
 export default {
+
   data() {
     return {
       isDetailRoom: false, isShowCart: false,
@@ -222,7 +224,7 @@ export default {
     Swiper,
     SwiperSlide,
     cart, room, rating, mapVue,
-    toast,
+    toast, chat
   },
   setup() {
     return {

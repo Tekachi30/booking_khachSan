@@ -31,6 +31,12 @@ module.exports = {
       deleted: {
         type: Sequelize.INTEGER
       },
+      send: {
+        type: Sequelize.INTEGER
+      },
+      receive: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

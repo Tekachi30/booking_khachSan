@@ -48,9 +48,9 @@ const io = new Server(server,
   });
   
   
-app.use((req, res, next) => {
-  res.io = io
-  next()
+  app.use((req, res, next) => {
+    res.io = io
+    next()
 });
 // node cron
 const mathlevelController = require('./controllers/mathlevelController')

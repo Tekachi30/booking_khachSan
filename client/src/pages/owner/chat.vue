@@ -94,16 +94,29 @@ import dayjs from 'dayjs';
 export default {
     data() {
         return {
-            owner: ''
+            owner: '', chats: [],
         };
     },
     mounted() {
         this.owner = JSON.parse(localStorage.getItem("owner"));
         socketService.ownerConnect(this.owner.id)
+        this.getHistory()
     },
-    components: {},
+    components: {
+    },
     methods: {
-
+        async getHistory(){
+            try {
+                const result = await this.$axios.post(`message/getHistory`,{
+                    id_user: "3",
+                    id_owner: this.owner.id
+                })
+                this.chats = result.data
+                console.log(this.chats);
+            } catch (error) {
+                console.log(error);
+            }
+        }
     },
 };
 </script>

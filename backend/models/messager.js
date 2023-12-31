@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     id_user: DataTypes.INTEGER,
     id_owner: DataTypes.INTEGER,
     messager: DataTypes.STRING,
-    deleted: DataTypes.INTEGER
+    deleted: DataTypes.INTEGER,
+    send: DataTypes.INTEGER,
+    receive: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'messager',
