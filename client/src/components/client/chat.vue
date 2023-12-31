@@ -1,100 +1,181 @@
 <template>
-    <button
-    class="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-16 h-16 bg-black hover:bg-gray-700 m-0 cursor-pointer border-gray-200 bg-none p-0 normal-case leading-5 hover:text-gray-900"
+  <!--button call chat-->
+  <button @click="openMess(); getHistory(id)"
+    class="fixed z-[200] bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-16 h-16 bg-black hover:bg-gray-700 m-0 cursor-pointer border-gray-200 bg-none p-0 normal-case leading-5 hover:text-gray-900"
     type="button" aria-haspopup="dialog" aria-expanded="false" data-state="closed">
-    <svg xmlns=" http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    <svg xmlns=" http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
       class="text-white block border-gray-200 align-middle">
       <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" class="border-gray-200">
       </path>
     </svg>
   </button>
 
-
-  <div style="box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);"
-    class="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px]">
-
-    <!-- Heading -->
-    <div class="flex flex-col space-y-1.5 pb-6">
-      <h2 class="font-semibold text-lg tracking-tight">Chatbot</h2>
-      <p class="text-sm text-[#6b7280] leading-3">Powered by Mendable and Vercel</p>
-    </div>
-
-
-
-
-    <!-- Chat Container -->
-    <div class="pr-4 h-[474px]" style="min-width: 100%; display: table;">
-      <!-- Chat Message AI -->
-      <div class="flex gap-3 my-4 text-gray-600 text-sm flex-1"><span
-          class="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
-          <div class="rounded-full bg-gray-100 border p-1"><svg stroke="none" fill="black" stroke-width="1.5"
-              viewBox="0 0 24 24" aria-hidden="true" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z">
-              </path>
-            </svg></div>
-        </span>
-        <p class="leading-relaxed"><span class="block font-bold text-gray-700">AI </span>Hi, how can I help you today?
-        </p>
+  <div class="fixed md:right-20 right-0 bottom-0 z-30 w-80 h-96 flex flex-col border shadow-md bg-white"
+    v-if="isShowMess">
+    <div class="flex items-center justify-between border-b p-2">
+      <!-- user info -->
+      <div class="flex items-center">
+        <div class="pl-2">
+          Tin nhắn
+        </div>
       </div>
 
-      <!--  User Chat Message -->
-      <div class="flex gap-3 my-4 text-gray-600 text-sm flex-1"><span
-          class="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
-          <div class="rounded-full bg-gray-100 border p-1"><svg stroke="none" fill="black" stroke-width="0"
-              viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z">
-              </path>
-            </svg></div>
-        </span>
-        <p class="leading-relaxed"><span class="block font-bold text-gray-700">You </span>fewafef</p>
+      <!-- end user info -->
+
+      <!-- chat box action -->
+      <div>
+        <button @click="openMess" class="inline-flex hover:bg-indigo-50 rounded-full p-2" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
-      <!-- Ai Chat Message  -->
-      <div class="flex gap-3 my-4 text-gray-600 text-sm flex-1"><span
-          class="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
-          <div class="rounded-full bg-gray-100 border p-1"><svg stroke="none" fill="black" stroke-width="1.5"
-              viewBox="0 0 24 24" aria-hidden="true" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z">
-              </path>
-            </svg></div>
-        </span>
-        <p class="leading-relaxed"><span class="block font-bold text-gray-700">AI </span>Sorry, I couldn't find any
-          information in the documentation about that. Expect answer to be less accurateI could not find the answer to
-          this in the verified sources.</p>
-      </div>
-    </div>
-    <!-- Input box  -->
-    <div class="flex items-center pt-0">
-      <form class="flex items-center justify-center w-full space-x-2">
-        <input
-          class="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] focus-visible:ring-offset-2"
-          placeholder="Type your message" value="">
-        <button
-          class="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2">
-          Send</button>
-      </form>
+      <!-- end chat box action -->
     </div>
 
+    <!--noi dung cuoc tro chuyen-->
+    <div class="flex flex-col h-full mb-4  overflow-x-auto overflow-y-auto" ref="chatContainer">
+      <div class="flex flex-col h-full">
+        <div class="grid grid-cols-12 gap-y-2" v-for="chat in chats">
+
+          <!--nguoi gui-->
+          <div class="col-start-1 col-end-8 p-3 rounded-lg" v-if="chat.check_send == 'Owner'">
+            <div class="flex flex-row items-center">
+              <div class="flex items-center justify-center ">
+                <p class="h-10 w-10 rounded-full bg-blue-400 text-center "> {{ getInitial(chat.owner.fullname) }}</p>
+              </div>
+
+              <div class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
+                <div>{{ chat.messager }}</div>
+                <div class="pl-4 flex items-center justify-center"><small class="text-gray-500 ">{{
+                  formatTime(chat.createdAt) }}</small>
+                </div>
+              </div>
+              <!-- <div class="text-rose-200 cursor-pointer ml-2" @click="onclosedelete(); sendata(chat)"
+                                    v-if="chat.sender_id === user.id">X</div> -->
+            </div>
+          </div>
+
+          <!--người nhận-->
+          <div class="col-start-6 col-end-13 p-3 rounded-lg" v-else>
+            <div class="flex items-center justify-start flex-row-reverse">
+              <!-- <div class="text-rose-200 cursor-pointer" @click="onclosedelete(); sendata(chat)"
+                                    v-if="chat.sender_id === user.id">X</div> -->
+              <div class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
+                <div>{{ chat.messager }}</div>
+                <div class="pl-4 flex items-center justify-center"><small class="text-gray-500 ">{{
+                  formatTime(chat.createdAt) }}</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!--noi dung cuoc tro chuyen-->
+
+    <!--footer chat-->
+    <div class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4 mb-2">
+      <!--input thêm tin nhắn-->
+      <div class="flex-grow ml-4">
+        <div class="relative w-full">
+          <textarea type="text" v-model="messager" v-on:keyup.enter="addMess(id)"
+            class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10 text-xs"></textarea>
+        </div>
+      </div>
+      <!--button send tin nhắn-->
+      <div class="ml-4 ">
+        <button @click="addMess(id)"
+          class="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
+          <span>Gửi</span>
+          <span class="ml-2">
+            <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+              </path>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+    <!--footer chat-->
   </div>
 </template>
 
 <script>
+import dayjs from 'dayjs';
+import socketService from '../../plugins/socketService';
 export default {
-    props: ['id'], // this.id
+  props: ['id'],
   data() {
     return {
-        
+      isShowMess: false,
+      id_owner: '',
+      user: '', chats: [], messager: ''
     };
   },
   mounted() {
-   
+    this.id_owner = this.id
+    this.user = JSON.parse(localStorage.getItem("User"));
+    socketService.getchat((data) => {
+      this.chats.push(data);
+      this.$nextTick(() => {
+
+        const chatContainer = this.$refs.chatContainer
+        chatContainer.scrollTop = chatContainer.scrollHeight
+      })
+    })
   },
   components: {},
   methods: {
-   
+    openMess() {
+      this.isShowMess = !this.isShowMess
+    },
+    getInitial(a) {
+      return a.charAt(0);
+    },
+    formatTime(timeString) {
+      return dayjs(timeString).format('HH:mm');
+    },
+    async getHistory(id) {
+
+      try {
+        const result = await this.$axios.post(`message/getHistory`, {
+          id_user: this.user.id,
+          id_owner: id
+        })
+        this.chats = result.data
+        this.$nextTick(() => {
+
+          const chatContainer = this.$refs.chatContainer
+          chatContainer.scrollTop = chatContainer.scrollHeight
+        })
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async addMess(id) {
+      try {
+        const result = await this.$axios.post(`message/add`,
+          {
+            "messager": this.messager,
+            "id_owner": id,
+            "id_user": this.user.id,
+            "check_send": "User"
+          }
+        )
+        this.messager = " "
+        this.$nextTick(() => {
+
+          const chatContainer = this.$refs.chatContainer
+          chatContainer.scrollTop = chatContainer.scrollHeight
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
 };
 </script>

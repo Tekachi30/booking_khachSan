@@ -70,7 +70,7 @@ const getRoomChat = async (req, res) => {
 
 const addMessage = async (req, res) => {
     try {
-        const { messager, id_user, id_owner, send, receive } = req.body;
+        const { messager, id_user, id_owner, check_send } = req.body;
 
         if (messager.length > 1000) {
             return res.status(400).json({ message: "Nội dung tin nhắn quá dài" });
@@ -80,11 +80,25 @@ const addMessage = async (req, res) => {
                 deleted: false,
                 id_owner: id_owner,
                 id_user: id_user,
-                send: send,
-                receive: receive
+                check_send: check_send,
             });
             res.status(200).json(chat.id);
-            res.io.emit("chat", chat);
+            const message = await Message.findOne({
+                where:{id:chat.id},
+                include: [
+                    {
+                        model: User,
+                        attributes: ["id","fullname"],
+                        where: {id: id_user}
+                    },
+                    {
+                        model: Owner,
+                        attributes: ["id","fullname"],
+                        where: {id: id_owner}
+                    }
+                ],
+            });
+            res.io.emit("chat", message);
         }
     } catch (error) {
         console.log(error);

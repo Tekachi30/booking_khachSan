@@ -170,8 +170,8 @@
     <cart @cancel="openCart()" v-if="isShowCart" :cart="cart" />
     <room @cancel="openDetailRoom()" v-if="isDetailRoom" :room="room" />
     <mapVue :lng="longitube" :lat="latitube" />
-    <rating :id="id_hotel" />
-    <chat/>
+    <rating />
+    <chat :id="id_owner"/>
   </div>
 <!--component toast thông báo !!!-->
 <toast ref="toast"></toast>
@@ -206,10 +206,10 @@ export default {
       citys: [], districts: [], wards: [], cart: [],
       countRating: '', longitube: null, latitube: null, img_hotel_1: null, 
       isShowReport: false,
-      room: [], selectedRooms: [], roomQuantity: {},
+      room: [], selectedRooms: [], roomQuantity: {},id_owner :null
     };
   },
-  mounted() {
+  async mounted() {
     this.user = JSON.parse(localStorage.getItem("User"));
     this.id_hotel = this.$route.params.id;
     this.getHotel();
@@ -218,7 +218,6 @@ export default {
     });
     AddressService.getAllDistricts().then(data => { this.districts = data; });
     AddressService.getAllWard().then(data => { this.wards = data; });
-
   },
   components: {
     Swiper,
@@ -264,11 +263,12 @@ export default {
         this.longitube = this.hotel.longitude
         this.latitube = this.hotel.latitube
         this.img_hotel_1 = this.hotel.img_hotels[0].url
-
+        this.id_owner = result.data.id_owner
         for (let i = 0; i < this.hotel.room_hotels.length; i++) {
           this.roomQuantity[this.hotel.room_hotels[i].id] = 0;
         }
 
+       
       } catch (error) {
         console.log(error)
       }

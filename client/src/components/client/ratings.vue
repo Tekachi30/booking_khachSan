@@ -1,5 +1,5 @@
 <template>
-    <div class="w-screen ">
+    <div class="">
 
         <div class="my-5 max-w-[1400px] px-10">
 
@@ -111,7 +111,6 @@ import dayjs from 'dayjs';
 import toast from '../toast.vue';
 
 export default {
-    props: ['id'], // this.id
     data() {
         return {
             rating: 0,

@@ -21,8 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     id_owner: DataTypes.INTEGER,
     messager: DataTypes.STRING,
     deleted: DataTypes.INTEGER,
-    send: DataTypes.INTEGER,
-    receive: DataTypes.INTEGER
+    check_send: DataTypes.ENUM("User","Owner"),
   }, {
     sequelize,
     modelName: 'messager',
