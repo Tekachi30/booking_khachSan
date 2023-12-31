@@ -31,11 +31,8 @@ module.exports = {
       deleted: {
         type: Sequelize.INTEGER
       },
-      send: {
-        type: Sequelize.INTEGER
-      },
-      receive: {
-        type: Sequelize.INTEGER
+      check_send: {
+        type: Sequelize.ENUM("User","Owner")
       },
       createdAt: {
         allowNull: false,
