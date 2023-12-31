@@ -119,12 +119,14 @@ export default {
     this.id_owner = this.id
     this.user = JSON.parse(localStorage.getItem("User"));
     socketService.getchat((data) => {
-      this.chats.push(data);
+      if(this.id_owner == data.owner.id && this.user.id == data.User.id)
+      {
+        this.chats.push(data);
       this.$nextTick(() => {
-
         const chatContainer = this.$refs.chatContainer
         chatContainer.scrollTop = chatContainer.scrollHeight
       })
+      }
     })
   },
   components: {},
@@ -139,7 +141,7 @@ export default {
       return dayjs(timeString).format('HH:mm');
     },
     async getHistory(id) {
-
+      this.id_owner = id
       try {
         const result = await this.$axios.post(`message/getHistory`, {
           id_user: this.user.id,
@@ -158,7 +160,13 @@ export default {
     },
     async addMess(id) {
       try {
-        const result = await this.$axios.post(`message/add`,
+        if(this.messager == '')
+        {
+          return;
+        }
+        else
+        {
+          const result = await this.$axios.post(`message/add`,
           {
             "messager": this.messager,
             "id_owner": id,
@@ -172,6 +180,8 @@ export default {
           const chatContainer = this.$refs.chatContainer
           chatContainer.scrollTop = chatContainer.scrollHeight
         })
+        }
+        
       } catch (error) {
         console.log(error)
       }
