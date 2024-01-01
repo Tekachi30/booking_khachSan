@@ -187,7 +187,7 @@
 </template>
 
 <script>
-import AddressService from '../../plugins/addressService'
+import AddressService from '../../plugins/addressService';
 
 export default {
 
@@ -195,7 +195,7 @@ export default {
         return {
             city_id: '1', name_hotel: '', price: 'full',
             hotels: [], citys: [], districts: [], wards: [],
-            showReload: false, follows: [], user: ''
+            showReload: false, follows: [], user: '', search: ''
         };
     },
     mounted() {
@@ -207,6 +207,7 @@ export default {
         AddressService.getAllWard().then(data => { this.wards = data; });
         this.getHotel()
         this.user = JSON.parse(localStorage.getItem("User"));
+        this.search = JSON.parse(sessionStorage.getItem("search"));
         this.getfollow()
 
     },
@@ -215,12 +216,12 @@ export default {
         async searchHotel() {
             try {
                 const result = await this.$axios.post(`hotel/search`,
-                    {
-                        'name_hotel': this.name_hotel,
-                        'city_code': this.city_id,
-                        'option_price': this.price
-                    })
-                this.hotels = result.data
+                {
+                    'name_hotel': this.name_hotel,
+                    'city_code': this.city_id,
+                    'option_price': this.price
+                })
+                this.hotels = result.data  
             } catch (error) {
                 console.log(error)
             }

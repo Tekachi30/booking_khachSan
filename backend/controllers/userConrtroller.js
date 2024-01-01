@@ -144,7 +144,7 @@ const updateUser = async (req, res) => {
   try {
     const user = await User.findByPk(userId);
     if (!user) {
-      return res.status(404).json({
+      return res.status(201).json({
         message: `Không tìm thấy user id ${userId}.`,
       });
     } else {
@@ -158,7 +158,7 @@ const updateUser = async (req, res) => {
       });
 
       return res.status(200).json({
-        message: `Cập nhật thông ti thành công.`, Updateuser
+        message: `Cập nhật thông tin thành công.`, Updateuser
       });
     }
   } catch (error) {

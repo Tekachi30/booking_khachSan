@@ -108,7 +108,7 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody v-for="(order, index) in orders" :key="index">
+                    <tbody v-for="(order, index) in orders.filter(item => item.status != 'Đã Đặt')" :key="index">
                         <tr class="border-b dark:border-gray-700">
                             <th scope="row"
                                 class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
@@ -121,6 +121,13 @@
                             <td class="px-4 py-3"> {{ formatCurrency(order.total_bank) }}</td>
                             
                             <!--action ?-->
+                            <button @click="openDelete()" type="button"
+                                class="flex w-full items-center py-3 px-4 hover:bg-gray-100 text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="red" style="margin-right: 5px;">
+                                    <path d="M367.2 412.5L99.5 144.8C77.1 176.1 64 214.5 64 256c0 106 86 192 192 192c41.5 0 79.9-13.1 111.2-35.5zm45.3-45.3C434.9 335.9 448 297.5 448 256c0-106-86-192-192-192c-41.5 0-79.9 13.1-111.2 35.5L412.5 367.2zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/>
+                                </svg>
+                                Hủy đơn
+                            </button>
                         </tr>
                     </tbody>
                 </table>
@@ -145,15 +152,22 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody v-for="(hotel, index) in hotels" :key="index">
+                    <tbody v-for="(hotel, index) in hotels.filter(item => item.id_user == this.user.id)" :key="index">
                         <tr class="border-b dark:border-gray-700">
                             <th scope="row"
                                 class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
                                     1 }}</th>
-                            <td class="px-4 py-3">
-                                {{ hotel.name_hotel }}
+                            <td class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">
+                                {{ hotel.hotel.name_hotel }}
                             </td>
                             <!--action ?-->
+                            <button @click="" type="button"
+                                class="flex w-full items-center py-3 px-4 hover:bg-gray-100 text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="red" style="margin-right: 5px;">
+                                    <path d="M367.2 412.5L99.5 144.8C77.1 176.1 64 214.5 64 256c0 106 86 192 192 192c41.5 0 79.9-13.1 111.2-35.5zm45.3-45.3C434.9 335.9 448 297.5 448 256c0-106-86-192-192-192c-41.5 0-79.9 13.1-111.2 35.5L412.5 367.2zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/>
+                                </svg>
+                                Hủy theo dõi
+                            </button>
                         </tr>
                     </tbody>
                 </table>
@@ -251,11 +265,46 @@
           </div>
       </div>
   </div>
+
+  <!-- Delete modal -->
+  <div id="deleteModal" v-if="isDelete"
+        class="  overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                <button @click="openDelete()" type="button"
+                    class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-toggle="deleteModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+
+                </button>
+                <!-- <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
+                    fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                </svg> -->
+                <p class="mb-4 text-gray-500 dark:text-gray-300">Bạn có muốn hủy đơn ?</p>
+                <div class="flex justify-center items-center space-x-4">
+                    <button data-modal-toggle="deleteModal" type="button" @click="openDelete()"
+                        class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Hủy</button>
+                    <button type="submit" @click=""
+                        class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <!--component toast thông báo !!!-->
 <toast ref="toast"></toast>
 </template>
 
 <script>
+import axios from 'axios';
 import toast from '../../components/toast.vue';
 export default {
   data() {
@@ -263,7 +312,7 @@ export default {
       activeTab: 'cart',isCart:true,isHotel:false,
       hotels: [], orders: [],
       user: '', account: '', fullname: '', sex: '', address: '', phone: '', email: '', users: '',
-      isUpdate: false,
+      isUpdate: false, isDelete: false,
       fullnameFocused: false, sexFocused: false, addressFocused: false, phoneFocused: false, emailFocused: false
     };
   },
@@ -271,6 +320,8 @@ export default {
    
     this.user = JSON.parse(localStorage.getItem("User"));
     this.getOrder()
+
+    this.getHotel()
   },
   components: {
     toast,
@@ -282,6 +333,9 @@ export default {
     },
     openUpdate() {
       this.isUpdate = !this.isUpdate
+    },
+    openDelete() {
+      this.isDelete = !this.isDelete
     },
     selectUser(){
       this.fullname = this.user.fullname,
@@ -312,7 +366,15 @@ export default {
        }
     },
 
-    
+    async getHotel() {
+      try {
+        const result = await this.$axios.get('favorate/get')
+        this.hotels = result.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async updateProfile(){
       try {
         // bật hết các focus validate
@@ -320,8 +382,8 @@ export default {
         this.sexFocused = true,
         this.addressFocused = true, this.phoneFocused = true
 
-        if (this.address && this.validEmail(this.email) && this.phone && this.validPhone(this.phone) && this.address && 
-        this.fullname && this.validFullName(this.fullname) && this.validAddress(this.address) && this.sex) {
+        if (this.validEmail(this.email) && this.phone && this.validPhone(this.phone) && this.address && 
+        this.fullname && this.validFullName(this.fullname) && this.sex) {
           const result = await this.$axios.put(`user/update/${this.user.id}`,{
                 fullname: this.fullname,
                 address: this.address,
@@ -343,6 +405,7 @@ export default {
           // bật hết các focus validate
           this.fullnameFocused = true, this.emailFocused = true, this.sexFocused = true,
           this.addressFocused = true, this.phoneFocused = true
+          console.log('lmao')
         }
       } catch (error) {
         console.log(error);
@@ -371,11 +434,6 @@ export default {
     //     const re = /[A-Z]/;
     //     return re.test(password);
     //   },
-      validAddress(address)
-      {
-        const re = /^.{1,10}$/; 
-        return re.test(address);
-      }
   
   },
 };

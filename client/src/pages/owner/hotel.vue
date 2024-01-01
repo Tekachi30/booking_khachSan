@@ -71,7 +71,7 @@
           dynamicBullets: true,
         }" :modules="modules" class="mySwiper ">
           <swiper-slide v-for="img in hotel.img_hotels">
-            <img class="rounded-t-lg p-1 " :src="img.url" alt="" />
+            <img class="rounded-t-lg p-1 " :src="img.url" alt="" style="width: 1360px; height: 360px;"/>
           </swiper-slide>
         </swiper>
 

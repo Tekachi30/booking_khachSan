@@ -460,7 +460,7 @@ const HotelFavorate = async (req, res) => {
              {
                  attributes: ['id', 'id_hotel', 'status', 'id_user'],
                  include: [
-                     { model: Hotel, attributes: ['id'] }
+                     { model: Hotel, attributes: ['id','name_hotel'] }
                  ],
                  raw: true,
                  nest: true,

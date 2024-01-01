@@ -1,5 +1,5 @@
 const express = require("express");
-const { getRoom, addRoom, addImgRoom, updateRoom, updateImgRoom,  deleteRoom,  } = require("../controllers/roomController");
+const { getRoom, addRoom, addImgRoom, updateRoom, updateImgRoom,  deleteRoom, deleteImgRoom,  } = require("../controllers/roomController");
 //deleteImgRoom
 const routerRoom = express.Router();
 
@@ -12,7 +12,7 @@ routerRoom.put("/api/room/update/:id", updateRoom);
 routerRoom.put("/api/room/updateImg/:id", updateImgRoom);
 
 routerRoom.delete("/api/room/delete/:id", deleteRoom);
-//routerRoom.put("/api/room/deleteImg/:id", deleteImgRoom);
+routerRoom.delete("/api/room/deleteImg/:id", deleteImgRoom);
 
 
 

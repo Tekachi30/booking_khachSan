@@ -210,22 +210,21 @@ const deleteRoom = async (req, res) => {
     }
 }
 
-// const deleteImgRoom = async (req, res) => {
-//     try {
-//         const id = req.params.id;
-//         const existImg = await ImgRoom.findByPk(id);
-
-//         if (existImg.length === 0) {
-//             return res.status(404).json({ error: 'Không tìm thấy' });
-//         }
-//         const imagePath = `./uploads/${existImg.name_img}`;
-//         deleteFile(imagePath);
-//         await existImg.destroy();
-//         return res.status(200).json({ message: 'Xóa thành công' });
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+const deleteImgRoom = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const existImg = await ImgRoom.findByPk(id);
+        if (existImg.length === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy' });
+        }
+        const imagePath = `./uploads/${existImg.name_img}`;
+        deleteFile(imagePath);
+        await existImg.destroy();
+        return res.status(200).json({ message: 'Xóa thành công' });
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -236,6 +235,5 @@ module.exports = {
     updateRoom,
     updateImgRoom,
     deleteRoom,
-    //deleteImgRoom
-    
+    deleteImgRoom
 }

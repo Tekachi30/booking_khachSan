@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto">
         <swiper :pagination="true" :modules="modules" class="mySwiper relative"  >  
-            <swiper-slide :style="{ backgroundImage: `url(${banner.url_banner})` }" class="bg-cover bg-no-repeat" v-for="(banner) in banners">
+            <swiper-slide :style="{ backgroundImage: `url(${banner.url_banner})`, backgroundSize: 'cover' }" class="bg-cover bg-no-repeat" v-for="(banner) in banners">
                 <div
                     class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
                     <div class="max-w-xl  ltr:sm:text-left rtl:sm:text-right">
@@ -32,11 +32,10 @@
                     <div class="md:grid grid-cols-2 gap-2">
                         <!--search ten-->
                         <div class="relative p-2">
-                            <input type="text" id="Search" placeholder="Tìm kiếm khách sạn"
-                                class="w-full rounded-md border-gray-200 py-5 px-5 pe-10 shadow-sm sm:text-sm" />
+                            <input type="text" id="Search" placeholder="Tìm kiếm khách sạn" v-model="name_hotel"
+                                class="w-full rounded-md border-gray-200 py-5 px-5 pe-10 shadow-sm sm:text-sm focus:outline-none" />
                             <span class="absolute inset-y-0 end-0 grid w-10 place-content-center">
                                 <button type="button" class="text-gray-600 hover:text-gray-700">
-
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -49,26 +48,33 @@
                         <div class=" md:grid grid-cols-3 gap-3 items-center">
                             <!-- THANH PHO -->
                             <div class="relative p-2">
-                                <select name="city" id="city"
-                                    class="w-full rounded-md  py-5 px-5 pe-10 shadow-sm sm:text-sm">
-                                    <option value="HCM">TP Hồ Chí Minh</option>
+                                <select v-model="city_id" required
+                                    class="appearance-none w-full rounded-md  py-5 px-1  pe-10 shadow-sm sm:text-sm focus:outline-none">
+                                    <option disabled>Thành phố</option>
+                                    <option v-for="city in citys" :key="city.code" :value="city.code">
+                                        {{ city.name }}
+                                    </option>
                                 </select>
                             </div>
 
                             <!--GIA CA-->
                             <div class="relative p-2">
-                                <select name="price" id="price"
-                                    class="w-full rounded-md  py-5 px-5 pe-10 shadow-sm sm:text-sm">
-                                    <option value="1000">10000</option>
+                                <select name="price" id="price" v-model="price"
+                                    class="w-full rounded-md  py-5 px-1 pe-10 shadow-sm sm:text-sm focus:outline-none appearance-none">
+                                    <option value="full">Tất cả các mức giá</option>
+                                    <option value="under1">Dưới 1 triệu</option>
+                                    <option value="1to3">Từ 1 tới 3 triệu</option>
+                                    <option value="3to6">Từ 3 tới 6 triệu</option>
+                                    <option value="above6">Trên 6 triệu</option>
                                 </select>
                             </div>
 
                             <!--button-->
                             <div class="mt-2 md:mt-0 p-2">
-                                <a
+                                <button @click="handleSearch()"
                                     class="w-full rounded-md border border-indigo-600 bg-indigo-600 py-5 px-5 pe-5 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500">
                                     Tìm kiếm
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -98,15 +104,23 @@ import 'swiper/css/pagination';
 
 
 // import required modules
-import { Pagination } from 'swiper/modules';
-
+import { Pagination , Autoplay } from 'swiper/modules';
+import AddressService from '../../plugins/addressService';
 export default {
     data() {
         return {
             banners: [],
+            city_id: '1', name_hotel: '', price: 'full',
+            citys: [], districts: [], wards: [],
         };
     },
     mounted() {
+        // đầu tiên là lấy city về
+        AddressService.getCountry().then((data) => {
+            this.citys = data;
+        });
+        AddressService.getAllDistricts().then(data => { this.districts = data; });
+        AddressService.getAllWard().then(data => { this.wards = data; });
         this.getBanner();
     },
     components: {
@@ -115,7 +129,7 @@ export default {
     },
     setup() {
         return {
-            modules: [Pagination],
+            modules: [Pagination , Autoplay ],
         };
     },
     methods: {
@@ -127,6 +141,21 @@ export default {
                console.log(error)
            }
         },
+
+        handleSearch(){
+            try {
+                const result = {
+                  "name_hotel": this.name_hotel,
+                  "city_id": this.city_id,
+                  "price": this.price,
+                };
+                if(result)
+                sessionStorage.setItem("search", JSON.stringify(result));
+                this.$router.push('/hotels');
+            } catch (error) {
+                console.log(error);
+            }
+        }
     },
 };
 </script>
