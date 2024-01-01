@@ -184,11 +184,12 @@
             </div>
         </section>
     </div>
+    <toast ref="toast"/>
 </template>
 
 <script>
 import AddressService from '../../plugins/addressService';
-
+import toast from '../../components/toast.vue';
 export default {
 
     data() {
@@ -198,7 +199,7 @@ export default {
             showReload: false, follows: [], user: '', search: ''
         };
     },
-    mounted() {
+   async mounted() {
         // đầu tiên là lấy city về
         AddressService.getCountry().then((data) => {
             this.citys = data;
@@ -208,10 +209,20 @@ export default {
         this.getHotel()
         this.user = JSON.parse(localStorage.getItem("User"));
         this.search = JSON.parse(sessionStorage.getItem("search"));
+        if(this.search)
+        {
+            const result = await this.$axios.post(`hotel/search`,
+                {
+                    'name_hotel': this.search.name_hotel,
+                    'city_code': this.search.city_id,
+                    'option_price': this.search.price
+                })
+                this.hotels = result.data  
+        }
         this.getfollow()
 
     },
-    components: {},
+    components: {toast},
     methods: {
         async searchHotel() {
             try {

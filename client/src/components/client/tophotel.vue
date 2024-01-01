@@ -125,7 +125,7 @@
         </a>
       </div>
       <button
-        class="flex justify-center font-medium text-dark border border-dark rounded-md py-3 px-6 hover:bg-dark  ease-in duration-200 mx-auto mt-5">
+        class="flex justify-center font-medium text-dark border border-dark rounded-md py-3 px-6 hover:bg-dark  ease-in duration-200 mx-auto mt-5" @click="toHotel()">
         Xem tất cả
       </button>
 
@@ -244,6 +244,11 @@ export default {
         this.getfollow()
       }
     },
+    toHotel()
+    {
+      this.$router.push('/hotels');
+
+    }
 
   }
 }

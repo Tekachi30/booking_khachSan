@@ -11,7 +11,7 @@
               <div class="image overflow-hidden">
                 <img
                   class="h-auto w-full mx-auto"
-                  src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"
+                  src="https://i.pinimg.com/originals/24/71/dc/2471dc26a5996f7102394061d105bf75.jpg"
                   alt=""
                 />
               </div>

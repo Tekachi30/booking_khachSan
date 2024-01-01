@@ -8,10 +8,10 @@
             <time datetime="2022-10-10" class="block text-xs text-gray-500"> {{ date }}</time>
 
             <a >
-                <h3 class="mt-0.5 text-lg text-gray-900">{{ title }}</h3>
+                <h3 class="mt-0.5 text-lg line-clamp-1 text-gray-900">{{ title }}</h3>
             </a>
 
-            <p class="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
+            <p class="mt-2 line-clamp-1 text-sm/relaxed text-gray-500">
                 {{ description }}
             </p>
         </div>

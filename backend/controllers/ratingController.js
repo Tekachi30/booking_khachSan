@@ -4,108 +4,124 @@ const User = db.User;
 const Hotel = db.hotel;
 const Owner = db.owner
 const sequelize = require('sequelize');
-const Op  = sequelize.Op
+const Op = sequelize.Op
 
 const getRatingAll = async (req, res) => {
   try {
-      const rating = await Rating.findAll({
-          include:[
-              {model: Hotel, attributes: ['name_hotel'],},
-              {model: User, attributes: ['fullname']}
-          ]
-      });
-      res.json(rating);
+    const rating = await Rating.findAll({
+      include: [
+        { model: Hotel, attributes: ['name_hotel'], },
+        { model: User, attributes: ['fullname'] }
+      ]
+    });
+    res.json(rating);
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 
 const getRating = async (req, res) => {
-    try {
-      const ownerId = req.params.id;
-        const rating = await Rating.findAll({
-            include:[
-                {
-                  model: Hotel, attributes: ['name_hotel'],
-                  include: [{
-                    model: Owner, 
-                    attributes: [],
-                    where: { id: ownerId }
-                  }]
-                },
-                {model: User, attributes: ['fullname']}
-            ]
-        });
-        res.json(rating);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const getByHotel = async(req,res)=>
-{
-try {
-  const id = req.params.id
-  const ratings = await Rating.findAll(
-    {
-      where:{id_hotel:id},
-      include:[
-        {model:User,attributes:['fullname']}
+  try {
+    const ownerId = req.params.id;
+    const rating = await Rating.findAll({
+      include: [
+        {
+          model: Hotel, attributes: ['name_hotel'],
+          include: [{
+            model: Owner,
+            attributes: [],
+            where: { id: ownerId }
+          }]
+        },
+        { model: User, attributes: ['fullname'] }
       ]
-    }
-  )
-  const stars = [1, 2, 3, 4, 5];
-  const ratingStatistics = [];
+    });
+    res.json(rating);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-for (const star of stars) {
-  const countResult = await Rating.count({
-    where: {
-      score_rating: {
-        [sequelize.Op.and]: [
-          { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
-          { [sequelize.Op.lt]: star + 1 } // Điểm đánh giá nhỏ hơn mức sao tiếp theo
+const getByHotel = async (req, res) => {
+  try {
+    const id = req.params.id
+    const ratings = await Rating.findAll(
+      {
+        where: { id_hotel: id },
+        include: [
+          { model: User, attributes: ['fullname'] }
         ]
       }
+    )
+    const stars = [1, 2, 3, 4, 5];
+    const ratingStatistics = [];
+
+    for (const star of stars) {
+      const countResult = await Rating.count({
+        where: {
+          score_rating: {
+            [sequelize.Op.and]: [
+              { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
+              { [sequelize.Op.lt]: star + 1 } // Điểm đánh giá nhỏ hơn mức sao tiếp theo
+            ]
+          }
+        }
+      });
+
+      const averageResult = await Rating.findAll({
+        attributes: [[sequelize.fn('SUM', sequelize.col('score_rating')), 'total_score']],
+        where: {
+          score_rating: {
+            [sequelize.Op.and]: [
+              { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
+              { [sequelize.Op.lt]: star + 1 } // Điểm đánh giá nhỏ hơn mức sao tiếp theo
+            ]
+          }
+        },
+        raw: true
+      });
+
+      const totalScore = averageResult[0].total_score;
+      const averageScore = totalScore / countResult;
+
+      ratingStatistics.push({
+        star,
+        count: countResult,
+        average_score: averageScore
+      });
     }
-  });
-
-  const averageResult = await Rating.findAll({
-    attributes: [[sequelize.fn('SUM', sequelize.col('score_rating')), 'total_score']],
-    where: {
-      score_rating: {
-        [sequelize.Op.and]: [
-          { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
-          { [sequelize.Op.lt]: star + 1 } // Điểm đánh giá nhỏ hơn mức sao tiếp theo
-        ]
-      }
-    },
-    raw: true
-  });
-
-  const totalScore = averageResult[0].total_score;
-  const averageScore = totalScore / countResult;
- 
-  ratingStatistics.push({
-    star,
-    count: countResult,
-    average_score: averageScore
-  });
-}
-const overallAverage = ratingStatistics.reduce((acc, rating) => acc + rating.average_score, 0) / ratingStatistics.length;
-res.json({ratingStatistics,ratings,
-  overallAverage});
-} catch (error) {
-  console.log(error)
-}
+    const overallAverage = ratingStatistics.reduce((acc, rating) => acc + rating.average_score, 0) / ratingStatistics.length;
+    res.json({
+      ratingStatistics, ratings,
+      overallAverage
+    });
+  } catch (error) {
+    console.log(error)
+  }
 }
 
+const getTopRating = async (req, res) => {
+  try {
+    const topRatings = await Rating.findAll({
+      attributes: ['id', 'id_user', 'id_hotel', 'score_rating','comment_rating'],
+      include: [
+        { model: User, attributes: ['fullname'] },
+        { model: Hotel, attributes: ['name_hotel'] }],
+      order: [['score_rating', 'DESC']],
+      limit: 10,
+    });
+    res.json(topRatings)
+  } catch (error) {
+    console.log(error)
+  }
+}
 // Xử lý đánh giá 1 lần  
 const addRating = async (req, res) => {
   try {
     const id = req.params.id;
     const { id_hotel, score_rating, comment_rating } = req.body;
 
-    
+
     const existingRating = await Rating.findOne({
       where: { id_hotel, id_user: id },
     });
@@ -134,47 +150,46 @@ const addRating = async (req, res) => {
 
 
 const deleteRating = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const exsitRating = await Rating.findByPk(id);
-        if(exsitRating){
-            await exsitRating.destroy();
-            return res.status(200).json({message: 'Xóa tin nhắn thành công'});
-        }else{
-            return res.status(201).json({message: 'Đánh giá không tồn tại'});
-        }
-    } catch (error) {
-        console.log(error);
+  try {
+    const id = req.params.id;
+    const exsitRating = await Rating.findByPk(id);
+    if (exsitRating) {
+      await exsitRating.destroy();
+      return res.status(200).json({ message: 'Xóa tin nhắn thành công' });
+    } else {
+      return res.status(201).json({ message: 'Đánh giá không tồn tại' });
     }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-const searchRating = async(req,res)=>
-{
+const searchRating = async (req, res) => {
   try {
-    const {search}= req.body
+    const { search } = req.body
     const result = await Rating.findAll(
-    {
-      include:[
-        {
-          model: Hotel, attributes: ['name_hotel'],
-        },
-        {model: User, attributes: ['fullname']}
-      ],
-      where: {
-        [Op.or]: [
+      {
+        include: [
           {
-            '$Hotel.name_hotel$': {
-              [Op.like]: `%${search}%`,
-            },
+            model: Hotel, attributes: ['name_hotel'],
           },
-          {
-            '$User.fullname$': {
-              [Op.like]: `%${search}%`,
-            },
-          },
+          { model: User, attributes: ['fullname'] }
         ],
-      },
-    }
+        where: {
+          [Op.or]: [
+            {
+              '$Hotel.name_hotel$': {
+                [Op.like]: `%${search}%`,
+              },
+            },
+            {
+              '$User.fullname$': {
+                [Op.like]: `%${search}%`,
+              },
+            },
+          ],
+        },
+      }
     )
     res.json(result)
   } catch (error) {
@@ -183,10 +198,11 @@ const searchRating = async(req,res)=>
 }
 
 module.exports = {
-    getRatingAll,
-    getRating,
-    addRating,
-    deleteRating,
-    searchRating,
-    getByHotel
+  getRatingAll,
+  getRating,
+  addRating,
+  deleteRating,
+  searchRating,
+  getByHotel,
+  getTopRating
 }
