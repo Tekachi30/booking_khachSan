@@ -31,7 +31,7 @@
     <div class=" w-full px-4 sm:px-8 xl:px-0">
       <div class="grid content-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-11 gap-x-7.5">
         <!-- ks 1 -->
-        <a class="block rounded-lg p-4 shadow-sm shadow-indigo-100" v-for="hotel in hotels">
+        <a class="block rounded-lg p-4 shadow-sm shadow-indigo-100 m-1" v-for="hotel in hotels">
           <!-- <img alt="Home"
                         src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                         class="h-56 w-full rounded-md object-cover" /> -->
@@ -54,7 +54,7 @@
 
               <div>
                 <dt class="sr-only">Địa chỉ</dt>
-                <dd class="pt-2 font-medium flex items-center">
+                <dd class="pt-2 font-medium flex flex-wrap">
                   {{ hotel.address + ',' }}
                   <p v-for="district in districts.filter(item => item.code == hotel.district_code)">{{ district.name +
                     ',' }}</p>
@@ -65,7 +65,7 @@
 
               <div>
                 <dt class="sr-only">Địa chỉ</dt>
-                <dd class="font-normal text-base">{{ hotel.information }}</dd>
+                <dd class="font-normal line-clamp-2 text-base">{{ hotel.information }}</dd>
               </div>
             </dl>
 
@@ -104,7 +104,7 @@
                 <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đặt
                   phòng</router-link>
-                <div class="ml-auto">
+                <div class="ml-auto" :class="getclass()">
                   <span v-if=" follows && follows.length > 0 && follows.some(item => item.id_hotel === hotel.id && item.id_user === user.id)">
                     <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
                     <span
@@ -242,6 +242,13 @@ export default {
       if (result.status == 200) {
         this.$refs.toast.showToast(result.data.message);
         this.getfollow()
+      }
+    },
+    getclass(){
+      if(this.user){
+        return '' 
+      }else{
+        return "hidden"
       }
     },
     toHotel()

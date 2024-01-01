@@ -189,7 +189,7 @@ export default
                 "idHotel":this.hotel.id,
                 "id_owner":this.owner.id
             });
-            this.orders = result.data
+            this.orders = result.data.filter(item => item.idHotel == this.hotel.id);
             console.log(result.data)
         } catch (error) {
             console.log(error)
