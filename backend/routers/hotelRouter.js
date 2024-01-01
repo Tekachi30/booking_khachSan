@@ -1,5 +1,5 @@
 const express = require("express");
-const { getHotel, addHotel, updateHotel, deleteHotel, getHotelByOwner, addImgHotel, updateImgHotel, deleteImgHotel, getHotelNon, getHotelId,searchHotel } = require("../controllers/hotelController");
+const { getHotel, addHotel, updateHotel, deleteHotel, getHotelByOwner, addImgHotel, updateImgHotel, deleteImgHotel, getHotelNon, getHotelId,searchHotel ,HotelFavorate,renderFavorate} = require("../controllers/hotelController");
 const routerHotel = express.Router();
 
 routerHotel.get("/api/hotel/get", getHotel);
@@ -18,8 +18,8 @@ routerHotel.put("/api/hotel/updateImg/:id", updateImgHotel);
 routerHotel.delete("/api/hotel/delete/:id", deleteHotel);
 routerHotel.delete("/api/hotel/deleteImg/:id", deleteImgHotel);
 
-
-
+routerHotel.post("/api/favorate/handle",HotelFavorate);
+routerHotel.get("/api/favorate/get",renderFavorate);
 
 module.exports = {
   routerHotel,

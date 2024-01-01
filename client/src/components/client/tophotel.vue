@@ -39,7 +39,7 @@
             dynamicBullets: true,
           }" :modules="modules" class="mySwiper ">
             <swiper-slide v-for="img in hotel.img_hotels">
-              <img class="rounded-t-lg p-1 " :src="img.url" alt="" style="width: 1360px; height: 360px;"/>
+              <img class="rounded-t-lg p-1 " :src="img.url" alt="" style="width: 1360px; height: 360px;" />
             </swiper-slide>
           </swiper>
 
@@ -48,7 +48,8 @@
               <div>
                 <dt class="sr-only">khách sạn</dt>
 
-                <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` }}" class="font-bold text-xl">{{ hotel.name_hotel }}</router-link>
+                <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }" class="font-bold text-xl">{{
+                  hotel.name_hotel }}</router-link>
               </div>
 
               <div>
@@ -80,7 +81,7 @@
                 <div class="mt-1.5 sm:mt-0">
                   <p class="text-gray-500">Đánh giá</p>
 
-                  <p class="font-medium">{{ countRating(hotel.id,hotel.rating_hotels) }} đánh giá</p>
+                  <p class="font-medium">{{ countRating(hotel.id, hotel.rating_hotels) }} đánh giá</p>
                 </div>
               </div>
 
@@ -94,17 +95,30 @@
 
                 <div class="mt-1.5 sm:mt-0">
                   <p class="text-gray-500">Số phòng</p>
-                  <p class="font-medium">{{ countRoom(hotel.id,hotel.room_hotels) }} phòng</p>
+                  <p class="font-medium">{{ countRoom(hotel.id, hotel.room_hotels) }} phòng</p>
                 </div>
               </div>
 
               <!--xem chi tiet-->
               <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 ml-auto">
-                <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` }}"
+                <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đặt
                   phòng</router-link>
-                  <button type="button"
-                  class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Yêu thích</button> 
+                <div class="ml-auto">
+                  <span v-if=" follows && follows.length > 0 && follows.some(item => item.id_hotel === hotel.id && item.id_user === user.id)">
+                    <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
+                    <span
+                      v-for="follow in follows.filter(item => item.id_hotel === hotel.id && item.id_user === user.id)">
+                      <!-- Kiểm tra trạng thái của sản phẩm và sử dụng màu đỏ hoặc black tương ứng -->
+                      <i class="fa-solid fa-bookmark text-xl" :style="{ color: follow.status ? '#ccc' : 'red' }"
+                        @click="unfollow(follow, hotel.id)"></i>
+                    </span>
+                  </span>
+                  <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
+                  <span v-else>
+                    <i class="fa-solid fa-bookmark text-xl" style="color: #ccc" @click="addfollow(hotel.id)"></i>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -117,6 +131,7 @@
 
     </div>
   </section>
+  <toast ref="toast" />
 </template>
 
 <script>
@@ -129,24 +144,29 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import AddressService from '../../plugins/addressService'
+
+import toast from '../toast.vue';
 export default {
   data() {
     return {
-      hotels: [], citys: [], districts: [], wards: []
+      hotels: [], citys: [], districts: [], wards: [], follows: [],user:''
     };
   },
   mounted() {
     this.getHotel()
-
+    this.getfollow()
     AddressService.getCountry().then((data) => {
       this.citys = data;
     });
     AddressService.getAllDistricts().then(data => { this.districts = data; });
     AddressService.getAllWard().then(data => { this.wards = data; });
+    this.user = JSON.parse(localStorage.getItem("User"));
+
   },
   components: {
     Swiper,
     SwiperSlide,
+    toast
   },
   setup() {
     return {
@@ -168,25 +188,62 @@ export default {
       return city ? city.name : '';
     },
 
-    countRoom(id,rooms) {
-      let sum = 0;   
-        for (let y = 0; y < rooms.length; y++) {
-          if (rooms[y].id_hotel === id) {
-            sum++;
-          }    
+    countRoom(id, rooms) {
+      let sum = 0;
+      for (let y = 0; y < rooms.length; y++) {
+        if (rooms[y].id_hotel === id) {
+          sum++;
+        }
       }
       return sum;
     },
 
-    countRating(id,rating) {
-      let sum = 0;   
-        for (let y = 0; y < rating.length; y++) {
-          if (rating[y].id_hotel === id) {
-            sum++;
-          }    
+    countRating(id, rating) {
+      let sum = 0;
+      for (let y = 0; y < rating.length; y++) {
+        if (rating[y].id_hotel === id) {
+          sum++;
+        }
       }
       return sum;
-    }
+    },
+    async getfollow() {
+      try {
+        const result = await this.$axios.get('favorate/get');
+        this.follows = result.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async unfollow(follow, hotelid) {
+      const id = follow.id;
+      const id_user = this.user.id
+      const result = await this.$axios.post('favorate/handle',
+        {
+          "id_user": id_user,
+          "id_hotel": hotelid,
+          "id": follow.id,
+          "status": follow.status
+        })
+      if (result.status == 200) {
+        this.$refs.toast.showToast(result.data.message);
+        this.getfollow()
+      }
+    },
+    async addfollow(hotelid) {
+      const id_user = this.user.id
+
+      const result = await this.$axios.post('favorate/handle',
+        {
+          "id_user": id_user,
+          "id_hotel": hotelid,
+        })
+      if (result.status == 200) {
+        this.$refs.toast.showToast(result.data.message);
+        this.getfollow()
+      }
+    },
 
   }
 }

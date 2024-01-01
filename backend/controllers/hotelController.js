@@ -436,6 +436,44 @@ const searchHotel = async (req, res) => {
     }
 }
 
+const HotelFavorate = async (req, res) => {
+    try {
+     const { id, id_user, id_hotel, status } = req.body;
+     const existFavorate = await Favorate.findOne({ where: { id_user, id_hotel } });
+ 
+     if (existFavorate) {
+         const favorate= await Favorate.destroy({ where: { id:id,id_user: id_user, id_hotel: id_hotel } });
+         res.status(200).json({favorate, message: "Hủy lưu thành công" })
+     }
+     else {
+         const favorate= await Favorate.create({ id_user, id_hotel, status });
+         res.status(200).json({ favorate, message: "Lưu bài thành công" })
+     }
+    } catch (error) {
+     res.status(404).json(error)
+    }
+ };
+ 
+ const renderFavorate = async (req, res) => {
+     try {
+         const favorate = await Favorate.findAll(
+             {
+                 attributes: ['id', 'id_hotel', 'status', 'id_user'],
+                 include: [
+                     { model: Hotel, attributes: ['id'] }
+                 ],
+                 raw: true,
+                 nest: true,
+             }
+         );
+         res.json(favorate);
+     } catch (error) {
+         res.json("không lấy được ");
+         console.log(error);
+     }
+ };
+ 
+
 module.exports = {
     getHotel,
     getHotelId,
@@ -447,6 +485,8 @@ module.exports = {
     updateImgHotel,
     deleteHotel,
     deleteImgHotel,
-    searchHotel
+    searchHotel,
+    HotelFavorate,
+    renderFavorate
 
 }

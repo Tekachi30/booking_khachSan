@@ -154,9 +154,24 @@
                                             <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }"
                                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đặt
                                                 phòng</router-link>
-                                            <button type="button"
-                                                class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Yêu
-                                                thích</button>
+                                            <div class="ml-auto">
+                                                <span
+                                                    v-if="follows && follows.length > 0 && follows.some(item => item.id_hotel === hotel.id && item.id_user === user.id)">
+                                                    <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
+                                                    <span
+                                                        v-for="follow in follows.filter(item => item.id_hotel === hotel.id && item.id_user === user.id)">
+                                                        <!-- Kiểm tra trạng thái của sản phẩm và sử dụng màu đỏ hoặc black tương ứng -->
+                                                        <i class="fa-solid fa-bookmark text-xl"
+                                                            :style="{ color: follow.status ? '#ccc' : 'red' }"
+                                                            @click="unfollow(follow, hotel.id)"></i>
+                                                    </span>
+                                                </span>
+                                                <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
+                                                <span v-else>
+                                                    <i class="fa-solid fa-bookmark text-xl" style="color: #ccc"
+                                                        @click="addfollow(hotel.id)"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -180,7 +195,7 @@ export default {
         return {
             city_id: '1', name_hotel: '', price: 'full',
             hotels: [], citys: [], districts: [], wards: [],
-            showReload:false,
+            showReload: false, follows: [], user: ''
         };
     },
     mounted() {
@@ -191,6 +206,9 @@ export default {
         AddressService.getAllDistricts().then(data => { this.districts = data; });
         AddressService.getAllWard().then(data => { this.wards = data; });
         this.getHotel()
+        this.user = JSON.parse(localStorage.getItem("User"));
+        this.getfollow()
+
     },
     components: {},
     methods: {
@@ -239,7 +257,44 @@ export default {
                 }
             }
             return sum;
-        }
+        },
+        async getfollow() {
+            try {
+                const result = await this.$axios.get('favorate/get');
+                this.follows = result.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        async unfollow(follow, hotelid) {
+            const id = follow.id;
+            const id_user = this.user.id
+            const result = await this.$axios.post('favorate/handle',
+                {
+                    "id_user": id_user,
+                    "id_hotel": hotelid,
+                    "id": follow.id,
+                    "status": follow.status
+                })
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message);
+                this.getfollow()
+            }
+        },
+        async addfollow(hotelid) {
+            const id_user = this.user.id
+
+            const result = await this.$axios.post('favorate/handle',
+                {
+                    "id_user": id_user,
+                    "id_hotel": hotelid,
+                })
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message);
+                this.getfollow()
+            }
+        },
     },
 };
 </script>

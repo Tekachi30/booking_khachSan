@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   favorate_hotel.init({
     id_hotel: DataTypes.INTEGER,
-    id_user: DataTypes.INTEGER
+    id_user: DataTypes.INTEGER,
+    status:DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'favorate_hotel',
