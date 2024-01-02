@@ -161,7 +161,7 @@
                                 {{ hotel.hotel.name_hotel }}
                             </td>
                             <!--action ?-->
-                            <button @click="" type="button"
+                            <button @click="unfollow(hotel)" type="button"
                                 class="flex w-full items-center py-3 px-4 hover:bg-gray-100 text-red-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="red" style="margin-right: 5px;">
                                     <path d="M367.2 412.5L99.5 144.8C77.1 176.1 64 214.5 64 256c0 106 86 192 192 192c41.5 0 79.9-13.1 111.2-35.5zm45.3-45.3C434.9 335.9 448 297.5 448 256c0-106-86-192-192-192c-41.5 0-79.9 13.1-111.2 35.5L412.5 367.2zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/>
@@ -422,18 +422,28 @@ export default {
         const re = /^(0[1-9]|84[2-9])(\d{8})$/;
         return re.test(phone);
       },
-      // validPassword(password) {
-      //   const re = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-      //   return re.test(password);
-      // },
+
        validFullName(fullName) {
         const re = /^.{3,50}$/; // Kiểm tra chuỗi từ 10 đến 50 ký tự
         return re.test(fullName);
       },
-    // validPassword2(password) {
-    //     const re = /[A-Z]/;
-    //     return re.test(password);
-    //   },
+   
+
+    async unfollow(follow) {
+            const id = follow.id;
+            const id_user = this.user.id
+            const result = await this.$axios.post('favorate/handle',
+                {
+                    "id_user": id_user,
+                    "id_hotel": follow.id_hotel,
+                    "id": follow.id,
+                    "status": follow.status
+                })
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message);
+                this.getHotel()
+            }
+        },
   
   },
 };

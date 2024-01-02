@@ -30,7 +30,7 @@
                             <select v-model="hotel" @change="getOrder()"
                                 class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none text-sm">
                                 <option disabled selected>Chọn khách sạn</option>
-                                <option v-for="hotel in hotels" :key="hotel" :value="hotel">
+                                <option v-for="hotel in hotels" :key="hotel.id" :value="hotel.id">
                                     {{ hotel.name_hotel }}
                                 </option>
                             </select>
@@ -54,7 +54,8 @@
                         <tbody v-for="(order, index) in orders" :key="index">
                             <tr class="border-b dark:border-gray-700">
                                 <th scope="row"
-                                    class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index +
+                                    class="px-4 py-3 font-medium  text-gray-900 whitespace-nowrap dark:text-black">{{ index
+                                        +
                                         1 }}</th>
                                 <td class="px-4 py-3"> {{ order.User.fullname }}</td>
                                 <td class="px-4 py-3"> {{ order.status }}</td>
@@ -115,17 +116,19 @@
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
 
                         <div>
-                            <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trạng thái</label>
-                            <select v-model="status" id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                              <option value="Đã Đặt">Đã đặt</option>
-                              <option value="Đã Thanh Toán">Đã thanh toán</option>
-                              <option value="Đã Trả Phòng">Đã trả phòng</option>
-                              <option value="Đã Hủy">Đã hủy</option>
+                            <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trạng
+                                thái</label>
+                            <select v-model="status" id="status"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="Đã Đặt">Đã đặt</option>
+                                <option value="Đã Thanh Toán">Đã thanh toán</option>
+                                <option value="Đã Trả Phòng">Đã trả phòng</option>
+                                <option value="Đã Hủy">Đã hủy</option>
                             </select>
                         </div>
 
                     </div>
-                    <button @click="updateOrder()" 
+                    <button @click="updateOrder()"
                         class=" inline-flex items-center bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
@@ -140,89 +143,86 @@
         </div>
     </div>
 
-<!--component toast thông báo !!!-->
-<toast ref="toast"></toast>
+    <!--component toast thông báo !!!-->
+    <toast ref="toast"></toast>
 </template>
 
 <script>
 import dayjs from 'dayjs';
 import toast from '../../components/toast.vue';
 export default
-{
-  data(){
-    return {
-        orders: [], hotels: [], owner: '', order: '', hotel: '',
-        isUpdate: false,
-        status: ''
-    }
-  },
-  mounted(){
-    this.owner = JSON.parse(localStorage.getItem("owner"));
-    // this.getOrder();
-    this.getHotel();
-    
-  },
-  components: {
-    toast,
-  },
-  methods: {
-    openUpdate(){
-        this.isUpdate = !this.isUpdate
-    },
-
-    selectOrder(select) {
-        this.order = select
-        this.status = select.status
-    },
-
-    // định dạng thời gian thông qua dayjs
-    formatTime(time){
-        return dayjs(time).format('DD-MM-YYYY');
-    },
-
-    
-    //lấy dữ liệu
-    async getOrder() {
-        try {
-            const result = await this.$axios.post(`order/get`,
-            {
-                "idHotel":this.hotel.id,
-                "id_owner":this.owner.id
-            });
-            this.orders = result.data.filter(item => item.idHotel == this.hotel.id);
-            console.log(result.data)
-        } catch (error) {
-            console.log(error)
-        }
-    },
-    async getHotel() {
-        try {
-            const result = await this.$axios.get(`hotel/get/${this.owner.id}`)
-            this.hotels = result.data
-            this.getOrder()
-        } catch (error) {
-            console.log(error)
-        }
-    },
-
-    // cập nhật hóa đơn
-    async updateOrder(){
-        try {
-            const result = await this.$axios.put(`order/update/${this.order.id}`,{
-                status: this.status
-            });
-            if (result.status == 200) {
-                this.openUpdate()
-                this.getOrder()
-                this.$refs.toast.showToast(result.data.message);
+    {
+        data() {
+            return {
+                orders: [], hotels: [], owner: '', order: '', hotel: '',
+                isUpdate: false,
+                status: ''
             }
-            else {
-                this.$refs.toast.showToast(result.data.message);
+        },
+        mounted() {
+            this.owner = JSON.parse(localStorage.getItem("owner"));
+            this.getHotel();
+
+        },
+        components: {
+            toast,
+        },
+        methods: {
+            openUpdate() {
+                this.isUpdate = !this.isUpdate
+            },
+
+            selectOrder(select) {
+                this.order = select
+                this.status = select.status
+            },
+
+            // định dạng thời gian thông qua dayjs
+            formatTime(time) {
+                return dayjs(time).format('DD-MM-YYYY');
+            },
+
+
+            //lấy dữ liệu
+            async getOrder() {
+                try {
+                        const result = await this.$axios.post(`order/get`,
+                            {
+                                "idHotel": this.hotel,
+                                "id_owner": this.owner.id
+                            });
+                        this.orders = result.data
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async getHotel() {
+                try {
+                    const result = await this.$axios.get(`hotel/get/${this.owner.id}`)
+                    this.hotels = result.data
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+
+            // cập nhật hóa đơn
+            async updateOrder() {
+                try {
+                    const result = await this.$axios.put(`order/update/${this.order.id}`, {
+                        status: this.status
+                    });
+                    if (result.status == 200) {
+                        this.openUpdate()
+                        this.getOrder()
+                        this.$refs.toast.showToast(result.data.message);
+                    }
+                    else {
+                        this.$refs.toast.showToast(result.data.message);
+                    }
+                } catch (error) {
+
+                }
             }
-        } catch (error) {
-            
         }
     }
-  }
-}
 </script>
