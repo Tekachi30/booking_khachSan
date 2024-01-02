@@ -100,7 +100,25 @@
               <option value="INTCARD">Thanh toán qua thẻ quốc tế</option>
             </select>
           </div>
-        </div>
+
+          <!--counpon chưa check-->
+          <!-- <div class="md:flex ">
+            <div class="m-2">
+              <label for="">Mã giảm giá</label>
+              <input type="text" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" 
+                v-model="counpon" />
+            </div>
+
+            <div class="m-2">
+              <label for="">Chọn mã giảm giá</label>
+            <select name="price" id="price" @change="choiceCounpon()" v-model="getCounpon" v-for="counpon in counpons"
+              class="w-full rounded-md  py-5 px-1 pe-10 shadow-sm sm:text-sm focus:outline-none appearance-none">
+              <option :value="counpon">{{ counpon.code_coupon }}</option>
+            </select>
+          </div>
+        </div> -->
+
+      </div>
         <!-- Modal footer -->
         <div class="  md:flex items-center p-4 md:p-5">
           <div class="sum_price md:mb-0 mb-2">
@@ -129,16 +147,16 @@ import toast from '../toast.vue';
 
 export default {
   props: ['cart'],
+  emits: ["cancel"],
   data() {
     return {
       carts: [], bankcode: '',
       roomQuantity: {}, user: null,
       fullname: null, email: null, phone: null, checkin: null, checkout: null,
-      date_forcus: false,
+      date_forcus: false,counpon:'',getCounpon:'',counpons:[]
     };
   },
   mounted() {
-
     for (let i = 0; i < this.cart.length; i++) {
       this.roomQuantity[this.cart[i].id] = this.cart[i].quantity;
     }
@@ -146,6 +164,7 @@ export default {
     this.email = this.user.email
     this.phone = this.user.phone
     this.fullname = this.user.fullname
+    this.getCounpons()
   },
   components: {
     toast,
@@ -179,7 +198,19 @@ export default {
     selectRoom(room) {
       this.room = room
     },
-
+    async getCounpons()
+    {
+      try {
+        const result = await this.$axios.get(`coupon/get/${this.$route.params.id}`);
+        this.counpons = result.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    choiceCounpon() {
+    
+     this.counpon = this.getCounpon.code_coupon 
+  },
     // handle cart
 
     increaseQuantity(room, index) {
