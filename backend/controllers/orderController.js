@@ -143,7 +143,7 @@ const updateOrder = async (req, res) => {
         existOrder.date_bank = date_bank
         await existOrder.save()
         const user = await User.findOne({ where: { id: existOrder.id_user } })
-        await sendMail(req, res, user.email)
+        await sendMail(req, res, user.email,user.fullname)
       }
     }
   } catch (error) {
@@ -151,17 +151,204 @@ const updateOrder = async (req, res) => {
   }
 }
 
-const sendMail = async (req, res, to) => {
+const sendMail = async (req, res, to,name) => {
   try {
-    const text = 'Bạn vi phạm quy tắc cộng đồng nên bị khóa tài khoản.'
+    const text = "Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.<br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi."
     const subject = 'Thông báo từ 404ViVu'
 
+    const html = `
+    <html>
+      <head>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <style>
+      body {
+          font-family: 'sans-serif';
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
 
+      .max-w-2xl {
+          max-width: 42rem; /* 2xl in Tailwind CSS */
+          margin-left: auto;
+          margin-right: auto;
+      }
+
+      .px-6 {
+          padding-left: 1.5rem; /* 6 in Tailwind CSS */
+          padding-right: 1.5rem;
+      }
+
+      .py-8 {
+          padding-top: 2rem; /* 8 in Tailwind CSS */
+          padding-bottom: 2rem;
+      }
+
+      .mx-auto {
+          margin-left: auto;
+          margin-right: auto;
+      }
+
+      .bg-gradient-to-r {
+          background: linear-gradient(to right, #a1e4f2, #63b3ed); /* from-cyan-200 to-blue-100 in Tailwind CSS */
+      }
+
+      .dark\:bg-gray-900 {
+          background-color: #1a202c; /* dark:bg-gray-900 in Tailwind CSS */
+      }
+
+      .rounded-md {
+          border-radius: 0.375rem; /* rounded-md in Tailwind CSS */
+      }
+
+      .shadow-xl {
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-xl in Tailwind CSS */
+      }
+
+      .items-center {
+          align-items: center;
+      }
+
+      .justify-center {
+          justify-content: center;
+      }
+
+      .h-7 {
+          height: 1.75rem; /* h-7 in Tailwind CSS */
+      }
+
+      .sm\:h-8 {
+          height: 2rem; /* sm:h-8 in Tailwind CSS */
+      }
+
+      .font-bold {
+          font-weight: 700;
+      }
+
+      .text-3xl {
+          font-size: 1.875rem; /* 3xl in Tailwind CSS */
+      }
+
+      .mt-8 {
+          margin-top: 2rem; /* mt-8 in Tailwind CSS */
+      }
+
+      .text-gray-700 {
+          color: #4a5568; /* text-gray-700 in Tailwind CSS */
+      }
+
+      .dark\:text-gray-200 {
+          color: #cbd5e0; /* dark:text-gray-200 in Tailwind CSS */
+      }
+
+      .mt-6 {
+          margin-top: 1.5rem; /* mt-6 in Tailwind CSS */
+      }
+
+      .leading-loose {
+          line-height: 1.75; /* leading-loose in Tailwind CSS */
+      }
+
+      .text-gray-600 {
+          color: #718096; /* text-gray-600 in Tailwind CSS */
+      }
+
+      .dark\:text-gray-300 {
+          color: #a0aec0; /* dark:text-gray-300 in Tailwind CSS */
+      }
+
+      .w-full {
+          width: 100%;
+      }
+
+      .h-64 {
+          height: 16rem; /* h-64 in Tailwind CSS */
+      }
+
+      .my-10 {
+          margin-top: 2.5rem; /* my-10 in Tailwind CSS */
+          margin-bottom: 2.5rem;
+      }
+
+      .rounded-lg {
+          border-radius: 0.5rem; /* rounded-lg in Tailwind CSS */
+      }
+
+      .md\:h-80 {
+          height: 20rem; /* md:h-80 in Tailwind CSS */
+      }
+
+      .text-gray-500 {
+          color: #a0aec0; /* text-gray-500 in Tailwind CSS */
+      }
+
+      .dark\:text-gray-400 {
+          color: #cbd5e0; /* dark:text-gray-400 in Tailwind CSS */
+      }
+
+      .font-medium {
+          font-weight: 500; /* font-medium in Tailwind CSS */
+      }
+
+      .text-gray-800 {
+          color: #2d3748; /* text-gray-800 in Tailwind CSS */
+      }
+
+      .dark\:text-white {
+          color: #fff; /* dark:text-white in Tailwind CSS */
+      }
+
+      .mt-3 {
+          margin-top: 0.75rem; /* mt-3 in Tailwind CSS */
+      }
+
+      .text-gray-500 {
+          color: #a0aec0; /* text-gray-500 in Tailwind CSS */
+      }
+
+      .dark\:text-gray-400 {
+          color: #cbd5e0; /* dark:text-gray-400 in Tailwind CSS */
+      }
+  </style>
+      </head>
+      <body>
+      <section class="max-w-2xl px-6 py-8 mx-auto bg-gradient-to-r from-cyan-200 to-blue-100 dark:bg-gray-900 rounded-md shadow-xl">
+      <header class="w-auto flex items-center justify-center h-7 sm:h-8 font-bold text-3xl">
+        <a >
+          404ViVu
+        </a>
+      </header>
+  
+      <main class="mt-8">
+        <h2 class="mt-6 text-gray-700 dark:text-gray-200">Hi ${name},</h2>
+  
+        <p class="mt-2 leading-loose text-gray-600 dark:text-gray-300">
+          ${text}
+        </p>
+  
+        <img  class="w-full h-64 my-10 rounded-lg md:h-80" src="https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2020/4/17/799236/KHACH-SAN.jpg" alt="">
+  
+        <p class="mt-2 text-gray-600 dark:text-gray-300">
+          Trân thành cảm ơn, <br>
+          404Vivu
+        </p>
+      </main>
+  
+  
+      <footer class="mt-8 text-center">
+        <h3 class="font-medium text-gray-800 dark:text-white">404ViVu đi cùng bạn đến khắp nơi</h3>
+  
+        <p class="mt-3 text-gray-500 dark:text-gray-400">© 2023 404ViVu.</p>
+      </footer>
+    </section>
+    </html>
+  `;
     const mailOptions = {
       from: YOUR_EMAIL_ADDRESS,
       to: to,
       subject: subject,
       text: text,
+      html: html
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
