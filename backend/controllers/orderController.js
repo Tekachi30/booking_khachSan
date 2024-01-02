@@ -129,7 +129,8 @@ const updateOrder = async (req, res) => {
     const id = req.params.id;
     const { vnp_orderID, total_bank, date_bank } = req.body
     const existOrder = await Order.findByPk(id);
-    console.log(existOrder.status)
+
+
     if (!existOrder) {
       return res.status(201).json({ message: "Hóa đơn không tồn tại." });
     } else {
@@ -137,13 +138,31 @@ const updateOrder = async (req, res) => {
         res.json("Đã thanh toán")
       }
       else {
+        // order_detail(id,id_room,quanlity) room(id,real_quantity)
+        // tính lại real_quantity = real_quantity - quanlity
+        const orderDetails = await OD.findAll(
+          {
+            where: { id_order: existOrder.id },
+            include: [Room]
+          }
+        )
+        for (const orderDetail of orderDetails) {
+          const room = orderDetail.room_hotel;
+          const quantity = orderDetail.quanlity;
+          await Room.update(
+            { real_quantity: room.real_quantity - quantity },
+            { where: { id: room.id } }
+          );
+        }
+
         existOrder.status = "Đã Thanh Toán"
         existOrder.vnp_orderID = vnp_orderID
         existOrder.total_bank = total_bank
         existOrder.date_bank = date_bank
         await existOrder.save()
+        const text = "Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.<br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi."
         const user = await User.findOne({ where: { id: existOrder.id_user } })
-        await sendMail(req, res, user.email,user.fullname)
+        await sendMail(req, res, user.email, user.fullname, text)
       }
     }
   } catch (error) {
@@ -151,9 +170,52 @@ const updateOrder = async (req, res) => {
   }
 }
 
-const sendMail = async (req, res, to,name) => {
+const statusOrder = async (req, res) => {
   try {
-    const text = "Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.<br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi."
+    const { id, status } = req.body
+    const existOrder = await Order.findByPk(id);
+    let text = ""
+    if (existOrder) {
+      if (status == "Đã Hủy") {
+        text = "Hủy đặt phòng thành công. <br> Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.<br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi."
+        // thực hiền hoàn tiền
+      }
+      else if (status == "Đã Trả Phòng") {
+        text = "Trả phòng thành công. <br> Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.<br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi."
+      }
+
+      const orderDetails = await OD.findAll(
+        {
+          where: { id_order: existOrder.id },
+          include: [Room]
+        }
+      )
+      for (const orderDetail of orderDetails) {
+        const room = orderDetail.room_hotel;
+        const quantity = orderDetail.quanlity;
+        await Room.update(
+          { real_quantity: room.real_quantity + quantity },
+          { where: { id: room.id } }
+        );
+      }
+
+      existOrder.status = status
+      await existOrder.save()
+      const user = await User.findOne({ where: { id: existOrder.id_user } })
+      await sendMail(req, res, user.email, user.fullname, text)
+      res.json({ message: "Update Thành công" })
+    }
+    else {
+      res.json("Không tồn tại hóa đơn")
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const sendMail = async (req, res, to, name, text) => {
+  try {
     const subject = 'Thông báo từ 404ViVu'
 
     const html = `
@@ -368,20 +430,13 @@ const sendMail = async (req, res, to,name) => {
 /*
    1: hiện đang ở trạng thái đó. không lặp lại trạng thái.
    đã đặt -> đã thanh toán -> đã trả phòng (hoặc đã hủy) 
-
 */
 
-// chưa xong
 const searchOrder = async (req, res) => {
   try {
     const { search } = req.body
     const result = await Order.findAll(
       {
-        where: {
-          status: {
-            [Op.like]: `%${search}%`
-          }
-        },
         include: [
           {
             model: User,
@@ -390,15 +445,13 @@ const searchOrder = async (req, res) => {
                 [Op.like]: `%${search}%`
               }
             },
-            attributes: []
           },
           {
             model: Hotel,
-            attributes: [],
+
             include: [
               {
                 model: Owner,
-                attributes: []
               }
             ]
           }
@@ -417,4 +470,5 @@ module.exports = {
   addOrder_detail,
   updateOrder,
   searchOrder,
+  statusOrder
 }

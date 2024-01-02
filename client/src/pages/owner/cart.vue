@@ -120,8 +120,6 @@
                                 thái</label>
                             <select v-model="status" id="status"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="Đã Đặt">Đã đặt</option>
-                                <option value="Đã Thanh Toán">Đã thanh toán</option>
                                 <option value="Đã Trả Phòng">Đã trả phòng</option>
                                 <option value="Đã Hủy">Đã hủy</option>
                             </select>
@@ -208,8 +206,9 @@ export default
             // cập nhật hóa đơn
             async updateOrder() {
                 try {
-                    const result = await this.$axios.put(`order/update/${this.order.id}`, {
-                        status: this.status
+                    const result = await this.$axios.put(`order/update/`, {
+                        status: this.status,
+                        id:this.order.id
                     });
                     if (result.status == 200) {
                         this.openUpdate()
