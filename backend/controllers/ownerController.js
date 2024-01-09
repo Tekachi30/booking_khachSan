@@ -18,7 +18,7 @@ const sequelize = require("sequelize");
 const Op = sequelize.Op;
 const dayjs = require("dayjs");
 dotenv.config();
-const fs = require("fs"); // package thao tác vs file 
+const fs = require("fs"); // package thao tác vs file
 const multer = require("multer"); // package sử dụng để thao tác upload file
 // Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -128,66 +128,112 @@ const updateOwner = async (req, res) => {
 
 const deleteOwner = async (req, res) => {
   try {
-    const id_owner = req.params.id;
-    const exits_owner = await Owner.findByPk(id_owner);
-    if (exits_owner) {
-      const get_order = await Hotel.findAll(
-        {
-          attributes: ['id', 'id_owner'],
-          where: { id_owner: id_owner },
-          include: [{ model: Room, attributes:['id','id_hotel'] }]
+    const id = req.params.id;
+    const exitsOwner = await Owner.findByPk(id);
+    if (!exitsOwner) {
+      return res
+        .status(201)
+        .json({ message: "Không tìm thấy tài khoản chủ khách sạn." });
+    } else {
+      const orders = await Order.findAll({
+        attributes: ["id", "status"],
+        include: [
+          {
+            model: OD,
+            attributes: ["id", "id_room", "id_order"],
+            required: true,
+            include: [
+              {
+                model: Room,
+                attributes: ["id", "id_hotel"],
+                required: true,
+                include: [
+                  {
+                    model: Hotel,
+                    attributes: ["id", "id_owner"],
+                    require: true,
+                    where: { id_owner: id },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      let hotelIds = orders.flatMap((order) =>
+        order.order_details.map((detail) => detail.room_hotel.hotel.id)
+      );
+
+      let uniqueHotelIds = [...new Set(hotelIds)];
+
+      let paidOrders = orders.filter(
+        (order) => order.status == "Đã Thanh Toán"
+      );
+
+      if (paidOrders.length > 0) {
+        return res
+          .status(200)
+          .json({
+            message: "Không thể xóa khách sạn vì có đơn hàng đã thanh toán.",
+          });
+      } else {
+        for (const order of orders) {
+          await OD.destroy({ where: { id_order: order.id } });
+          await order.destroy();
         }
-      )
+
+        for (var y = 0; y < uniqueHotelIds.length; y++) {
+          const img_hotel = await ImgHotel.findAll({
+            where: { id_hotel: uniqueHotelIds[y] },
+          });
+          if (img_hotel.length > 0) {
+            for (const img of img_hotel) {
+              const imagePath = `./uploads/${img.name_img}`;
+              deleteFile(imagePath);
+              await img.destroy();
+            }
+          }
+          /*
+                    tìm X
+                    lấy list img_X từ X tìm được (id_X)
+                */
+          const room = await Room.findAll({
+            where: { id_hotel: uniqueHotelIds[y] },
+          });
+          const roomIds = room.map((r) => r.id);
+          const img_room = await ImgRoom.findAll({
+            where: { id_room: roomIds },
+          });
+          if (img_room.length > 0) {
+            for (const img of img_room) {
+              const imagePath = `./uploads/${img.name_img}`;
+              deleteFile(imagePath);
+              await img.destroy();
+            }
+          }
+          await Room.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+          await Rating.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+          await Report.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+          await Favorate.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+          await Coupon.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+          await Hotel.destroy({where: {id: uniqueHotelIds[y]}});
+
+          await exitsOwner.destroy();
+
+          return res.status(200).json({ message: "Xóa thành công." });
+        }
+      }
     }
   } catch (error) {
     console.log(error);
   }
 };
-
-
-const hasdelete = async (idHotel, idRoom, idOwner) => {
-
-  const existCoupon = await Coupon.findOne({ where: { id_hotel: idHotel } })
-  const existFavorate = await Favorate.findOne({ where: { id_hotel: idHotel } })
-  const existReport = await Report.findOne({ where: { id_hotel: idHotel } })
-  const existRating = await Rating.findOne({ where: { id_hotel: idHotel } })
-  const existRoom = await Room.findOne({ where: { id: idRoom } })
-  const existHotel = await Hotel.findOne({ where: { id: idHotel } })
-  const exitOwner = await Hotel.findOne({ where: { id: idOwner } })
-
-  if (existCoupon) { await Coupon.destroy({ where: { id_hotel: idHotel } }); }
-  if (existFavorate) { await Favorate.destroy({ where: { id_hotel: idHotel } }); }
-  if (existReport) { await Report.destroy({ where: { id_hotel: idHotel } }); }
-  if (existRating) { await Rating.destroy({ where: { id_hotel: idHotel } }); }
-
-  if (existRoom) {
-    const room = await Room.findAll({ where: { id_hotel: idHotel } })
-    const roomIds = room.map((r) => r.id);
-    const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
-    if (img_room.length > 0) {
-      for (const img of img_room) {
-        const imagePath = `./uploads/${img.name_img}`;
-        deleteFile(imagePath);
-        await img.destroy();
-      }
-      await Room.destroy({ where: { id: idRoom } });
-    }
-  }
-
-  if (existHotel) {
-    const img_hotel = await ImgHotel.findAll({ where: { id_hotel: idHotel } });
-    if (img_hotel.length > 0) {
-      for (const img of img_hotel) {
-        const imagePath = `./uploads/${img.name_img}`;
-        deleteFile(imagePath);
-        await img.destroy();
-      }
-      await Hotel.destroy({ where: { id_owner: idOwner } });
-    }
-  }
-
-  if (exitOwner) { await Mess.destroy({ where: { id_owner: idOwner }, }); }
-}
 
 // Sử dụng hàm để xóa file khỏi thư mục upload
 const deleteFile = (filePath) => {
@@ -198,7 +244,7 @@ const deleteFile = (filePath) => {
     }
     console.log(`File ${filePath} has been deleted`);
   });
-}
+};
 
 const searchOwner = async (req, res) => {
   try {
@@ -224,4 +270,3 @@ module.exports = {
   deleteOwner,
   searchOwner,
 };
-

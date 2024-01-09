@@ -327,7 +327,7 @@ const deleteHotel = async (req, res) => {
         const id = req.params.id;
         const existHotel = await Hotel.findByPk(id);
         if (!existHotel) {
-            return res.status(200).json({ message: 'Không tìm thấy khách sạn.' });
+            return res.status(201).json({ message: 'Không tìm thấy khách sạn.' });
         } else {
 
             const orders = await Order.findAll(
@@ -383,11 +383,11 @@ const deleteHotel = async (req, res) => {
                 }
                 await Room.destroy({ where: { id_hotel: existHotel.id } });
 
-                await Rating.destroy({ where: { id_hotel: existHotel.id } }); // xóa hết luôn hả
+                await Rating.destroy({ where: { id_hotel: existHotel.id } }); 
 
                 await Report.destroy({ where: { id_hotel: existHotel.id } });
 
-                await Favorate.destroy({ where: { id_hotel: existHotel.id } }); // xóa hotel =>  => xóa OD 
+                await Favorate.destroy({ where: { id_hotel: existHotel.id } }); 
 
                 await coupon.destroy({ where: { id_hotel: existHotel.id } });
 
