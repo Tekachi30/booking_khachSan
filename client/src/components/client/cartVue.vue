@@ -61,32 +61,44 @@
             <div class="m-2">
               <label for="">Họ và tên:</label>
               <input type="text" placeholder="Họ và tên"
-                class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" v-model="fullname" disabled />
+                class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" v-model="fullname" />
             </div>
 
             <div class="m-2">
               <label for="">Địa chỉ email:</label>
               <input type="text" placeholder="Email"
-                class="px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none w-full" v-model="email" disabled />
+                class="px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none w-full" v-model="email" />
             </div>
+          </div>
+          <div class="m-2">
+            <label for="">Địa chỉ </label>
+            <input type="text" placeholder="Nhập địa chỉ"
+              class="px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none w-full" v-model="address" />
+          </div>
+          <div class="m-2">
+            <label for="">Số điện thoại </label>
+            <input type="text" placeholder="Nhập số điện thoại"
+              class="px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none w-full" v-model="phone" />
           </div>
           <!--check in out-->
           <div class="md:flex">
             <div class="m-2">
               <label for="">Ngày nhận phòng:</label>
-              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" @change="handleDateChange()"
-                v-model="checkin" />
+              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none"
+                @change="handleDateChange()" v-model="checkin" />
               <p v-if="!checkin && date_forcus" class="text-red-500 text-sm ml-1">Vui lòng chọn ngày nhận phòng!</p>
-              <p v-if="checkin && date_forcus" class="text-red-500 text-sm ml-1">Ngày nhận phòng không thể lớn hơn ngày trả phòng!</p>
+              <p v-if="checkin && date_forcus" class="text-red-500 text-sm ml-1">Ngày nhận phòng không thể lớn hơn ngày
+                trả phòng!</p>
             </div>
 
             <div class="m-2">
               <label for="">Ngày trả phòng:</label>
 
-              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none" @change="handleDateChange2()"
-                v-model="checkout" />
-                <p v-if="!checkout && date_forcus" class="text-red-500 text-sm ml-1">Vui lòng chọn ngày trả phòng!</p>
-                <p v-if="checkout && date_forcus" class="text-red-500 text-sm ml-1">Ngày trả phòng không thể nhỏ hơn ngày nhận phòng!</p>
+              <input type="date" class="w-full px-4 py-3 rounded-lg  mt-2 border  focus:bg-white focus:outline-none"
+                @change="handleDateChange2()" v-model="checkout" />
+              <p v-if="!checkout && date_forcus" class="text-red-500 text-sm ml-1">Vui lòng chọn ngày trả phòng!</p>
+              <p v-if="checkout && date_forcus" class="text-red-500 text-sm ml-1">Ngày trả phòng không thể nhỏ hơn ngày
+                nhận phòng!</p>
             </div>
           </div>
 
@@ -118,7 +130,7 @@
           </div>
         </div> -->
 
-      </div>
+        </div>
         <!-- Modal footer -->
         <div class="  md:flex items-center p-4 md:p-5">
           <div class="sum_price md:mb-0 mb-2">
@@ -139,8 +151,8 @@
     </div>
 
   </div>
-<!--component toast thông báo !!!-->
-<toast ref="toast"></toast>
+  <!--component toast thông báo !!!-->
+  <toast ref="toast"></toast>
 </template>
 <script>
 import toast from '../toast.vue';
@@ -153,7 +165,7 @@ export default {
       carts: [], bankcode: '',
       roomQuantity: {}, user: null,
       fullname: null, email: null, phone: null, checkin: null, checkout: null,
-      date_forcus: false,counpon:'',getCounpon:'',counpons:[]
+      date_forcus: false, counpon: '', getCounpon: '', counpons: [], address: '', phone: ''
     };
   },
   mounted() {
@@ -161,9 +173,12 @@ export default {
       this.roomQuantity[this.cart[i].id] = this.cart[i].quantity;
     }
     this.user = JSON.parse(localStorage.getItem("User"));
-    this.email = this.user.email
-    this.phone = this.user.phone
-    this.fullname = this.user.fullname
+    if (this.user) {
+      this.email = this.user.email
+      this.phone = this.user.phone
+      this.fullname = this.user.fullname
+      this.address = this.user.address
+    }
     this.getCounpons()
   },
   components: {
@@ -198,8 +213,7 @@ export default {
     selectRoom(room) {
       this.room = room
     },
-    async getCounpons()
-    {
+    async getCounpons() {
       try {
         const result = await this.$axios.get(`coupon/get/${this.$route.params.id}`);
         this.counpons = result.data
@@ -208,9 +222,9 @@ export default {
       }
     },
     choiceCounpon() {
-    
-     this.counpon = this.getCounpon.code_coupon 
-  },
+
+      this.counpon = this.getCounpon.code_coupon
+    },
     // handle cart
 
     increaseQuantity(room, index) {
@@ -279,18 +293,18 @@ export default {
 
     // Phương thức này sẽ được gọi khi giá trị của ngày thay đổi
     handleDateChange() {
-        const currentDate = new Date(); // Lấy ngày hiện tại
-        const selectedDate = new Date(this.checkin); // Lấy giá trị ngày từ input
-        if (selectedDate <= currentDate) {
+      const currentDate = new Date(); // Lấy ngày hiện tại
+      const selectedDate = new Date(this.checkin); // Lấy giá trị ngày từ input
+      if (selectedDate <= currentDate) {
         currentDate.setDate(currentDate.getDate() + 1);// Nếu ngày đã chọn nhỏ hơn hoặc bằng ngày hiện tại, thì cộng thêm 1 ngày
         const formattedDate = currentDate.toISOString().split('T')[0]; // Format lại ngày để có định dạng YYYY-MM-DD
         this.checkin = formattedDate;
       }
     },
     handleDateChange2() {
-        const currentDate = new Date(); // Lấy ngày hiện tại
-        const selectedDate = new Date(this.checkout); // Lấy giá trị ngày từ input
-        if (selectedDate <= currentDate) {
+      const currentDate = new Date(); // Lấy ngày hiện tại
+      const selectedDate = new Date(this.checkout); // Lấy giá trị ngày từ input
+      if (selectedDate <= currentDate) {
         currentDate.setDate(currentDate.getDate() + 1);// Nếu ngày đã chọn nhỏ hơn hoặc bằng ngày hiện tại, thì cộng thêm 1 ngày
         const formattedDate = currentDate.toISOString().split('T')[0]; // Format lại ngày để có định dạng YYYY-MM-DD
         this.checkout = formattedDate;
@@ -299,8 +313,15 @@ export default {
 
     async addOrder() {
       try {
-        if(this.checkin && this.checkout)
-        {
+
+        let id = ''
+        if (this.user) {
+          id = this.user.id
+        }
+        else {
+          id = 0
+        }
+        if (this.checkin && this.checkout) {
           if (this.checkin > this.checkout) {
             this.date_forcus = true;
           } else if (this.checkout < this.checkin) {
@@ -312,23 +333,34 @@ export default {
             }
 
             const result = await this.$axios.post(`create_payment_url`,
-            {
-              "id_user": this.user.id,
-              "checkin": this.checkin,
-              "checkout": this.checkout,
-              "carts": this.cart,
-              "amount": total,
-              "bankCode":this.bankcode,
-              "language":"vn"
-            })
-            const paymentUrl = result.data.redirectUrl;
+              {
+                "id_user": id,
+                "phone": this.phone,
+                "email": this.email,
+                "address": this.address,
+                "fullname": this.fullname,
+                "checkin": this.checkin,
+                "checkout": this.checkout,
+                "carts": this.cart,
+                "amount": total,
+                "bankCode": this.bankcode,
+                "language": "vn"
+              })
+            if (result.status == 202) {
+              this.$refs.toast.showToast(result.data);
 
-            this.date_forcus = false;
-            // Chuyển hướng đến trang thanh toán của VNPAY
-            localStorage.setItem("order", JSON.stringify(result.data.order));
-            window.location.href = paymentUrl;
+            }
+            else {
+              const paymentUrl = result.data.redirectUrl;
+
+              this.date_forcus = false;
+              // Chuyển hướng đến trang thanh toán của VNPAY
+              localStorage.setItem("order", JSON.stringify(result.data.order));
+              localStorage.setItem("check_create", JSON.stringify(result.data.check_create))
+              window.location.href = paymentUrl;
+            }
           }
-        }else{
+        } else {
           this.date_forcus = true;
         }
       } catch (error) {

@@ -173,7 +173,7 @@ const addOrder_detail = async (req, res) => {
 const updateOrder = async (req, res) => {
   try {
     const id = req.params.id;
-    const { vnp_orderID, total_bank, date_bank } = req.body
+    const { vnp_orderID, total_bank, date_bank ,check_create } = req.body
     const existOrder = await Order.findByPk(id);
 
 
@@ -206,8 +206,31 @@ const updateOrder = async (req, res) => {
         existOrder.total_bank = total_bank
         existOrder.date_bank = date_bank
         await existOrder.save()
-        const text = "Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.<br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi."
         const user = await User.findOne({ where: { id: existOrder.id_user } })
+        if(check_create == true )
+        {
+          var text = `Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. 
+          Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>
+          Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. 
+          Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.
+          <br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. 
+          Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. 
+          Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi.<br>
+          Đây là tài khoản và mật khẩu của quý khách hàng. <br>
+          Tên đăng nhập : ${user.email} <br>
+          Mật khẩu: User@123
+          `
+        }
+        else
+        {
+          var text = `Chân thành cảm ơn Quý khách hàng đã tin tưởng và lựa chọn dịch vụ của chúng tôi thông qua trang web. 
+          Chúng tôi trân trọng sự ủng hộ của Quý khách, và sẽ luôn nỗ lực để mang đến trải nghiệm tốt nhất cho chuyến đi của bạn.<br>
+          Đội ngũ chúng tôi hiểu rằng sự thoải mái và tiện nghi là yếu tố quan trọng trong mỗi chuyến đi của Quý khách. 
+          Chúng tôi cam kết cung cấp dịch vụ chất lượng, đảm bảo mọi chi tiết được chăm sóc và phục vụ tận tâm.
+          <br>Nếu có bất kỳ nhu cầu hoặc yêu cầu đặc biệt nào, xin vui lòng liên hệ với chúng tôi. 
+          Chúng tôi sẽ cố gắng hết sức để đáp ứng mọi mong muốn của Quý khách.<br>Một lần nữa, chân thành cảm ơn sự lựa chọn của Quý khách hàng. 
+          Chúng tôi rất mong được phục vụ Quý khách và hy vọng rằng chuyến đi của bạn sẽ trở nên đặc biệt và nhớ mãi.`
+        }
         await sendMail(req, res, user.email, user.fullname, text)
       }
     }

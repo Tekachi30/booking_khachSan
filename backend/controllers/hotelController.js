@@ -8,7 +8,8 @@ const Rating = db.rating_hotel;
 const Report = db.report_hotel;
 const Favorate = db.favorate_hotel;
 const coupon = db.coupon_owner;
-
+const Order = db.order;
+const OD = db.order_detail;
 const sequelize = require('sequelize');
 const Op = sequelize.Op
 const dayjs = require('dayjs');
@@ -48,22 +49,22 @@ const deleteFile = (filePath) => {
 
 const resultPost = async (citycode, districtcode, ward_code, address_hotel) => {
     try {
-      // Lấy thông tin về city, district, commune từ API provinces
-      const cityAPI = await axios.get(`https://provinces.open-api.vn/api/p/${citycode}`);
-      const apicityData = cityAPI.data.name;
-      const districtAPI = await axios.get(`https://provinces.open-api.vn/api/d/${districtcode}`);
-      const apidistrictData = districtAPI.data.name;
-      const communeAPI = await axios.get(`https://provinces.open-api.vn/api/w/${ward_code}`);
-      const apicommuneData = communeAPI.data.name;
-      let  address = `${address_hotel},${apicommuneData},${apidistrictData},${apicityData}`;
-      const response = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${KEY_MAP}`, {
-      });
-      const data = response.data.features[0].geometry
-      return data;
+        // Lấy thông tin về city, district, commune từ API provinces
+        const cityAPI = await axios.get(`https://provinces.open-api.vn/api/p/${citycode}`);
+        const apicityData = cityAPI.data.name;
+        const districtAPI = await axios.get(`https://provinces.open-api.vn/api/d/${districtcode}`);
+        const apidistrictData = districtAPI.data.name;
+        const communeAPI = await axios.get(`https://provinces.open-api.vn/api/w/${ward_code}`);
+        const apicommuneData = communeAPI.data.name;
+        let address = `${address_hotel},${apicommuneData},${apidistrictData},${apicityData}`;
+        const response = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${KEY_MAP}`, {
+        });
+        const data = response.data.features[0].geometry
+        return data;
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  };
+};
 // start 
 
 const getHotelId = async (req, res) => {
@@ -215,7 +216,7 @@ const addHotel = async (req, res) => {
                 longitude: locationData.coordinates[0],
                 latitube: locationData.coordinates[1]
             })
-            return res.status(200).json({ message: 'Thêm khách sạn thành công.',hotel });
+            return res.status(200).json({ message: 'Thêm khách sạn thành công.', hotel });
         }
     } catch (error) {
         console.log(error);
@@ -267,13 +268,13 @@ const updateHotel = async (req, res) => {
         if (exsitHotel) {
             if (!exsitName_hotel) {
                 exsitHotel.name_hotel = name_hotel,
-                exsitHotel.address = address,
-                exsitHotel.city_code = city_code,
-                exsitHotel.district_code = district_code
+                    exsitHotel.address = address,
+                    exsitHotel.city_code = city_code,
+                    exsitHotel.district_code = district_code
                 exsitHotel.ward_code = ward_code
                 exsitHotel.information = information,
-                exsitHotel.longitude = locationData.coordinates[0],
-                exsitHotel.latitube = locationData.coordinates[1]
+                    exsitHotel.longitude = locationData.coordinates[0],
+                    exsitHotel.latitube = locationData.coordinates[1]
 
                 await exsitHotel.save();
                 return res.status(200).json({ message: 'Cập nhập thành công' });
@@ -328,41 +329,72 @@ const deleteHotel = async (req, res) => {
         if (!existHotel) {
             return res.status(200).json({ message: 'Không tìm thấy khách sạn.' });
         } else {
-            const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
-            if (img_hotel.length > 0) {
-                for (const img of img_hotel) {
-                    const imagePath = `./uploads/${img.name_img}`;
-                    deleteFile(imagePath);
-                    await img.destroy();
+
+            const orders = await Order.findAll(
+                {
+                    attributes: ['id', 'status'],
+                    include:
+                        [
+                            {
+                                model: OD, attributes: ['id', 'id_room', 'id_order'],
+                                required: true,
+                                include: [
+                                    {
+                                        model: Room, attributes: ['id', 'id_hotel'],
+                                        where: { id_hotel: id },
+                                        required: true,
+                                    }
+                                ]
+                            }
+                        ]
                 }
+            )
+            const paidOrders = orders.filter(order => order.status == 'Đã Thanh Toán');
+
+            if (paidOrders.length > 0) {
+                return res.status(200).json({ message: 'Không thể xóa khách sạn vì có đơn hàng đã thanh toán.' });
             }
-            /*
-                tìm X
-                lấy list img_X từ X tìm được (id_X)
-            */
-            const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
-            const roomIds = room.map((r) => r.id);
-            const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
-            if (img_room.length > 0) {
-                for (const img of img_room) {
-                    const imagePath = `./uploads/${img.name_img}`;
-                    deleteFile(imagePath);
-                    await img.destroy();
+            else {
+                for (const order of orders) {
+                    await OD.destroy({ where: { id_order: order.id } });
+                    await order.destroy();
                 }
+                const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
+                if (img_hotel.length > 0) {
+                    for (const img of img_hotel) {
+                        const imagePath = `./uploads/${img.name_img}`;
+                        deleteFile(imagePath);
+                        await img.destroy();
+                    }
+                }
+                /*
+                    tìm X
+                    lấy list img_X từ X tìm được (id_X)
+                */
+                const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
+                const roomIds = room.map((r) => r.id);
+                const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
+                if (img_room.length > 0) {
+                    for (const img of img_room) {
+                        const imagePath = `./uploads/${img.name_img}`;
+                        deleteFile(imagePath);
+                        await img.destroy();
+                    }
+                }
+                await Room.destroy({ where: { id_hotel: existHotel.id } });
+
+                await Rating.destroy({ where: { id_hotel: existHotel.id } }); // xóa hết luôn hả
+
+                await Report.destroy({ where: { id_hotel: existHotel.id } });
+
+                await Favorate.destroy({ where: { id_hotel: existHotel.id } }); // xóa hotel =>  => xóa OD 
+
+                await coupon.destroy({ where: { id_hotel: existHotel.id } });
+
+                await existHotel.destroy();
+
+                return res.status(200).json({ message: 'Xóa thành công.' });
             }
-            await Room.destroy({ where: { id_hotel: existHotel.id } });
-
-            await Rating.destroy({ where: { id_hotel: existHotel.id } }); // xóa hết luôn hả
-
-            await Report.destroy({ where: { id_hotel: existHotel.id } });
-
-            await Favorate.destroy({ where: { id_hotel: existHotel.id } }); // xóa hotel =>  => xóa OD 
-
-            await coupon.destroy({ where: { id_hotel: existHotel.id } });
-
-            await existHotel.destroy();
-
-            return res.status(200).json({ message: 'Xóa thành công.' });
 
         }
     } catch (error) {
@@ -390,7 +422,7 @@ const deleteImgHotel = async (req, res) => {
 
 const searchHotel = async (req, res) => {
     try {
-        const { option_price,name_hotel,city_code } = req.body
+        const { option_price, name_hotel, city_code } = req.body
         let where_price;
 
         switch (option_price) {
@@ -416,9 +448,9 @@ const searchHotel = async (req, res) => {
 
         const get_hotel = await Hotel.findAll(
             {
-                where:{ name_hotel: { [Op.like]: `%${name_hotel}%` } , city_code:city_code },
-                include:[
-                    {model:Room,where:where_price},
+                where: { name_hotel: { [Op.like]: `%${name_hotel}%` }, city_code: city_code },
+                include: [
+                    { model: Room, where: where_price },
                     {
                         model: ImgHotel, attributes: ['id', 'name_img', 'url', 'id_hotel'], raw: true,
                         nest: true,
@@ -438,41 +470,41 @@ const searchHotel = async (req, res) => {
 
 const HotelFavorate = async (req, res) => {
     try {
-     const { id, id_user, id_hotel, status } = req.body;
-     const existFavorate = await Favorate.findOne({ where: { id_user, id_hotel } });
- 
-     if (existFavorate) {
-         const favorate= await Favorate.destroy({ where: { id:id,id_user: id_user, id_hotel: id_hotel } });
-         res.status(200).json({favorate, message: "Hủy lưu thành công" })
-     }
-     else {
-         const favorate= await Favorate.create({ id_user, id_hotel, status });
-         res.status(200).json({ favorate, message: "Lưu bài thành công" })
-     }
+        const { id, id_user, id_hotel, status } = req.body;
+        const existFavorate = await Favorate.findOne({ where: { id_user, id_hotel } });
+
+        if (existFavorate) {
+            const favorate = await Favorate.destroy({ where: { id: id, id_user: id_user, id_hotel: id_hotel } });
+            res.status(200).json({ favorate, message: "Hủy lưu thành công" })
+        }
+        else {
+            const favorate = await Favorate.create({ id_user, id_hotel, status });
+            res.status(200).json({ favorate, message: "Lưu bài thành công" })
+        }
     } catch (error) {
-     res.status(404).json(error)
+        res.status(404).json(error)
     }
- };
- 
- const renderFavorate = async (req, res) => {
-     try {
-         const favorate = await Favorate.findAll(
-             {
-                 attributes: ['id', 'id_hotel', 'status', 'id_user'],
-                 include: [
-                     { model: Hotel, attributes: ['id','name_hotel'] }
-                 ],
-                 raw: true,
-                 nest: true,
-             }
-         );
-         res.json(favorate);
-     } catch (error) {
-         res.json("không lấy được ");
-         console.log(error);
-     }
- };
- 
+};
+
+const renderFavorate = async (req, res) => {
+    try {
+        const favorate = await Favorate.findAll(
+            {
+                attributes: ['id', 'id_hotel', 'status', 'id_user'],
+                include: [
+                    { model: Hotel, attributes: ['id', 'name_hotel'] }
+                ],
+                raw: true,
+                nest: true,
+            }
+        );
+        res.json(favorate);
+    } catch (error) {
+        res.json("không lấy được ");
+        console.log(error);
+    }
+};
+
 
 module.exports = {
     getHotel,

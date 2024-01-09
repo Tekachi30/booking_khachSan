@@ -250,7 +250,14 @@ export default {
     },
 
     openCart() {
-      this.isShowCart = !this.isShowCart
+      if(this.cart.length > 0 )
+      {
+        this.isShowCart = !this.isShowCart
+      }
+      else
+      {
+        this.$refs.toast.showToast('Vui lòng chọn tối thiểu 1 phòng.');
+      }
     },
 
     formatCurrency(value) {

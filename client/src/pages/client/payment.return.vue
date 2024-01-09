@@ -46,13 +46,16 @@ export default {
     data() {
         return {
             user: '',
-            order: ''
+            order: '',
+            check_create:''
 
         };
     },
     async mounted() {
-        this.user = JSON.parse(localStorage.getItem("User"));
+       
         this.order = JSON.parse(localStorage.getItem("order"));
+        this.getUSer()
+        this.check_create = JSON.parse(localStorage.getItem("check_create"));
         const check_payment = await this.getPayment()
         console.log(check_payment)
         if (check_payment === `00`) {
@@ -60,7 +63,8 @@ export default {
                 {
                     "vnp_orderID": this.$route.query.vnp_OrderInfo,
                     "total_bank": this.$route.query.vnp_Amount/100,
-                    "date_bank": this.formatDate(this.$route.query.vnp_PayDate)
+                    "date_bank": this.formatDate(this.$route.query.vnp_PayDate),
+                    "check_create":this.check_create
                 })
         }
         else {
@@ -92,6 +96,15 @@ export default {
         goHome()
         {
             this.$router.push('/');
+        },
+        async getUSer()
+        {
+            try {
+                const result = await this.$axios.get(`user/get/${this.order.id_user}`)
+                this.user = result.data
+            } catch (error) {
+                console.log(error)
+            }
         }
     },
 };
