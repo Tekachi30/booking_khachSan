@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 // Hàm xử lý để gửi email
 const sendMail = (req, res) => {
@@ -7,16 +7,16 @@ const sendMail = (req, res) => {
 
   // Tạo đối tượng transporter sử dụng SMTP transport
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
-      user: 'manfromhell2000@gmail.com',
-      pass: 'Tekachi3030',
+      user: "manfromhell2000@gmail.com",
+      pass: "Tekachi3030",
     },
   });
 
   // Thiết lập thông tin người nhận, người gửi, chủ đề và nội dung email
   const mailOptions = {
-    from: 'manfromhell2000@gmail.com',
+    from: "manfromhell2000@gmail.com",
     to: to,
     subject: subject,
     text: text,
@@ -25,11 +25,11 @@ const sendMail = (req, res) => {
   // Sử dụng transporter để gửi email
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error('Error:', error.message);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.error("Error:", error.message);
+      return res.status(500).json({ error: "Internal Server Error" });
     } else {
-      console.log('Email sent:', info.response);
-      return res.status(200).json({ success: 'Email sent successfully' });
+      console.log("Email sent:", info.response);
+      return res.status(200).json({ success: "Email sent successfully" });
     }
   });
 };

@@ -62,7 +62,8 @@ const addBanner = async (req, res) => {
                         await Banner.create({title_banner: title_banner ,url_banner: imageUrl, name_banner: req.file.filename, content_banner:content_banner})
                         return res.status(200).json({ message: "Thêm thành công" })
                     }
-                }else{
+                }
+                else{
                     return res.status(201).json({ message: "Title bị trùng lặp." })
                 }
             });
@@ -88,7 +89,7 @@ const updateBanner = async (req, res) => {
             }
 
             const Ubanner = await Banner.findByPk(id);
-            const exsitTitle = await Banner.findOne({ where: { title_banner } });
+            const exsitTitle = await Banner.findOne({ where: { title_banner, id: id } });
 
             if(!exsitTitle){
                 // Kiểm tra nếu có file ảnh mới được chọn
@@ -102,7 +103,20 @@ const updateBanner = async (req, res) => {
                 }
                 return res.status(200).json({ message: `Cập nhật thành công ` });
             }else{
-                return res.status(201).json({ message: "Title bị trùng lặp." })
+                if(exsitTitle.id == id){
+                    // Kiểm tra nếu có file ảnh mới được chọn
+                if (req.file) {
+                    const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+                    const imagePath = `./uploads/${Ubanner.name_banner}`;
+                    deleteFile(imagePath);
+                    await Ubanner.update({ title_banner: title_banner, content_banner:content_banner, url_banner: imageUrl, name_banner: req.file.filename })
+                } else {
+                    await Ubanner.update({ title_banner: title_banner,content_banner:content_banner});
+                }
+                return res.status(200).json({ message: `Cập nhật thành công ` });
+                }else{
+                    return res.status(201).json({ message: "Title bị trùng lặp." })
+                }
             }
         });
     } catch (error) {

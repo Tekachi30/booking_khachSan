@@ -6,7 +6,7 @@
             <div class=" relative overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <form class="flex items-center">
+                        <!-- <form class="flex items-center">
                             <label for="simple-search" class="sr-only">Tìm kiếm</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -21,7 +21,18 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="Tìm theo tên.." required="">
                             </div>
-                        </form>
+                        </form> -->
+
+                        <div class="mt-5">
+                           <select v-model="month" @change="changeMonth()"
+                              class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none ">
+                              <option value="1">Tháng 1</option>
+                              <option value="2">Tháng 2</option>
+                              <option value="3">Tháng 3</option>
+                              <option value="4">Tháng 4</option>
+                           </select>
+                        </div>
+
 
                         <!--view getHotel => option value lấy ra id_hotel-->
                         <div class="hotel mb-2 mt-3">
@@ -114,7 +125,6 @@
                 <!-- Modal body -->
                 <div>
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
-
                         <div>
                             <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trạng
                                 thái</label>
@@ -124,7 +134,6 @@
                                 <option value="Đã Hủy">Đã hủy</option>
                             </select>
                         </div>
-
                     </div>
                     <button @click="updateOrder()"
                         class=" inline-flex items-center bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
@@ -154,7 +163,7 @@ export default
             return {
                 orders: [], hotels: [], owner: '', order: '', hotel: '',
                 isUpdate: false,
-                status: ''
+                status: '', month: '',
             }
         },
         mounted() {
@@ -185,10 +194,11 @@ export default
             async getOrder() {
                 try {
                         const result = await this.$axios.post(`order/get`,
-                            {
-                                "idHotel": this.hotel,
-                                "id_owner": this.owner.id
-                            });
+                        {
+                            "idHotel": this.hotel,
+                            "id_owner": this.owner.id,
+                        });
+
                         this.orders = result.data
                 } catch (error) {
                     console.log(error)
@@ -219,7 +229,21 @@ export default
                         this.$refs.toast.showToast(result.data.message);
                     }
                 } catch (error) {
+                    console.log(error);
+                }
+            },
 
+            async changeMonth(){
+                try {
+                        const result = await this.$axios.post(`order/getMoth`,
+                        {
+                            "id_owner": this.owner.id,
+                            "month": this.month
+                        });
+
+                        this.orders = result.data
+                } catch (error) {
+                    console.log(error)
                 }
             }
         }

@@ -79,8 +79,8 @@
     <!-- End block -->
 
     <!-- Delete modal -->
-    <div id="deleteModal" tabindex="-1" aria-hidden="true" v-if="isDelete"
-        class=" overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 right-0 left-0 z-50 justify-center items-center md:inset-0 max-h-full">
+    <div id="deleteModal" v-if="isDelete"
+        class="   overflow-y-auto overflow-x-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <!-- Modal content -->
             <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">

@@ -31,8 +31,9 @@ const getOrder = async (req, res) => {
     const exitsOwner = await Owner.findByPk(id_owner)
     if (exitsOwner) {
       const orders = await Order.findAll({
-
         attributes: ["id", "id_user", "status", "provider"],
+
+
         include: [
           {
             model: User,
@@ -64,6 +65,51 @@ const getOrder = async (req, res) => {
     console.log(error);
   }
 };
+
+const getUserOrder = async (req, res) => {
+  try {
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const getMoth = async (req, res) => {
+  try {
+    
+    const { id_owner, month } = req.body;
+    const exitsOwner = await Owner.findByPk(id_owner)
+    if (exitsOwner) {
+      const orders = await Order.findAll({
+        attributes: ["id", "id_user", "status", "provider","createdAt"],
+        where: sequelize.where
+        (sequelize.fn('MONTH', sequelize.col('Order.createdAt')), month),
+
+        include: [
+          {
+            model: User,
+            attributes: ["id", "fullname"]
+          },
+          {
+            model: OD,
+            attributes: ["id", "id_order", "id_room"],
+            required: true,
+            include: [
+              {
+                model: Room,
+                attributes: ["id", "id_hotel"],
+                required: true,
+              }
+            ]
+          }
+        ]
+      });
+      res.json(orders);
+  }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const getOrderbyUser = async (req, res) => {
   try {
@@ -470,5 +516,6 @@ module.exports = {
   addOrder_detail,
   updateOrder,
   searchOrder,
-  statusOrder
+  statusOrder,
+  getMoth
 }

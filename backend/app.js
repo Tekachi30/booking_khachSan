@@ -53,12 +53,14 @@ const io = new Server(server,
     next()
 });
 // node cron
+const cron = require('node-cron');
+
 const mathlevelController = require('./controllers/mathlevelController')
 
 
 // app.get('/api/level/get', async (req, res) => {
 //   try {
-//     const result = await mathlevelController.final_score();
+//     const result = await mathlevelController.mathLevel();
 //     res.send(result);
 //   } catch (error) {
 //     console.error(error);
@@ -67,7 +69,7 @@ const mathlevelController = require('./controllers/mathlevelController')
 // });
 
 
-// 0 1 1 * * 1h 1 tây hằng tháng
+//// 0 1 1 * * 1h 1 tây hằng tháng
 // const task = cron.schedule('* * * * *', () => {
 //   mathlevelController.mathLevel()
 // }, {

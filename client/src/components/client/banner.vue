@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto">
         <swiper :pagination="true" :modules="modules" class="mySwiper relative">
-            <swiper-slide :style="{ backgroundImage: `url(${banner.url_banner})`, backgroundSize: 'cover' }"
+            <swiper-slide :style="{ backgroundImage: `url(${banner.url_banner})`, width: '1400px', height: '800px' }"
                 class="bg-cover bg-no-repeat" v-for="(banner) in banners">
                 <div
                     class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
@@ -10,7 +10,7 @@
 
                             <strong class="block font-extrabold text-blue-700"> {{ banner.title_banner }} </strong>
                         </h1>
-                        <p class="mt-4 max-w-lg sm:text-xl/relaxed text-green-400">
+                        <p class="mt-4 max-w-lg sm:text-xl/relaxed text-green-800">
                             {{ banner.content_banner }}
                         </p>
                         <div class="mt-8 flex flex-wrap gap-4 text-center">

@@ -83,7 +83,9 @@ const final_score = async () => {
                 finalScore: score_final
             };
         });
+        
         return finalScore
+        
     } catch (error) {
         console.log(error)
     }
@@ -116,24 +118,28 @@ const mathLevel = async (req, res) => {
     try {
         const points = await final_score();
         const get_mathLevel = await Hotel.findAll();
+        
         const array_mathLevel = get_mathLevel.map(math => ({
             level: math.level,
             point: math.point,
             id: math.id
         }))
+
+
         for (let i = 0; i < points.length; i++) {
+            console.log(points)
             for (let x = 0; x < array_mathLevel.length; x++) {
-                if (points[i].id == array_mathLevel[x].id) {
-                    const level = result_math_level(2, points[i].finalScore)
+                if (points[i].id_hotel == array_mathLevel[x].id) {
+                    const level = result_math_level(1, points[i].finalScore)
                     await Hotel.update({
                         level: level,
-                        point: points[i].point,
+                        point: points[i].finalScore,
                     }, {
                         where: {
                             id: array_mathLevel[x].id,
                         }
                     })
-                    break; 
+                     
                 }
             }
         }

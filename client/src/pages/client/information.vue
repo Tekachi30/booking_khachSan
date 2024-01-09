@@ -211,7 +211,7 @@
                           class="bg-gray-50 border mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                           placeholder="Nhập họ và tên" required="">
                       <p v-if="!fullname && fullnameFocused" class="text-red-500 text-sm ml-1">Họ và tên chưa được nhập!</p>
-                      <p class="text-red-500 text-sm ml-1" 
+                      <p class="text-red-500 text-sm ml-1"
                         v-else-if="!validFullName(fullname) && fullnameFocused">Tên người dùng phải từ 3 tới 50 ký tự</p>
                   </div>
                   <div>
@@ -246,7 +246,7 @@
                       <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                       <input v-model="email" type="text" name="email" id="email"
                           class="bg-gray-50 border mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Nhập email" required="">
+                          placeholder="Nhập email" required="" disabled>
                       <p v-if="!email && emailFocused" class="text-red-500 text-sm ml-1">Email chưa được nhập!</p>
                       <p class="text-red-500 text-sm ml-1" v-else-if="!validEmail(email) && emailFocused">Email sai định dạng.</p>
                   </div>
@@ -430,20 +430,40 @@ export default {
    
 
     async unfollow(follow) {
-            const id = follow.id;
-            const id_user = this.user.id
-            const result = await this.$axios.post('favorate/handle',
-                {
-                    "id_user": id_user,
-                    "id_hotel": follow.id_hotel,
-                    "id": follow.id,
-                    "status": follow.status
-                })
+        const id = follow.id;
+        const id_user = this.user.id
+        const result = await this.$axios.post('favorate/handle',
+            {
+                "id_user": id_user,
+                "id_hotel": follow.id_hotel,
+                "id": follow.id,
+                "status": follow.status
+            })
+        if (result.status == 200) {
+            this.$refs.toast.showToast(result.data.message);
+            this.getHotel()
+        }
+    },
+
+      // cập nhật hóa đơn
+      async updateOrder() {
+        try {
+            const result = await this.$axios.put(`order/update/`, {
+                status: "Đã Hủy",
+                id:this.order.id
+            });
             if (result.status == 200) {
+                this.openDelete()
+                // this.getOrder()
                 this.$refs.toast.showToast(result.data.message);
-                this.getHotel()
             }
-        },
+            else {
+                this.$refs.toast.showToast(result.data.message);
+            }
+        } catch (error) {
+          console.log(error);
+        }
+      }
   
   },
 };

@@ -27,8 +27,8 @@
               <swiper :pagination="true" :modules="modules" class="mySwiper">
                 <swiper-slide v-for="img in room.img_rooms">
                   <div class="flex items-center justify-center px-2">
-                    <img :src="img.url" alt="Mô tả ảnh"
-                      class="  object-cover  rounded-lg">
+                    <img :src="img.url" alt="Mô tả ảnh" 
+                      class="  object-cover  rounded-lg" style="width: 1200px; height: 480px;">
                   </div>
                 </swiper-slide>
               </swiper>

@@ -3,6 +3,9 @@ const Report = db.report_hotel;
 const User = db.User;
 const Hotel = db.hotel;
 const Owner = db.owner;
+const Order = db.order;
+const OD = db.order_detail;
+const Room = db.room_hotel;
 const sequelize = require('sequelize');
 const Op  = sequelize.Op
 
@@ -26,6 +29,29 @@ const addReport = async (req, res) => {
       const id = req.params.id;
       const {id_hotel , comment_report} = req.body;
 
+      const orders = await Order.findAll({
+        attributes: ["id", "id_user", "status", "provider"],
+        include: [
+          {
+            model: User,
+            attributes: ["id", "fullname"],
+          },
+          {
+            model: OD,
+            attributes: ["id", "id_order", "id_room"],
+            required: true,
+            include: [
+              {
+                model: Room,
+                attributes: ["id", "id_hotel"],
+                where: { id_hotel: id_hotel },
+                required: true,
+              },
+            ],
+          },
+        ],
+      });
+
       const existingReport = await Report.findOne({
         where: { id_hotel, id_user: id },
       });
@@ -39,12 +65,16 @@ const addReport = async (req, res) => {
       if(!existUser){
         return res.status(201).json({message: 'Không tìm thấy user'});
       }else{
-        await Report.create({
-          comment_report: comment_report,
-          id_hotel: id_hotel,
-          id_user: id,
-        });
-        return res.status(200).json({message: 'Báo cáo thành công'});
+        if(orders.status == "Đã Trả Phòng"){
+          await Report.create({
+            comment_report: comment_report,
+            id_hotel: id_hotel,
+            id_user: id,
+          });
+          return res.status(200).json({message: 'Báo cáo thành công'});
+        }else{
+          return res.status(201).json({message: 'Bạn chưa đủ điều kiện để báo cáo khách sạn này.'});
+        }
       }
     } catch (error) {
       console.log(error);

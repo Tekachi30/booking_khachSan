@@ -66,11 +66,11 @@
 
                 <div class="p-5">
                     <a>
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">{{ room.type_room }}</h5>
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">{{ formatTypeRoom(room.type_room) }}</h5>
                     </a>
                     <p class="mb-3 font-normal text-gray-700 ">{{ room.quanlity }}</p>
                     <p class="mb-3 font-normal text-gray-700 ">{{ room.real_quanlity }}</p>
-                    <p class="mb-3 font-normal text-gray-700 ">{{ room.price }}</p>
+                    <p class="mb-3 font-normal text-gray-700 ">{{ room.price }} Đồng</p>
 
                     <a @click="openUpdate(); select(room)"
                         class="inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
@@ -499,6 +499,7 @@ export default {
                 console.log(error)
             }
         },
+        
         async addRoom() {
             try {
                 if (!this.type_room || !this.quantity || !this.price) {
@@ -644,6 +645,22 @@ export default {
                 console.log(error)
             }
         },
+        formatTypeRoom(type) {
+      switch (type) {
+        case 'SGL':
+          return 'Phòng 1 giường đơn cho 1 người.';
+        case 'TWL':
+          return 'Phòng 2 giường đơn cho 2 người.';
+        case 'DBL':
+          return 'Phòng 1 giường đôi cho 2 người.';
+        case 'TRPL_1':
+          return 'Phòng 1 giường đơn và 1 giường đôi.';
+        case 'TRPL_2':
+          return 'Phòng 3 giường đơn.';
+        default:
+          return 'Unknown room type';
+      }
+    },
     },
 };
 </script>

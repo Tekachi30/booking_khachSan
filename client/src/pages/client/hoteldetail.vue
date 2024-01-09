@@ -36,6 +36,15 @@
       </swiper-slide>
     </swiper>
 
+    <!-- Mô tả khách sạn -->
+    <div class="mt-10">
+      <p class="mb-4 text-3xl font-extrabold text-gray-900 md:text-4xl">Thông tin khách sạn</p>
+      <div class="text-lg text-gray-700">
+        {{ hotel.information }}
+      </div>
+    </div>
+
+
     <!-- đặt phòng-->
     <p class="mb-4 mt-10 text-2xl font-extrabold  text-gray-900 md:text-3xl">Các loại phòng và giá</p>
     <div class="md:grid grid-cols-6 gap-4 px-2">
