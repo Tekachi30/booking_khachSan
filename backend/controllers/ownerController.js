@@ -131,9 +131,7 @@ const deleteOwner = async (req, res) => {
     const id = req.params.id;
     const exitsOwner = await Owner.findByPk(id);
     if (!exitsOwner) {
-      return res
-        .status(201)
-        .json({ message: "Không tìm thấy tài khoản chủ khách sạn." });
+      return res.status(201).json({ message: "Không tìm thấy tài khoản chủ khách sạn." });
     } else {
       const orders = await Order.findAll({
         attributes: ["id", "status"],
@@ -172,12 +170,11 @@ const deleteOwner = async (req, res) => {
       );
 
       if (paidOrders.length > 0) {
-        return res
-          .status(200)
-          .json({
+        return res.status(200).json({
             message: "Không thể xóa khách sạn vì có đơn hàng đã thanh toán.",
           });
       } else {
+
         for (const order of orders) {
           await OD.destroy({ where: { id_order: order.id } });
           await order.destroy();
@@ -194,10 +191,6 @@ const deleteOwner = async (req, res) => {
               await img.destroy();
             }
           }
-          /*
-                    tìm X
-                    lấy list img_X từ X tìm được (id_X)
-                */
           const room = await Room.findAll({
             where: { id_hotel: uniqueHotelIds[y] },
           });
@@ -222,12 +215,12 @@ const deleteOwner = async (req, res) => {
 
           await Coupon.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
 
-          await Hotel.destroy({where: {id: uniqueHotelIds[y]}});
+          await Hotel.destroy({ where: { id: uniqueHotelIds[y] } });
 
-          await exitsOwner.destroy();
-
-          return res.status(200).json({ message: "Xóa thành công." });
         }
+        await Mess.destroy({where:{id_owner:id}})
+        await Owner.destroy({where:{id:id}})
+        return res.status(200).json({ message: "Xóa thành công." });
       }
     }
   } catch (error) {
