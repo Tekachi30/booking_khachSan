@@ -159,30 +159,86 @@ const deleteOwner = async (req, res) => {
         ],
       });
 
-      let hotelIds = orders.flatMap((order) =>
-        order.order_details.map((detail) => detail.room_hotel.hotel.id)
-      );
+      if (orders.length > 0) {
 
-      let uniqueHotelIds = [...new Set(hotelIds)];
+        let hotelIds = orders.flatMap((order) =>
+          order.order_details.map((detail) => detail.room_hotel.hotel.id)
+        );
 
-      let paidOrders = orders.filter(
-        (order) => order.status == "Đã Thanh Toán"
-      );
+        const hotels = await Hotel.findAll({where:{id_owner:id}})
+        let HotelIds2 = hotels.flatMap((hotel)=>hotel.id);
+       
+        let uniqueHotelIds = [...new Set(hotelIds)];
+        uniqueHotelIds = [...new Set([...uniqueHotelIds, ...HotelIds2])];
 
-      if (paidOrders.length > 0) {
-        return res.status(200).json({
+        let paidOrders = orders.filter(
+          (order) => order.status == "Đã Thanh Toán"
+        );
+
+        if (paidOrders.length > 0) {
+          return res.status(200).json({
             message: "Không thể xóa khách sạn vì có đơn hàng đã thanh toán.",
           });
-      } else {
+        } else {
 
-        for (const order of orders) {
-          await OD.destroy({ where: { id_order: order.id } });
-          await order.destroy();
+          for (const order of orders) {
+            await OD.destroy({ where: { id_order: order.id } });
+            await order.destroy();
+          }
+
+          for (var y = 0; y < uniqueHotelIds.length; y++) {
+
+            const img_hotel = await ImgHotel.findAll({
+              where: { id_hotel: uniqueHotelIds[y] },
+            });
+            if (img_hotel.length > 0) {
+              for (const img of img_hotel) {
+                const imagePath = `./uploads/${img.name_img}`;
+                deleteFile(imagePath);
+                await img.destroy();
+              }
+            }
+            const room = await Room.findAll({
+              where: { id_hotel: uniqueHotelIds[y] },
+            });
+            const roomIds = room.map((r) => r.id);
+            const img_room = await ImgRoom.findAll({
+              where: { id_room: roomIds },
+            });
+            if (img_room.length > 0) {
+              for (const img of img_room) {
+                const imagePath = `./uploads/${img.name_img}`;
+                deleteFile(imagePath);
+                await img.destroy();
+              }
+            }
+            await Room.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+            await Rating.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+            await Report.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+            await Favorate.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+            await Coupon.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+
+            await Hotel.destroy({ where: { id: uniqueHotelIds[y] } });
+
+          }
+
+          await Mess.destroy({ where: { id_owner: id } })
+          await Owner.destroy({ where: { id: id } })
+          return res.status(200).json({ message: "Xóa thành công." });
         }
-
-        for (var y = 0; y < uniqueHotelIds.length; y++) {
+      }
+      else {
+        const hotels = await Hotel.findAll({where:{id_owner:id}})
+        let HotelIds2 = hotels.flatMap((hotel)=>hotel.id);
+        
+        for(var y=0 ; y< HotelIds2.length;y++)
+        {
           const img_hotel = await ImgHotel.findAll({
-            where: { id_hotel: uniqueHotelIds[y] },
+            where: { id_hotel:  HotelIds2[y] },
           });
           if (img_hotel.length > 0) {
             for (const img of img_hotel) {
@@ -192,7 +248,7 @@ const deleteOwner = async (req, res) => {
             }
           }
           const room = await Room.findAll({
-            where: { id_hotel: uniqueHotelIds[y] },
+            where: { id_hotel:  HotelIds2[y] },
           });
           const roomIds = room.map((r) => r.id);
           const img_room = await ImgRoom.findAll({
@@ -205,21 +261,20 @@ const deleteOwner = async (req, res) => {
               await img.destroy();
             }
           }
-          await Room.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+          await Room.destroy({ where: { id_hotel:  HotelIds2[y] } });
 
-          await Rating.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+          await Rating.destroy({ where: { id_hotel:  HotelIds2[y] } });
 
-          await Report.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+          await Report.destroy({ where: { id_hotel:  HotelIds2[y] } });
 
-          await Favorate.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+          await Favorate.destroy({ where: { id_hotel:  HotelIds2[y] } });
 
-          await Coupon.destroy({ where: { id_hotel: uniqueHotelIds[y] } });
+          await Coupon.destroy({ where: { id_hotel:  HotelIds2[y] } });
 
-          await Hotel.destroy({ where: { id: uniqueHotelIds[y] } });
-
+          await Hotel.destroy({ where: { id:  HotelIds2[y] } });
         }
-        await Mess.destroy({where:{id_owner:id}})
-        await Owner.destroy({where:{id:id}})
+        await Mess.destroy({ where: { id_owner: id } })
+        await Owner.destroy({ where: { id: id } })
         return res.status(200).json({ message: "Xóa thành công." });
       }
     }

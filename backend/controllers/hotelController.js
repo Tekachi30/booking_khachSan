@@ -349,52 +349,96 @@ const deleteHotel = async (req, res) => {
                         ]
                 }
             )
-            const paidOrders = orders.filter(order => order.status == 'Đã Thanh Toán');
 
-            if (paidOrders.length > 0) {
-                return res.status(200).json({ message: 'Không thể xóa khách sạn vì có đơn hàng đã thanh toán.' });
-            }
-            else {
-                for (const order of orders) {
-                    await OD.destroy({ where: { id_order: order.id } });
-                    await order.destroy();
+            if(orders.length > 0)
+            {
+                const paidOrders = orders.filter(order => order.status == 'Đã Thanh Toán');
+
+                if (paidOrders.length > 0) {
+                    return res.status(200).json({ message: 'Không thể xóa khách sạn vì có đơn hàng đã thanh toán.' });
                 }
+                else {
+                    for (const order of orders) {
+                        await OD.destroy({ where: { id_order: order.id } });
+                        await order.destroy();
+                    }
+                    const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
+                    if (img_hotel.length > 0) {
+                        for (const img of img_hotel) {
+                            const imagePath = `./uploads/${img.name_img}`;
+                            deleteFile(imagePath);
+                            await img.destroy();
+                        }
+                    }
+                    /*
+                        tìm X
+                        lấy list img_X từ X tìm được (id_X)
+                    */
+                    const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
+                    const roomIds = room.map((r) => r.id);
+                    const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
+                    if (img_room.length > 0) {
+                        for (const img of img_room) {
+                            const imagePath = `./uploads/${img.name_img}`;
+                            deleteFile(imagePath);
+                            await img.destroy();
+                        }
+                    }
+                    await Room.destroy({ where: { id_hotel: existHotel.id } });
+    
+                    await Rating.destroy({ where: { id_hotel: existHotel.id } }); 
+    
+                    await Report.destroy({ where: { id_hotel: existHotel.id } });
+    
+                    await Favorate.destroy({ where: { id_hotel: existHotel.id } }); 
+    
+                    await coupon.destroy({ where: { id_hotel: existHotel.id } });
+    
+                    await existHotel.destroy();
+    
+                    return res.status(200).json({ message: 'Xóa thành công.' });
+                }
+            }
+
+            else
+            {
                 const img_hotel = await ImgHotel.findAll({ where: { id_hotel: existHotel.id } });
-                if (img_hotel.length > 0) {
-                    for (const img of img_hotel) {
-                        const imagePath = `./uploads/${img.name_img}`;
-                        deleteFile(imagePath);
-                        await img.destroy();
+                    if (img_hotel.length > 0) {
+                        for (const img of img_hotel) {
+                            const imagePath = `./uploads/${img.name_img}`;
+                            deleteFile(imagePath);
+                            await img.destroy();
+                        }
                     }
-                }
-                /*
-                    tìm X
-                    lấy list img_X từ X tìm được (id_X)
-                */
-                const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
-                const roomIds = room.map((r) => r.id);
-                const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
-                if (img_room.length > 0) {
-                    for (const img of img_room) {
-                        const imagePath = `./uploads/${img.name_img}`;
-                        deleteFile(imagePath);
-                        await img.destroy();
+                    /*
+                        tìm X
+                        lấy list img_X từ X tìm được (id_X)
+                    */
+                    const room = await Room.findAll({ where: { id_hotel: existHotel.id } })
+                    const roomIds = room.map((r) => r.id);
+                    const img_room = await ImgRoom.findAll({ where: { id_room: roomIds } });
+                    if (img_room.length > 0) {
+                        for (const img of img_room) {
+                            const imagePath = `./uploads/${img.name_img}`;
+                            deleteFile(imagePath);
+                            await img.destroy();
+                        }
                     }
-                }
-                await Room.destroy({ where: { id_hotel: existHotel.id } });
-
-                await Rating.destroy({ where: { id_hotel: existHotel.id } }); 
-
-                await Report.destroy({ where: { id_hotel: existHotel.id } });
-
-                await Favorate.destroy({ where: { id_hotel: existHotel.id } }); 
-
-                await coupon.destroy({ where: { id_hotel: existHotel.id } });
-
-                await existHotel.destroy();
-
-                return res.status(200).json({ message: 'Xóa thành công.' });
+                    await Room.destroy({ where: { id_hotel: existHotel.id } });
+    
+                    await Rating.destroy({ where: { id_hotel: existHotel.id } }); 
+    
+                    await Report.destroy({ where: { id_hotel: existHotel.id } });
+    
+                    await Favorate.destroy({ where: { id_hotel: existHotel.id } }); 
+    
+                    await coupon.destroy({ where: { id_hotel: existHotel.id } });
+    
+                    await existHotel.destroy();
+    
+                    return res.status(200).json({ message: 'Xóa thành công.' });
             }
+            
 
         }
     } catch (error) {
