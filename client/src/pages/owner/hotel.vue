@@ -500,6 +500,7 @@ export default {
     openAdd() {
       this.isAdd = !this.isAdd
       this.imgs = []
+      this.clear();
     },
     openUpdate() {
       // reset mảng chứa ảnh 
@@ -740,6 +741,22 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+
+    clear(){
+      this.city_id = '';
+      this.districts_code = '';
+      this.ward_code = '';
+      this.name_hotel = '';
+      this.information = '';
+      this.address = '';
+
+      this.name_hotel_forcus = false;
+      this.address_forcus = false;
+      this.city_id_forcus = false;
+      this.districts_code_forcus = false;
+      this.ward_code_forcus = false;
+      this.information_forcus = false;
     },
 
     async deleteHotel()

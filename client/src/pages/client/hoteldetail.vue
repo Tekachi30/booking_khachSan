@@ -214,7 +214,7 @@ export default {
       hotels: [], hotel: '', user: '', id_hotel: '', quantity: '', content: '',
       citys: [], districts: [], wards: [], cart: [],
       countRating: '', longitube: null, latitube: null, img_hotel_1: null, 
-      isShowReport: false,
+      isShowReport: false, contentFocused: false,
       room: [], selectedRooms: [], roomQuantity: {},id_owner :null
     };
   },
@@ -323,11 +323,10 @@ export default {
     increaseQuantity(room, index) {
       // Check for existing cart item with the same room ID
       const cartItem = this.cart.find(item => item.id === room.id);
-
-      if (this.roomQuantity[room.id] >= room.quantity) {
+      if (this.roomQuantity[room.id] >= room.real_quantity) {
         // alert('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
         this.$refs.toast.showToast('Số lượng đặt phòng không được phép lớn hơn số lượng phòng thực tế.');
-        this.roomQuantity[room.id] = room.quantity;
+        this.roomQuantity[room.id] = room.real_quantity;
         return;
       }
 
@@ -385,23 +384,24 @@ export default {
     },
 
     async reportHotel() {
-      this.contentFocused = true;
-      if (this.content) {
-        try {
-            const result = await this.$axios.post(`report/add/${this.user.id}`,
-                {
-                    id_hotel: this.$route.params.id,
-                    comment_report: this.content
-                })
-                this.$refs.toast.showToast(result.data.message);
-            if (result.status === 200) {
-              this.contentFocused = false;
-              this.openReport();
+      try {
+        if(this.content){
+          const result = await this.$axios.post(`report/add/${this.user.id}`,
+              {
+                  id_hotel: this.$route.params.id,
+                  comment_report: this.content
+              })
               this.$refs.toast.showToast(result.data.message);
-            }
-        } catch (error) {
-            console.log(error)
+          if (result.status === 200) {
+            this.contentFocused = false;
+            this.openReport();
+            this.$refs.toast.showToast(result.data.message);
+          }
+        }else{
+          this.contentFocused = true;
         }
+      } catch (error) {
+          console.log(error)
       }
     }
   },

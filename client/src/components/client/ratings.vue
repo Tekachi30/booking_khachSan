@@ -85,13 +85,13 @@
             <div class="py-4 px-4">
                 <StarRating :star-size="30" :increment="0.1" :star-color="'text-yellow-500'"
                     :empty-star-color="'text-gray-300'" v-model:rating="rating" />
-                <p class="text-red-500 text-sm ml-1" v-if="!rating && ratingFocused">Không được để trống.</p>
+                <p class="text-red-500 text-sm ml-1" v-if="!rating && ratingFocused">Vui lòng đánh giá điểm.</p>
 
             </div>
             <div class="py-4 px-4">
                 <textarea class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
                     placeholder="Nhập nội dung ..." v-model="content"></textarea>
-                <p class="text-red-500 text-sm ml-1" v-if="!content && contentFocused">Không được để trống.</p>
+                <p class="text-red-500 text-sm ml-1" v-if="!content && contentFocused">Hãy chia sẻ trải nghiệm của bạn về khách sạn.</p>
 
             </div>
             <div class="modal-footer py-3 px-4 ">

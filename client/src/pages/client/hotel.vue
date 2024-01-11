@@ -237,6 +237,7 @@ export default {
                 console.log(error)
             }
         },
+        
         async getHotel() {
             try {
                 const result = await this.$axios.get(`hotel/get/`)
