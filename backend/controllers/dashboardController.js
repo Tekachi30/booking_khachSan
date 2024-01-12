@@ -16,12 +16,26 @@ const Op = sequelize.Op
 // thống kê số bình luận theo 12 tháng của 1 khách sạn 
 
 //test
-const getOwner = async (req, res) =>{
+const getOwner = async (req, res) => {
     try {
-        const owner = await Owner.findAll({
-            attributes: ['fullname']
+        // đếm số lượng phòng của khách sạn
+        const hotels = await Hotel.findAll({
+            attributes: ['id', 'name_hotel'],
         });
-        res.json(owner);
+
+        const arrayCount = []
+        for (const hotel of hotels) {
+            const count = await Room.count({
+                where: { id_hotel: hotel.id }
+            })
+            arrayCount.push(
+                {
+                    count:count,
+                    name_hotel:hotel.name_hotel
+                }
+            )
+        }
+        res.json(arrayCount)
     } catch (error) {
         console.log(error);
     }

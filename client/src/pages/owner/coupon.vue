@@ -1,7 +1,5 @@
 <template>
     <!-- Start block -->
-
-
     <section class=" p-3 sm:p-5 antialiased">
         <div class=" px-4 ">
             <!-- Start coding here -->
@@ -206,7 +204,7 @@
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm
                             giá</label>
-                        <input v-model="discount" type="text" name="discount" id="discount"
+                        <input v-model="discount" type="text" name="discount" id="discount" @change="checkDiscount(e)"
                             class="bg-gray-50 border mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập giảm giá" required="">
                         <p v-if="!discount && discount_forcus" class="text-red-500 text-sm ml-1">Giảm giá chưa được nhập!</p>
@@ -372,16 +370,17 @@ export default
             },
 
             checkDiscount(e) {
-             if(this.discount >= 0)
+             if(this.discount > 0)
              {
                  if (this.discount > this.max_discount) {
                     // alert(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`);
-                    this.$refs.toast.showToast(`Giá giảm đã bị vượt giới hạn. ${this.max_discount}`);
-                    // this.discount = this.max_discount;
+                    this.$refs.toast.showToast(`Giá giảm đã bị vượt giới hạn ${this.max_discount}`);
+                    this.discount = this.max_discount;
                  }
              }else{
                 // alert(`Giá giảm phải lớn hơn 0.`)
-                this.$refs.toast.showToast(`Giá giảm phải lớn hơn 0.`);
+                this.$refs.toast.showToast(`Mã giảm giá tối thiểu là 1%`); 
+                this.discount = 1;
              }
             },
             math_counpon(level) {

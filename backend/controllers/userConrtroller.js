@@ -222,38 +222,23 @@ const deleteUser = async (req, res) => {
             message: `Không thể xóa khách hàng - Xóa sau thời gian: ${result_last}`,
           });
       } else {
-        const needOrder = await Order.findOne({ where: { id_user: id } });
+        
+        const needOrder = await Order.findAll({ where: { id_user: id } });
+        if(needOrder.length > 0)
+        {
+          for(const order of needOrder)
+          {
+            await OD.destroy({where:{id_order:order.id}})
+            order.destroy()
+          }
+        }
+        
+        await Rating.destroy({ where: { id_user: id } });
+        await Mess.destroy({ where: { id_user: id } });
+        await Report.destroy({ where: { id_user: id } });
+        await Favorate.destroy({ where: { id_user: id } });
+        await Noti.destroy({ where: { id_user: id } });
 
-        const hasOD = await OD.findOne({ where: { id_order: needOrder.id } });
-        if (hasOD) {
-          await hasOD.destroy();
-        }
-        const hasRating = await Rating.findOne({ where: { id_user: id } });
-        if (hasRating) {
-          await hasRating.destroy();
-        }
-        const hasMess = await Mess.findOne({ where: { id_user: id } });
-        if (hasMess) {
-          await hasMess.destroy();
-        }
-        const hasReport = await Report.findOne({ where: { id_user: id } });
-        if (hasReport) {
-          await hasReport.destroy();
-        }
-        const hasFavorate = await Favorate.findOne({ where: { id_user: id } });
-        if (hasFavorate) {
-          await hasFavorate.destroy();
-        }
-        const hasNoti = await Noti.findOne({ where: { id_user: id } });
-        if (hasNoti) {
-          await hasNoti.destroy();
-        }
-        // await Order.destroy({ where: { id_user: id } });
-        // await Rating.destroy({ where: { id_user: id } });
-        // await Mess.destroy({ where: { id_user: id } });
-        // await Report.destroy({ where: { id_user: id } });
-        // await Favorate.destroy({ where: { id_user: id } });
-        // await Noti.destroy({ where: { id_user: id } });
         await User.destroy({ where: { id: id } });
         return res.status(200).json({ message: "Xóa thành công." });
       }

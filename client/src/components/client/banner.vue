@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto">
         <swiper :pagination="true" :modules="modules" class="mySwiper relative">
-            <swiper-slide :style="{ backgroundImage: `url(${banner.url_banner})`, width: '1400px', height: '800px' }"
+            <swiper-slide :style="{ backgroundImage: `url(${banner.url_banner})`}"
                 class="bg-cover bg-no-repeat" v-for="(banner) in banners">
                 <div
                     class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">

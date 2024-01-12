@@ -13,6 +13,7 @@ export default {
     this.fetchData();
   },
   methods: {
+
     async fetchData() {
       try {
         // nơi nhận api 
@@ -25,9 +26,10 @@ export default {
     },
 
     showChart(data) {
+      
       const chartCanvas = this.$refs.chartCanvas;
       const chart = new Chart(chartCanvas, {
-        type: 'bar',
+        type: 'pie',
         data: {
           labels: [],
           datasets: [
@@ -52,14 +54,16 @@ export default {
       // Add data points to the chart
       data.forEach(item => {
         // tên title => vi tháng 1-2-3 ...
-        chart.data.labels.push(`Danh mục: ${item.fullname}`);
+        chart.data.labels.push(`Khách sạn: ${item.name_hotel}`);
         // giá trị kết quả trả về => vd 100-200-300...
-        // chart.data.datasets[0].data.push(item.result);
+        chart.data.datasets[0].data.push(item.count);
       });
 
       // Update the chart
       chart.update();
-    }
+    },
+    
+
   }
 };
 </script>
