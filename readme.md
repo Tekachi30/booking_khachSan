@@ -28,7 +28,7 @@
 # pass: owner1234+
 
 https://postsrc.com/components/tailwind-css-error-pages/simple-500-error-component
-
+https://vue-chartjs.org/guide/#installation
 # Test thanh toán
 Ngân hàng: NCB
 Số thẻ: 9704198526191432198

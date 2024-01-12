@@ -92,6 +92,7 @@ const { routerCoupon } = require ('./routers/couponRouter');
 const { routerRoom } = require ('./routers/roomRouter');
 const { routerMail } = require ('./routers/mailRouter');
 const { routerPay } = require ('./routers/payMentRouter');
+const { routerDash} = require('./routers/dashboardRouter')
 // Thiết lập body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
