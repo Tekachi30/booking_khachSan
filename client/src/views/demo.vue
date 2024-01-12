@@ -16,13 +16,14 @@ export default {
     async fetchData() {
       try {
         // nơi nhận api 
-        const response = await axios.get('');
+        const response = await this.$axios.get('dashboard/getOwner');
         const data = response.data;
         this.showChart(data);
       } catch (error) {
         console.error(error);
       }
     },
+
     showChart(data) {
       const chartCanvas = this.$refs.chartCanvas;
       const chart = new Chart(chartCanvas, {
@@ -51,9 +52,9 @@ export default {
       // Add data points to the chart
       data.forEach(item => {
         // tên title => vi tháng 1-2-3 ...
-        chart.data.labels.push(`Danh mục: ${item.title}`);
+        chart.data.labels.push(`Danh mục: ${item.fullname}`);
         // giá trị kết quả trả về => vd 100-200-300...
-        chart.data.datasets[0].data.push(item.result);
+        // chart.data.datasets[0].data.push(item.result);
       });
 
       // Update the chart

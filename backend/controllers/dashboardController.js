@@ -15,7 +15,18 @@ const Op = sequelize.Op
 
 // thống kê số bình luận theo 12 tháng của 1 khách sạn 
 
+//test
+const getOwner = async (req, res) =>{
+    try {
+        const owner = await Owner.findAll({
+            attributes: ['fullname']
+        });
+        res.json(owner);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
-
+    getOwner
 }
