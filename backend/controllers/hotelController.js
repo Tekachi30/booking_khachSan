@@ -195,12 +195,16 @@ const getHotelNon = async (req, res) => {
 const addHotel = async (req, res) => {
     try {
         const id = req.params.id
-        const { name_hotel, address, city_code, district_code, ward_code, information } = req.body;
+        // check owner tồn tại hay không ?
+        const exitsOwner = await Owner.findByPk(id)
+        if(exitsOwner)
+        {
+            const { name_hotel, address, city_code, district_code, ward_code, information } = req.body;
         const locationData = await resultPost(city_code, district_code, ward_code, address);
         const exsitName_hotel = await Hotel.findOne({ where: { name_hotel: name_hotel } });
         // ! là không tồn tại hoặc đơn giản là phủ định của cái biến đó. 
         if (exsitName_hotel) {
-            return res.status(400).json({ message: 'Tên Khách sạn đã được sử dụng.' });
+            return res.status(201).json({ message: 'Tên Khách sạn đã được sử dụng.' });
         } else {
             const hotel = await Hotel.create({
                 name_hotel: name_hotel,
@@ -218,6 +222,13 @@ const addHotel = async (req, res) => {
             })
             return res.status(200).json({ message: 'Thêm khách sạn thành công.', hotel });
         }
+        }
+        else
+        {
+            return res.status(201).json({ message: 'Không tồn tại chủ khách sạn' });
+
+        }
+        
     } catch (error) {
         console.log(error);
     }

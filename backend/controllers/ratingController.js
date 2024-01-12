@@ -52,8 +52,8 @@ const getByHotel = async (req, res) => {
   try {
     const id = req.params.id;
     const ratings = await Rating.findAll({
-      where: { id_hotel: id },
       include: [{ model: User, attributes: ["fullname"] }],
+      where: { id_hotel: id },
     });
     const stars = [1, 2, 3, 4, 5];
     const ratingStatistics = [];
@@ -61,10 +61,11 @@ const getByHotel = async (req, res) => {
     for (const star of stars) {
       const countResult = await Rating.count({
         where: {
+          id_hotel: id,
           score_rating: {
             [sequelize.Op.and]: [
-              { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
-              { [sequelize.Op.lt]: star + 1 }, // Điểm đánh giá nhỏ hơn mức sao tiếp theo
+              { [sequelize.Op.gte]: star },
+              { [sequelize.Op.lt]: star + 1 },
             ],
           },
         },
@@ -75,18 +76,21 @@ const getByHotel = async (req, res) => {
           [sequelize.fn("SUM", sequelize.col("score_rating")), "total_score"],
         ],
         where: {
+          id_hotel: id,
           score_rating: {
             [sequelize.Op.and]: [
-              { [sequelize.Op.gte]: star }, // Điểm đánh giá lớn hơn hoặc bằng mức sao hiện tại
-              { [sequelize.Op.lt]: star + 1 }, // Điểm đánh giá nhỏ hơn mức sao tiếp theo
+              { [sequelize.Op.gte]: star },
+              { [sequelize.Op.lt]: star + 1 },
             ],
           },
         },
         raw: true,
       });
 
-      const totalScore = averageResult[0].total_score;
-      const averageScore = totalScore / countResult;
+      const totalScore = averageResult[0]?.total_score || 0;
+
+      // Xử lý chia cho 0 hoặc khi countResult là 0
+      const averageScore = countResult !== 0 ? totalScore / countResult : 0;
 
       ratingStatistics.push({
         star,
@@ -94,16 +98,24 @@ const getByHotel = async (req, res) => {
         average_score: averageScore,
       });
     }
-    const overallAverage =
-      ratingStatistics.reduce((acc, rating) => acc + rating.average_score, 0) /
-      ratingStatistics.length;
+
+    // Tính toán tổng trung bình với số lượng đánh giá thực sự
+    let overallAverage =
+      ratingStatistics.reduce((acc, rating) => acc + rating.average_score * rating.count, 0) /
+      ratings.length;
+    
+    if(isNaN(overallAverage))
+    {
+      overallAverage = 0
+    }
     res.json({
       ratingStatistics,
       ratings,
       overallAverage,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).send("Lỗi Nội Server");
   }
 };
 

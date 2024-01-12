@@ -421,9 +421,10 @@
             </div>
         </div>
     </div>
-</template>
 <!--component toast thông báo !!!-->
 <toast ref="toast"></toast>
+</template>
+
 <script>
 
 // Import Swiper Vue.js components
@@ -473,7 +474,7 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
-    toast,
+    toast
   },
   setup() {
     return {
@@ -616,7 +617,7 @@ export default {
                "ward_code": this.ward_code,
                "information": this.information
              })
-           console.log(result.data.hotel.id)
+          
 
            if (result.status == 200) {
              const formImg = new FormData();
@@ -640,7 +641,7 @@ export default {
                 this.ward_code_forcus = false;
                 this.information_forcus = false;
                 // this.avatar_forcus = false;
-                console.log(result.data.message)
+                
 
                 setTimeout(() => {
                    location.reload()
@@ -653,6 +654,11 @@ export default {
              } catch (error) {
                console.log(error)
              }
+           }
+           else
+           {
+           this.$refs.toast.showToast(result.data.message);
+         
            }
          }
          else {
