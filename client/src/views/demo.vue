@@ -1,68 +1,34 @@
 <template>
-  <div>
-    <canvas ref="chartCanvas"></canvas>
+  <div class="container">
+    <Bar :data="chartData" />
   </div>
 </template>
 
 <script>
-import Chart from 'chart.js/auto';
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 export default {
-  name: 'App',
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-
-    async fetchData() {
-      try {
-        // nơi nhận api 
-        const response = await this.$axios.get('dashboard/getRoomHotel');
-        const data = response.data;
-        this.showChart(data);
-      } catch (error) {
-        console.error(error);
+  name: 'BarChart',
+  components: { Bar },
+  data: () => ({
+    loaded: false,
+    chartData: {
+        labels: [ 'January', 'February', 'March'],
+        datasets: [
+          {
+            label: 'Data One',
+            backgroundColor: ['#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360','#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+            data: [40, 20, 12]
+          }
+        ]
       }
-    },
-
-    showChart(data) {
-      
-      const chartCanvas = this.$refs.chartCanvas;
-      const chart = new Chart(chartCanvas, {
-        type: 'pie',
-        data: {
-          labels: [],
-          datasets: [
-            {
-              label: 'Số lượng bài viết',
-              data: [],
-              backgroundColor: 'rgba(46, 159, 225, 0.2)',
-              borderColor: 'rgba(46, 159, 225, 1)',
-              borderWidth: 1
-            },
-          ]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      });
-
-      // Add data points to the chart
-      data.forEach(item => {
-        // tên title => vi tháng 1-2-3 ...
-        chart.data.labels.push(`Khách sạn: ${item.name_hotel}`);
-        // giá trị kết quả trả về => vd 100-200-300...
-        chart.data.datasets[0].data.push(item.count);
-      });
-
-      // Update the chart
-      chart.update();
-    },
-    
-
+  }),
+  created() {
+    this.chartData.labels.push('HELLO');
+    this.chartData.datasets[0].data.push(10)
   }
-};
+}
 </script>
