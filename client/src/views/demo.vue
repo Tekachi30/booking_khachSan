@@ -6,7 +6,6 @@
 
 <script>
 import Chart from 'chart.js/auto';
-import axios from 'axios'
 export default {
   name: 'App',
   mounted() {
@@ -17,7 +16,7 @@ export default {
     async fetchData() {
       try {
         // nơi nhận api 
-        const response = await this.$axios.get('dashboard/getOwner');
+        const response = await this.$axios.get('dashboard/getRoomHotel');
         const data = response.data;
         this.showChart(data);
       } catch (error) {
