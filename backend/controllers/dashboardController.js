@@ -126,7 +126,7 @@ const roomInMonth = async (req, res) => {
     }
 }
 
-// Số lượng khách đăng ký trong năm
+// Số lượng khách đăng ký trong tung năm
 const countUserInYear = async (req, res) => {
     try {
         
