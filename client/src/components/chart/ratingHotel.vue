@@ -15,8 +15,8 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const response = await this.$axios.get('dashboard/countUserInYear');
-                const data = response.data.userCountsByYear;
+                const response = await this.$axios.get('dashboard/countRatingHotel');
+                const data = response.data;
                 this.showChart(data);
             } catch (error) {
                 console.error(error);
@@ -30,7 +30,7 @@ export default {
                     labels: [],
                     datasets: [
                         {
-                            label: 'Số lượng khách hàng',
+                            label: 'Số lượng đánh giá',
                             data: [],
                             backgroundColor: ['#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360','#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
                             borderColor: 'rgba(46, 159, 225, 1)',
@@ -54,7 +54,7 @@ export default {
 
             // Add data points to the chart
             data.forEach(item => {
-                chart.data.labels.push(`${item.year}`);
+                chart.data.labels.push(`${item.name_hotel}`);
                 chart.data.datasets[0].data.push(item.count);
             });
 

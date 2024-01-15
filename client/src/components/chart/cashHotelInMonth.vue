@@ -15,8 +15,8 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const response = await this.$axios.get('dashboard/countUserInYear');
-                const data = response.data.userCountsByYear;
+                const response = await this.$axios.get('dashboard/castHotelInMonth');
+                const data = response.data.monthlyRevenue;
                 this.showChart(data);
             } catch (error) {
                 console.error(error);
@@ -25,14 +25,14 @@ export default {
         showChart(data) {
             const chartCanvas = this.$refs.chartCanvas;
             const chart = new Chart(chartCanvas, {
-                type: 'pie',
+                type: 'bar',
                 data: {
                     labels: [],
                     datasets: [
                         {
-                            label: 'Số lượng khách hàng',
+                            label: `Tổng tiền khách sạn thu được theo tháng`,
                             data: [],
-                            backgroundColor: ['#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360','#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+                            backgroundColor: 'rgba(46, 159, 225, 1)',
                             borderColor: 'rgba(46, 159, 225, 1)',
                             borderWidth: 1
                         },
@@ -54,8 +54,8 @@ export default {
 
             // Add data points to the chart
             data.forEach(item => {
-                chart.data.labels.push(`${item.year}`);
-                chart.data.datasets[0].data.push(item.count);
+                chart.data.labels.push(`Tháng ${item.month}`);
+                chart.data.datasets[0].data.push(item.totalBank);
             });
 
             // Update the chart

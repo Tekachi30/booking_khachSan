@@ -26,7 +26,7 @@
 
 # pass: admin
 # pass: owner1234+
-# pass: User123@
+# pass: User@123
 
 https://postsrc.com/components/tailwind-css-error-pages/simple-500-error-component
 https://vue-chartjs.org/guide/#installation

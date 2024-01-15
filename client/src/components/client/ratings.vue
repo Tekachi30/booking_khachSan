@@ -62,7 +62,6 @@
                 </div>
             </div>
       </div>
-
     </div>
 
     <!--popup rating-->
@@ -160,6 +159,11 @@ export default {
         async ratingHotel() {
             this.ratingFocused = true;
             this.contentFocused = true;
+
+            if (this.user.id === null) {
+            this.$refs.toast.showToast("Bạn cần đăng nhập để đánh giá");
+            return; // Stop further execution
+    }
             if (this.rating && this.content) {
                 try {
                     const result = await this.$axios.post(`rating/add/${this.user.id}`,

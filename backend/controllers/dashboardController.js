@@ -87,7 +87,8 @@ const getHotelForMonth = async (req, res) => {
 // Bao nhiêu phòng được tạo ra ở khách sạn đó theo từng tháng trong năm
 const roomInMonth = async (req, res) => {
     try {
-        const hotel_id = req.query.id;
+        // const hotel_id = req.query.id;
+        const hotel_id = 5
         // Lấy năm từ tham số yêu cầu (hoặc sử dụng mặc định nếu không có)
         const year = req.query.year || new Date().getFullYear();
 
@@ -153,8 +154,8 @@ const countUserInYear = async (req, res) => {
 // Số lượng khách hàng mới đăng ký trong tháng này.
 const countUserInMonth = async (req, res) => {
     try {
-        // const year = req.query.year || new Date().getFullYear();
-        const year = "2023"
+        const year = req.query.year || new Date().getFullYear();
+        // const year = "2023"
 
         const whereCondition = {
             createdAt: {
@@ -233,6 +234,8 @@ const countOwnerInMonth = async (req, res) => {
 const orderInMonth = async (req, res) => {
     try {
         const hotel_id = req.query.id;
+        // const hotel_id = 5;
+
         // Lấy năm từ tham số yêu cầu (hoặc sử dụng mặc định nếu không có)
         const year = req.query.year || new Date().getFullYear();
 
@@ -293,7 +296,8 @@ const orderInMonth = async (req, res) => {
 // Số tiền tháng này khách sạn kiếm được  
 const castHotelInMonth = async (req, res) => {
     try {
-        const hotel_id = req.query.id;
+        // const hotel_id = req.query.id;
+        const hotel_id = 7
         const year = req.query.year || new Date().getFullYear();
 
         const monthlyRevenue = await Order.findAll({
@@ -350,7 +354,8 @@ const castHotelInMonth = async (req, res) => {
 // Khách sạn tạo được bao nhiêu coupon trong tháng này
 const couponHotelInMonth = async (req, res) => {
     try {
-        const hotel_id = req.query.id;
+        // const hotel_id = req.query.id;
+        const hotel_id = 8;
         const year = req.query.year || new Date().getFullYear();
 
         const monthlyCoupon = await Coupon.findAll({
@@ -387,7 +392,30 @@ const couponHotelInMonth = async (req, res) => {
     }
 }
 
+const countRatingHotel = async (req, res) => {
+    try {
+        // đếm số lượng phòng của khách sạn
+        const hotels = await Hotel.findAll({
+            attributes: ['id', 'name_hotel'],
+        });
 
+        const arrayCount = []
+        for (const hotel of hotels) {
+            const count = await Rating.count({
+                where: { id_hotel: hotel.id }
+            })
+            arrayCount.push(
+                {
+                    count:count,
+                    name_hotel:hotel.name_hotel
+                }
+            )
+        }
+        res.json(arrayCount)
+    } catch (error) {
+        console.log(error);
+    }
+}
 module.exports = {
     getRoomHotel,
     getHotelForMonth,
@@ -398,4 +426,5 @@ module.exports = {
     orderInMonth,
     castHotelInMonth,
     couponHotelInMonth,
+    countRatingHotel,
 }

@@ -109,6 +109,11 @@ const router = createRouter({
           name: "banner",
           component: () => import("../pages/admin/banner.vue"),
         },
+        {
+          path: "noti",
+          name: "noti",
+          component: () => import("../pages/admin/noti.vue"),
+        },
       ],
     },
     {

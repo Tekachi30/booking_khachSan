@@ -52,6 +52,9 @@
               Bạn chưa có tài khoản ?
               <router-link to="/register" class="text-blue-500 hover:text-blue-700 font-semibold">
                 Đăng ký tài khoản
+              </router-link><br>
+              <router-link to="/" class="text-blue-500 hover:text-blue-700 font-semibold transition duration-300">
+                Về trang chủ
               </router-link>
             </p>
           </div>

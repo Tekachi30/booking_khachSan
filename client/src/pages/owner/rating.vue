@@ -106,7 +106,7 @@ export default
        try {
             const result = await this.$axios.post('rating/search',
             {
-                "search":this.value_search
+                "search": this.value_search
             });
             this.ratings = result.data
        } catch (error) {
