@@ -156,7 +156,7 @@ const countUserInMonth = async (req, res) => {
     try {
         const year = req.query.year || new Date().getFullYear();
         // const year = "2023"
-
+        console.log(year)
         const whereCondition = {
             createdAt: {
                 [Op.between]: [

@@ -26,8 +26,8 @@ export default {
     name: 'App',
     data() {
         const currentYear = new Date().getFullYear();
-        const startYear = 2015;
-        const years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => startYear + index);
+        const startYear = 1999;
+        const years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => startYear + index); // laasy code tren mang ?
         return {
             year: years, hotel: '',
             hotels: []

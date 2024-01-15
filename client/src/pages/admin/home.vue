@@ -1,47 +1,47 @@
 <template>
-  <div class="flex flex-wrap mb-10">
+  <div class="grid grid-cols-1 md:grid-cols-3 md:gap-3">
     <div class="mx-5">
-      <userInYear />
+      <userInYear class="w-full" />
     </div>
 
     <div class="mx-5">
-      <roomHotel />
+      <roomHotel class="w-full" />
     </div>
 
     <div class="mx-5">
-      <ratingHotel/>
+      <ratingHotel class="w-full"/>
     </div>
   </div>
 
-  <div class="flex flex-row mb-10">
-    <div class="mx-5 w-6/12">
+  <div class="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+    <div class="mx-5 ">
       <userInMonth />
     </div>
-    <div class="mx-5 w-6/12">
+    <div class="mx-5 ">
       <hotelForMonth />
     </div>
   </div>
 
-  <div class="flex flex-row">
-    <div class="mx-5 w-6/12">
+  <div class="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+    <div class="mx-5 ">
         <ownerInMonth/>
     </div>
-    <div class="mx-5 w-6/12">
+    <div class="mx-5 ">
         <orderInMonth/>
     </div>
   </div>
 
-  <div class="flex flex-row mb-10">
-    <div class="mx-5 w-6/12">
+  <div class="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+    <div class="mx-5 ">
         <roomInMonth/>
     </div>
-    <div class="mx-5 w-6/12">
+    <div class="mx-5 ">
         <cashHotelInMonth/>
     </div>
   </div>
 
-  <div class="flex flex-row">
-    <div class="mx-5 w-6/12">
+  <div class="">
+    <div class="mx-5 ">
         <couponHotelInMonth/>
     </div>
   </div>
