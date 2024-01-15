@@ -16,8 +16,9 @@ const getFullNoti = async (req, res) => {
 
 const getNotiByUser = async (req, res) => {
     try {
-        const id = req.pramas.id;
-        const user = await User.findByFk(id);
+        
+        const id = req.params.id;
+        const user = await User.findByPk(id);
         if(!user){
             return res.status(201).json({ message: 'Không tồn tại user.' });
         }else{
@@ -46,6 +47,7 @@ const addNoti = async (req, res) => {
             });
             res.io.emit('notification', notification);
         }
+        res.json({message:"Thêm thông báo thành công."})
     } catch (error) {
         console.log(error);
     }
@@ -53,20 +55,15 @@ const addNoti = async (req, res) => {
 
 const deleteNoti = async (req, res) => {
     try {
-        const {noti_id, user_id} = res.body;
-
-        const noti = await Noti.findOne({ where: {id: noti_id}});
-        const user = await User.findOne({ where: {id: user_id}});
-        if(!user){
-            return res.status(201).json({ message: 'Không tồn tại user.' });
-        }else{
+        const id = req.params.id;
+        const noti = await Noti.findByPk(id);
             if(!noti){
                 return res.status(201).json({ message: 'Không tồn tại thông báo.' });
             }else{
                 noti.destroy();
                 return res.status(200).json({ message: 'Xóa thành công.' });
             }
-        }
+        
     } catch (error) {
         console.log(error);
     }

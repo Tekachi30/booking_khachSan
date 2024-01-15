@@ -3,9 +3,9 @@ const { getFullNoti, getNotiByUser, addNoti, deleteNoti } = require("../controll
 const routerNoti = express.Router();
 
 routerNoti.get("/api/noti/get", getFullNoti);
-routerNoti.get("/api/noti/get/:id", getNotiByUser);
+routerNoti.get("/api/noti/getbyuser/:id", getNotiByUser);
 routerNoti.post("/api/noti/add", addNoti);
-routerNoti.post("/api/noti/delete", deleteNoti);
+routerNoti.delete("/api/noti/delete/:id", deleteNoti);
 
 module.exports = {
     routerNoti,

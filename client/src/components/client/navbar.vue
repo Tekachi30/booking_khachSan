@@ -65,6 +65,13 @@
             </transition>
           </div>
           
+          <div class="profile-pic ml-2 cursor-pointer" @click="openNoti()" v-if="ischeckLogin">
+          <div
+            class="rounded-full w-10 h-10 object-cover bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 flex items-center justify-center">
+            <i class="uil-github text-3xl md:text-xl"></i>
+          </div>
+        </div>
+
         </ul>
       </div>
 
@@ -103,20 +110,32 @@
     </div>
   </nav>
 
-
+<notification v-if="showNoti" @cancel="openNoti()"/>
 </template>
 
 <script>
-
+import notification from '../notification.vue';
 export default {
   data() {
     return {
       isMobileMenuOpen: false, user: '',
       showLogout: false,
+      showNoti:false,
+      ischeckLogin:false
+      
     };
   },
+  components:{notification},
   mounted() {
     this.user = JSON.parse(localStorage.getItem("User"));
+    if(this.user.id)
+    {
+      this.ischeckLogin = true
+    }
+    else
+    {
+      this.ischeckLogin = false
+    }
   },
   methods: {
     toggleMobileMenu() {
@@ -124,6 +143,10 @@ export default {
     },
     openLogout(){
       this.showLogout = !this.showLogout
+    },
+    openNoti()
+    {
+      this.showNoti = !this.showNoti
     },
     checkLogin() {
       if(this.user){
