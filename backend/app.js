@@ -92,8 +92,8 @@ const { routerCoupon } = require ('./routers/couponRouter');
 const { routerRoom } = require ('./routers/roomRouter');
 const { routerMail } = require ('./routers/mailRouter');
 const { routerPay } = require ('./routers/payMentRouter');
-// const { routerDash } = require ('./routers/dashboardRouter');
 const { routerDashboard } = require ('./routers/dashboardRouter');
+const { routerNoti } = require ('./routers/notiRouter');
 
 // Thiết lập body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -106,7 +106,7 @@ app.use(express.json());
 
 // Định tuyến
 
-app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerDashboard,
+app.use(routerUser, routerHotel, routerAdmin, routerBanner, routerReport, routerDashboard, routerNoti,
   routerOwner, routerMessage, routerRating, routerOrder, routerCoupon, routerRoom, routerMail, routerPay);
 // Serve các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));

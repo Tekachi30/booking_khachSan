@@ -58,12 +58,13 @@ const deleteNoti = async (req, res) => {
         const noti = await Noti.findOne({ where: {id: noti_id}});
         const user = await User.findOne({ where: {id: user_id}});
         if(!user){
-
+            return res.status(201).json({ message: 'Không tồn tại user.' });
         }else{
             if(!noti){
-                
+                return res.status(201).json({ message: 'Không tồn tại thông báo.' });
             }else{
-
+                noti.destroy();
+                return res.status(200).json({ message: 'Xóa thành công.' });
             }
         }
     } catch (error) {
