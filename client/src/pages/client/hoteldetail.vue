@@ -242,8 +242,12 @@ export default {
   methods: {
 
     openReport() {
-      this.isShowReport = !this.isShowReport
-      this.content = ""
+      if (this.user) {
+        this.isShowReport = !this.isShowReport
+        this.content = ""
+      }else{
+        this.$refs.toast.showToast('Vui lòng đăng nhập để sử dụng chức năng.');
+      }
     },
     openDetailRoom() {
       this.isDetailRoom = !this.isDetailRoom
@@ -403,7 +407,8 @@ export default {
       } catch (error) {
           console.log(error)
       }
-    }
+    },
+
   },
 };
 </script>

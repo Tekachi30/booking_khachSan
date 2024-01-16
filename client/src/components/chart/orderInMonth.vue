@@ -1,12 +1,12 @@
 <template>
     <div>
         <div>
-          <label for="year">Chọn Năm:</label>
-          <select v-model="year" @change="fetchData()">
-            <option v-for="y in year" :key="y" :value="y">{{ y }}</option>
-          </select>
+            <label for="year">Chọn Năm:</label>
+            <select v-model="year" @change="fetchData()">
+                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+            </select>
         </div>
-    
+
         <div>
           <label for="hotel">Chọn Khách Sạn:</label>
           <select v-model="hotel" @change="fetchData()">
@@ -25,16 +25,42 @@ import Chart from 'chart.js/auto';
 export default {
     name: 'App',
     data() {
-        const currentYear = new Date().getFullYear();
-        const startYear = 1999;
-        const years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => startYear + index); // laasy code tren mang ?
         return {
-            year: years, hotel: '',
-            hotels: []
-        }
+            year: '',hotel: '',
+            years: [], hotels: []
+        };
     },
     mounted() {
-        this.fetchData();
+        const currentYear = new Date().getFullYear();
+        const startYear = 2015;
+        this.years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => startYear + index) 
+        const chartCanvas = this.$refs.chartCanvas;
+        this.chart = new Chart(chartCanvas, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: `Số lượng hóa đơn được đặt theo tháng`,
+                        data: [],
+                        backgroundColor: 'rgba(46, 159, 225, 1)',
+                        borderColor: 'rgba(46, 159, 225, 1)',
+                        borderWidth: 1
+                    },
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Value"
+                        }
+                    }
+                }
+            }
+        });
         this.getHotel();
     },
     methods: {
@@ -56,42 +82,19 @@ export default {
             }
         },
         showChart(data) {
-            const chartCanvas = this.$refs.chartCanvas;
-            const chart = new Chart(chartCanvas, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [
-                        {
-                            label: `Số lượng hóa đơn được đặt theo tháng`,
-                            data: [],
-                            backgroundColor: 'rgba(46, 159, 225, 1)',
-                            borderColor: 'rgba(46, 159, 225, 1)',
-                            borderWidth: 1
-                        },
-                    ]
-                },
-                options: {
-                    scales: {
-                        
-                        y: {
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: "Value"
-                            }
-                        }
-                    }
-                }
-            });
+            const chart = this.chart; // Lưu biểu đồ vào thuộc tính dữ liệu để truy cập sau
 
-            // Add data points to the chart
+            // Xóa dữ liệu hiện có của biểu đồ
+            chart.data.labels = [];
+            chart.data.datasets[0].data = [];
+
+            // Thêm dữ liệu mới vào biểu đồ
             data.forEach(item => {
                 chart.data.labels.push(`Tháng ${item.month}`);
                 chart.data.datasets[0].data.push(item.count);
             });
 
-            // Update the chart
+            // Cập nhật biểu đồ
             chart.update();
         }
     }

@@ -24,7 +24,7 @@ export default {
     mounted() {
         const currentYear = new Date().getFullYear();
         const startYear = 2015;
-        this.years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => startYear + index) // laasy code tren mang ? 
+        this.years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => startYear + index) 
         const chartCanvas = this.$refs.chartCanvas;
         this.chart = new Chart(chartCanvas, {
             type: 'bar',

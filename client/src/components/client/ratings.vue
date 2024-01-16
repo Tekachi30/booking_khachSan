@@ -133,7 +133,11 @@ export default {
     components: { StarRating, toast, },
     methods: {
         openRating() {
-            this.isShowRating = !this.isShowRating
+            if(this.user){
+                this.isShowRating = !this.isShowRating
+            }else{
+                this.$refs.toast.showToast('Vui lòng đăng nhập để sử dụng chức năng.');
+            }
         },
         async getRating() {
             try {

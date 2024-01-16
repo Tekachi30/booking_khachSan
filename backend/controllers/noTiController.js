@@ -7,7 +7,11 @@ const Op = sequelize.Op
 
 const getFullNoti = async (req, res) => {
     try {
-        const noti = await Noti.findAll();
+        const noti = await Noti.findAll({
+            include: [
+                { model: User, attributes: ["fullname"] },
+              ],
+        });
         res.json(noti);
     } catch (error) {
         console.log(error);

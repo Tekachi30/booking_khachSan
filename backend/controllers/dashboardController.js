@@ -87,8 +87,8 @@ const getHotelForMonth = async (req, res) => {
 // Bao nhiêu phòng được tạo ra ở khách sạn đó theo từng tháng trong năm
 const roomInMonth = async (req, res) => {
     try {
-        // const hotel_id = req.query.id;
-        const hotel_id = 5
+        const hotel_id = req.query.id;
+        // const hotel_id = 5
         // Lấy năm từ tham số yêu cầu (hoặc sử dụng mặc định nếu không có)
         const year = req.query.year || new Date().getFullYear();
 
@@ -296,8 +296,8 @@ const orderInMonth = async (req, res) => {
 // Số tiền tháng này khách sạn kiếm được  
 const castHotelInMonth = async (req, res) => {
     try {
-        // const hotel_id = req.query.id;
-        const hotel_id = 7
+        const hotel_id = req.query.id;
+        // const hotel_id = 7
         const year = req.query.year || new Date().getFullYear();
 
         const monthlyRevenue = await Order.findAll({
@@ -354,8 +354,8 @@ const castHotelInMonth = async (req, res) => {
 // Khách sạn tạo được bao nhiêu coupon trong tháng này
 const couponHotelInMonth = async (req, res) => {
     try {
-        // const hotel_id = req.query.id;
-        const hotel_id = 8;
+        const hotel_id = req.query.id;
+        // const hotel_id = 8;
         const year = req.query.year || new Date().getFullYear();
 
         const monthlyCoupon = await Coupon.findAll({
