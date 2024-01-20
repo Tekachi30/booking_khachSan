@@ -135,6 +135,8 @@ export default {
         openRating() {
             if(this.user){
                 this.isShowRating = !this.isShowRating
+                this.rating = 0;
+                this.content = '';
             }else{
                 this.$refs.toast.showToast('Vui lòng đăng nhập để sử dụng chức năng.');
             }
@@ -166,8 +168,8 @@ export default {
 
             if (this.user.id === null) {
             this.$refs.toast.showToast("Bạn cần đăng nhập để đánh giá");
-            return; // Stop further execution
-    }
+            return; 
+            }
             if (this.rating && this.content) {
                 try {
                     const result = await this.$axios.post(`rating/add/${this.user.id}`,

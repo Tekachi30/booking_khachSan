@@ -224,7 +224,7 @@
 
 
               <div class="infor_voucher">
-                Mã giảm giá của khách sạn
+                {{ coupon.code_coupon }}
               </div>
 
               <div class="action_save">

@@ -58,7 +58,7 @@
                                     {{ coupon.id_hotel }}
                                 </td> -->
                                 <td class="px-4 py-3"> {{ coupon.code_coupon }}</td>
-                                <td class="px-4 py-3"> {{ coupon.discount }}</td>
+                                <td class="px-4 py-3"> {{ coupon.discount }}%</td>
                                 <td class="px-4 py-3"> {{ formatTime(coupon.createdAt) }} </td>
                                 <td class="px-4 py-3"> {{ formatTime(coupon.date_coupon) }}</td>
                                 <!--action ?-->
@@ -137,7 +137,7 @@
 
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giảm
-                            giá</label>
+                            giá %</label>
                         <input v-model="discount" type="number" name="discount" id="discount" @change="checkDiscount(e)"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập giảm giá" required="">

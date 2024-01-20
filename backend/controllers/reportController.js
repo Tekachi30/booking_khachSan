@@ -65,7 +65,10 @@ const addReport = async (req, res) => {
       if(!existUser){
         return res.status(201).json({message: 'Không tìm thấy user'});
       }else{
-        if(orders.status == "Đã Trả Phòng"){
+        const orderWithCorrectStatus = orders.find(order => order.status === "Đã Trả Phòng");
+        // if(orders.status == "Đã Trả Phòng")
+        if(orderWithCorrectStatus)
+        {
           await Report.create({
             comment_report: comment_report,
             id_hotel: id_hotel,

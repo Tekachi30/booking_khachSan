@@ -17,11 +17,12 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input type="text" id="simple-search" v-on:keyup.enter="search()" v-model="value_search"
+                                <input type="text" v-on:keyup.enter="search()" v-model="value_search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="Tìm theo tên.." required="">
                             </div>
                         </form>
+
                     </div>
                 </div>
                 <!--nội dung-->
@@ -48,7 +49,7 @@
                                     {{ rating.hotel.name_hotel }}
                                 </td>
                                 <td class="px-4 py-3"> {{ rating.User.fullname }}</td>
-                                <td class="px-4 py-3"> {{ rating.score_rating }}</td>
+                                <td class="px-4 py-3"> {{ rating.score_rating }} sao</td>
                                 <td class="px-4 py-3"> {{ rating.comment_rating }}</td>
                                 <td class="px-4 py-3"> {{ formatTime(rating.createdAt) }}</td>
                                 
@@ -70,11 +71,11 @@ export default
 {
   data(){
     return {
-        ratings: [], hotels: [], owner: ''
+        ratings: [], hotels: [], owner: '', value_search: '', rating: '',
     }
   },
   mounted(){
-    this.owner = this.getToken()
+    this.owner = JSON.parse(localStorage.getItem("owner"));
     this.getRating();
   },
   components: {},
@@ -85,17 +86,10 @@ export default
         return dayjs(time).format('DD-MM-YYYY');
     },
 
-    // lấy thông tin của chính owner đã đăng nhập trên local storage
-    getToken() {
-      let owner = JSON.parse(localStorage.getItem("owner"));
-      return owner;
-    },
-
     async getRating() {
        try {
-           const result = await this.$axios.get(`rating/get/${this.owner.id}`);
+           const result = await this.$axios.get(`rating/getOwner/${this.owner.id}`);
            this.ratings = result.data;
-           console.log(result.data);
        } catch (error) {
            console.log(error)
        }
@@ -104,9 +98,10 @@ export default
     async search()
     {
        try {
+            console.log(this.value_search);
             const result = await this.$axios.post('rating/search',
             {
-                "search": this.value_search
+                "search":this.value_search
             });
             this.ratings = result.data
        } catch (error) {
