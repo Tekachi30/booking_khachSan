@@ -71,7 +71,7 @@ const loginOwner = async (req, res) => {
     if (exsitOnwer) {
       const ismatch = await bcrypt.compare(password, exsitOnwer.password);
       if (!ismatch) {
-        return res.status(400).json({ message: "Mật khẩu không chính xác." });
+        return res.status(201).json({ message: "Mật khẩu không chính xác." });
       }
       // Tạo JWT
       const token = jwt.sign(
@@ -93,7 +93,7 @@ const loginOwner = async (req, res) => {
       });
     } else {
       return res
-        .status(400)
+        .status(201)
         .json({ message: "Tài khoản sai hoặc không tồn tại" });
     }
   } catch (error) {

@@ -128,7 +128,7 @@ export default {
   components:{notification},
   mounted() {
     this.user = JSON.parse(localStorage.getItem("User"));
-    if(this.user.id)
+    if(this.user)
     {
       this.ischeckLogin = true
     }

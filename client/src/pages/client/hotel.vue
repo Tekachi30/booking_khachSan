@@ -70,7 +70,7 @@
                 <!--view chữ kq-->
 
                 <div class="flex items-center justify-between mt-20 ">
-                    <p class="text-2xl font-bold text-gray-900 ">Tìm thấy {{ hotels.length }} tỷ kết quả</p>
+                    <p class="text-2xl font-bold text-gray-900 ">Tìm thấy {{ hotels.length }} kết quả</p>
                     <select name="sort" id="sort"
                         class=" py-2 px-5 rounded-2xl border-gray-300 appearance-none  text-gray-700 text-base font-bold focus:outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 ">
                         <option value="non">Không sắp xếp</option>
@@ -211,6 +211,7 @@ export default {
         this.search = JSON.parse(sessionStorage.getItem("search"));
         if(this.search)
         {
+            // console.log(this.search.name_hotel);
             const result = await this.$axios.post(`hotel/search`,
                 {
                     'name_hotel': this.search.name_hotel,

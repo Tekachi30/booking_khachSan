@@ -37,12 +37,12 @@
     </swiper>
 
     <!-- Mô tả khách sạn -->
-    <div class="mt-10">
+    <!-- <div class="mt-10">
       <p class="mb-4 text-3xl font-extrabold text-gray-900 md:text-4xl">Thông tin khách sạn</p>
       <div class="text-lg text-gray-700">
         {{ hotel.information }}
       </div>
-    </div>
+    </div> -->
 
 
     <!-- đặt phòng-->
@@ -133,7 +133,7 @@
                 </h3>
               </a>
 
-              <p class="mt-2  text-sm/relaxed text-white/95">
+              <p class="mt-2 px-2 py-4 rounded-2xl text-xl font-medium bg-white">
                 {{ hotel.information }}
               </p>
             </div>

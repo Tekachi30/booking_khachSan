@@ -479,6 +479,7 @@ const searchHotel = async (req, res) => {
     try {
         const { option_price, name_hotel, city_code } = req.body
         let where_price;
+        
 
         switch (option_price) {
             case 'under1':
@@ -503,7 +504,13 @@ const searchHotel = async (req, res) => {
 
         const get_hotel = await Hotel.findAll(
             {
-                where: { name_hotel: { [Op.like]: `%${name_hotel}%` }, city_code: city_code },
+                // where: { name_hotel: { [Op.like]: `%${name_hotel}%` }, city_code: city_code },
+                where: {
+                    [Op.or]: [
+                        { name_hotel: { [Op.like]: `%${name_hotel}%` } },
+                        { city_code: city_code }
+                    ]
+                },
                 include: [
                     { model: Room, where: where_price },
                     {

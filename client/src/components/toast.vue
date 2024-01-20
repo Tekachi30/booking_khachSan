@@ -38,7 +38,7 @@
         this.visible = true
         setTimeout(() => {
           this.visible = false
-        }, 2000) // thời gian đợi 3 giây trước khi ẩn toast
+        }, 2000) // thời gian đợi 2 giây trước khi ẩn toast
       },
       closeToast() {
         this.visible = !this.visible

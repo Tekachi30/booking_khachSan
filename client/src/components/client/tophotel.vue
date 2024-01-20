@@ -48,8 +48,11 @@
               <div>
                 <dt class="sr-only">khách sạn</dt>
 
-                <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }" class="font-bold text-xl">{{
-                  hotel.name_hotel }}</router-link>
+                <!-- <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }" class="font-bold text-xl">{{
+                  hotel.name_hotel }}</router-link> -->
+                  <p class="font-bold text-xl" @click="gotoDetail(hotel.id)">
+                    {{hotel.name_hotel }}
+                  </p>
               </div>
 
               <div>
@@ -101,9 +104,13 @@
 
               <!--xem chi tiet-->
               <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2 ml-auto">
-                <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }"
+                <!-- <router-link :to="{ name: 'hoteldetail', params: { id: `${hotel.id}` } }"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đặt
-                  phòng</router-link>
+                  phòng</router-link> -->
+                  <p class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  @click="gotoDetail(hotel.id)">
+                    Đặt phòng
+                  </p>
                 <div class="ml-auto" :class="getclass()">
                   <span v-if=" follows && follows.length > 0 && follows.some(item => item.id_hotel === hotel.id && item.id_user === user.id)">
                     <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
@@ -253,8 +260,12 @@ export default {
     },
     toHotel()
     {
-      this.$router.push('/hotels');
+      // this.$router.push('/hotels');
+      window.location.href=`http://localhost:5173/hotels`
 
+    },
+    gotoDetail(id){ 
+      window.location.href=`http://localhost:5173/hoteldetail/${id}`
     }
 
   }

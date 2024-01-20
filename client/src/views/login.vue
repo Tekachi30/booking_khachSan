@@ -33,9 +33,19 @@
             + 4 if là check rỗng, check độ dài tối thiểu 8 kí tự , check kí tự đặc biệt, check chữ cái hoa
             -->
             <div class="mt-5">
-              <input type="password" placeholder="Mật khẩu"
+              <input :type="type" placeholder="Mật khẩu"
                 class="px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none w-full"
                 v-model="password"  />
+                <span
+                  class="absolute inset-y-0 right-0 flex items-center pr-3"
+                  @click="togglePasswordVisibility()"
+                >
+                  <i
+                    class="fa"
+                    :class="[showPassword ? 'fa-eye' : 'fa-eye-slash']"
+                    aria-hidden="true"
+                  ></i> 
+                </span>
             </div>
             <p class="text-red-500 text-sm ml-1" v-if="!password && passwordFocused">Mật khẩu bị trống.</p>
 
@@ -74,9 +84,9 @@
   export default {
     data() {
       return {
-        account: '', password: '',
+        account: '', password: '', type: '',
         user: '',
-        accountFocused: false, passwordFocused: false,
+        accountFocused: false, passwordFocused: false,showPassword: false
       };
     },
     components:
@@ -115,6 +125,15 @@
             
           }
       },
+      togglePasswordVisibility(){
+          if (this.showPassword == false) {
+          this.showPassword = !this.showPassword;
+          this.type = "text";
+        } else {
+          this.showPassword = !this.showPassword;
+          this.type = "password";
+        }
+      }
   
       // các re ràng buộc
       // validaccount(account) {
