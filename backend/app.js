@@ -58,26 +58,26 @@ const cron = require('node-cron');
 const mathlevelController = require('./controllers/mathlevelController')
 
 
-// app.get('/api/level/get', async (req, res) => {
-//   try {
-//     const result = await mathlevelController.mathLevel();
-//     res.send(result);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send(error);
-// }
-// });
+app.get('/api/level/get', async (req, res) => {
+  try {
+    const result = await mathlevelController.mathLevel();
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+}
+});
 
 
 //// 0 1 1 * * 1h 1 tây hằng tháng
-// const task = cron.schedule('* * * * *', () => {
-//   mathlevelController.mathLevel()
-// }, {
-//   scheduled: true,
-//   timeZone: 'Asia/Ho_Chi_Minh'
-// });
+const task = cron.schedule('* * * * *', () => {
+  mathlevelController.mathLevel()
+}, {
+  scheduled: true,
+  timeZone: 'Asia/Ho_Chi_Minh'
+});
 
-// task.start()
+task.start()
 
 const { routerUser } = require ('./routers/userRouter');
 const { routerHotel } = require ('./routers/hotelRouter');

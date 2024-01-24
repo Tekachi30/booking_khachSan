@@ -32,7 +32,7 @@ export default {
                 labels: [],
                 datasets: [
                     {
-                        label: `Số lượng khách hàng đăng ký theo tháng`,
+                        label: `Số lượng khách hàng đăng ký theo từng tháng`,
                         data: [],
                         backgroundColor: 'rgba(46, 159, 225, 1)',
                         borderColor: 'rgba(46, 159, 225, 1)',

@@ -282,6 +282,7 @@ export default {
         onFileSelected(event) {
             this.avatar = event.target.files[0]
         },
+        
         onFileSelectedUpdate(event) {
             this.new_avatar = event.target.files[0]
         },
@@ -292,7 +293,9 @@ export default {
             this.avatar = select.url_banner
         },
         openAdd() {
-            this.isAdd = !this.isAdd
+            this.isAdd = !this.isAdd;
+            this.title_banner = '';
+            this.content_banner = '';
         },
         openUpdate() {
             this.isUpdate = !this.isUpdate

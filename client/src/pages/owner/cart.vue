@@ -23,7 +23,7 @@
                             </div>
                         </form> -->
 
-                        <div class="mt-5">
+                        <!-- <div class="mt-5">
                            <select v-model="month" @change="changeMonth()"
                               class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none ">
                               <option value="1">Tháng 1</option>
@@ -38,7 +38,7 @@
                               <option value="11">Tháng 11</option>
                               <option value="12">Tháng 12</option>
                            </select>
-                        </div>
+                        </div> -->
 
 
                         <!--view getHotel => option value lấy ra id_hotel-->

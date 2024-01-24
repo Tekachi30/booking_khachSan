@@ -541,7 +541,7 @@ const HotelFavorate = async (req, res) => {
         }
         else {
             const favorate = await Favorate.create({ id_user, id_hotel, status });
-            res.status(200).json({ favorate, message: "Lưu bài thành công" })
+            res.status(200).json({ favorate, message: "Lưu khách sạn thành công" })
         }
     } catch (error) {
         res.status(404).json(error)

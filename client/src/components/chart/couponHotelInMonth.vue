@@ -41,7 +41,7 @@ export default {
                 labels: [],
                 datasets: [
                     {
-                        label: `Số lượng phòng được tạo theo từng tháng của khách sạn`,
+                        label: `Số lượng mã giảm giá được tạo theo từng tháng của khách sạn`,
                         data: [],
                         backgroundColor: 'rgba(46, 159, 225, 1)',
                         borderColor: 'rgba(46, 159, 225, 1)',

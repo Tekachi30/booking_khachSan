@@ -41,7 +41,7 @@ export default {
                 labels: [],
                 datasets: [
                     {
-                        label: `Số lượng hóa đơn được đặt theo tháng`,
+                        label: `Số lượng hóa đơn được đặt theo từng tháng`,
                         data: [],
                         backgroundColor: 'rgba(46, 159, 225, 1)',
                         borderColor: 'rgba(46, 159, 225, 1)',

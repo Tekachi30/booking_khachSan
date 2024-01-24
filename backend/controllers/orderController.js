@@ -59,14 +59,12 @@ const getOrder = async (req, res) => {
     else {
       res.json('Không tồn tại chủ khách sạn')
     }
-
-
   } catch (error) {
     console.log(error);
   }
 };
 
-const getUserOrder = async (req, res) => {
+const getUOrder = async (req, res) => {
   try {
     
   } catch (error) {

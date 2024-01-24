@@ -32,7 +32,7 @@ export default {
                         {
                             label: 'Số lượng đánh giá',
                             data: [],
-                            backgroundColor: ['#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360','#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+                            backgroundColor: ['#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360','#f87979', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360','#ABCDEF','#789012'],
                             borderColor: 'rgba(46, 159, 225, 1)',
                             borderWidth: 1
                         },

@@ -81,6 +81,15 @@
           </a>
           <p class="mb-3 font-normal text-gray-700 ">{{ hotel.information }}</p>
           <p class="mb-3 font-normal text-gray-700 ">{{ hotel.address }}</p>
+          <a @click="openUpdate(); select(hotel)"
+            class="inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
+            Cập nhật
+          </a>
+          <a 
+          @click="openDelete();select(hotel)"
+            class="ml-2 inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
+            Xóa
+          </a>
         </div>
       </div>
 

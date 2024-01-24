@@ -109,7 +109,6 @@ const result_math_level = (X, point) => {
     } else {
         level = Math.floor(point / delta);
     }
-
     return level;
 };
 
@@ -130,7 +129,7 @@ const mathLevel = async (req, res) => {
             console.log(points)
             for (let x = 0; x < array_mathLevel.length; x++) {
                 if (points[i].id_hotel == array_mathLevel[x].id) {
-                    const level = result_math_level(1, points[i].finalScore)
+                    const level = result_math_level(2, points[i].finalScore)
                     await Hotel.update({
                         level: level,
                         point: points[i].finalScore,

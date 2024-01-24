@@ -248,6 +248,7 @@
     </div>
   </div>
   <!--component toast thông báo !!!-->
+  <!-- this.$refs.toast.showToast(""); -->
   <toast ref="toast"></toast>
 </template>
 <script>
@@ -403,11 +404,11 @@ export default {
     handleDateChange() {
       const currentDate = new Date(); // Lấy ngày hiện tại
       const selectedDate = new Date(this.checkin); // Lấy giá trị ngày từ input
-      if (selectedDate <= currentDate) {
-        currentDate.setDate(currentDate.getDate() + 1); // Nếu ngày đã chọn nhỏ hơn hoặc bằng ngày hiện tại, thì cộng thêm 1 ngày
-        const formattedDate = currentDate.toISOString().split("T")[0]; // Format lại ngày để có định dạng YYYY-MM-DD
-        this.checkin = formattedDate;
-      }
+      // if (selectedDate <= currentDate) {
+      //   currentDate.setDate(currentDate.getDate() + 1); // Nếu ngày đã chọn nhỏ hơn hoặc bằng ngày hiện tại, thì cộng thêm 1 ngày
+      //   const formattedDate = currentDate.toISOString().split("T")[0]; // Format lại ngày để có định dạng YYYY-MM-DD
+      //   this.checkin = formattedDate;
+      // }
     },
     handleDateChange2() {
       const currentDate = new Date(); // Lấy ngày hiện tại

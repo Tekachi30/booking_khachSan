@@ -185,7 +185,8 @@ const addRating = async (req, res) => {
     if (!existUser) {
       return res.status(201).json({ message: "Không tìm thấy user" });
     } else {
-      const orderWithCorrectStatus = orders.find(order => order.status === "Đã Trả Phòng");
+      const orderWithCorrectStatus = orders.find(order => order.status == "Đã Trả Phòng");
+      // const orderWithCorrectStatus = Order.findOne({ where: {id_user: existUser.id}})
       // if(orders.status == "Đã Trả Phòng")
       if (orderWithCorrectStatus)
       {

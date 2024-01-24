@@ -94,7 +94,7 @@
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tiêu đề</label>
                             <input v-model="title_noti" type="text" name="title_noti" id="title_noti"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Nhập tài khoản" required="">
+                                placeholder="Nhập tiêu đề" required="">
                             <p v-if="!title_noti && title_noti_forcus" style="color: darkred; font-weight: bold;">Chưa nhập tiêu đề!</p>
                         </div>
 
@@ -102,7 +102,7 @@
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nội dung</label>
                             <input v-model="content_noti" type="text" name="content_noti" id="content_noti"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Nhập Họ tên" required="">
+                                placeholder="Nhập nội dung" required="">
                             <p v-if="!content_noti && content_noti_forcus" style="color: darkred; font-weight: bold;">Chưa nhập nội dung!</p>
                         </div>
                        

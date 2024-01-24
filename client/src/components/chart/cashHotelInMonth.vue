@@ -41,7 +41,7 @@ export default {
                 labels: [],
                 datasets: [
                     {
-                        label: `Tổng tiền khách sạn thu được theo tháng`,
+                        label: `Tổng tiền khách sạn thu được theo từng tháng`,
                         data: [],
                         backgroundColor: 'rgba(46, 159, 225, 1)',
                         borderColor: 'rgba(46, 159, 225, 1)',
